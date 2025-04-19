@@ -5,10 +5,10 @@ website:
   title: "ISSS608-YL"
   navbar:
     left:
-      - text: "Hands-on Exercise"
-        menu: 
-          - text: "Hands-on Exercise 1"
-            href: "Hands-on_Exercise/Hands-on_Ex01/Hands-on_Ex01.html"
+    - text: "Hands-on Exercise"
+      menu: 
+        - text: "Hands-on Exercise 1"
+          href: "Hands-on_Exercise/Hands-on_Ex01/Hands-on_Ex01.html"
     right: 
       - href: index.qmd
         text: Home
