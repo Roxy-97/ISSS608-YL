@@ -55,6 +55,7 @@ ggplot(data=exam_data,
 ```
 
 ## Y-axis is not very useful, using scale_y_continuous() to hide
+
 ```{r}
 ggplot(data=exam_data, 
        aes(x = MATHS)) +
@@ -66,6 +67,7 @@ ggplot(data=exam_data,
 ```
 
 #Plotting a simple histogram
+
 ```{r}
 ggplot(data=exam_data,
        aes(x=MATHS))+
@@ -74,6 +76,7 @@ ggplot(data=exam_data,
 ```
 
 ### Modifying geometric object by changing geom (add fill="color")
+
 ```{r}
 ggplot(data=exam_data, 
        aes(x= MATHS)) +
@@ -82,7 +85,7 @@ ggplot(data=exam_data,
                  fill="light blue")  
 ```
 
-### Modifying geometric object by changing aes(add fill ="sub-group") 
+### Modifying geometric object by changing aes(add fill ="sub-group")
 
 ```{r}
 ggplot(data=exam_data, 
@@ -100,19 +103,19 @@ ggplot(data=exam_data,
   geom_histogram(bins=20, 
                  color="grey30")
 ```
-Note：different between using fill and colour 
 
-fill controls inside fill  [Works on ： bar charts, histograms，boxplots etc.]
-colour（color）controls border/outline color [Works on ： Line plots, scatter plots，edges etc.]
+Note：different between using fill and colour
 
+fill controls inside fill \[Works on ： bar charts, histograms，boxplots etc.\] colour（color）controls border/outline color \[Works on ： Line plots, scatter plots，edges etc.\]
 
-#Plotting a simple density
+# Plotting a simple density
 
 ```{r}
 ggplot(data=exam_data, 
        aes(x = MATHS)) +
   geom_density()           
 ```
+
 ```{r}
 ggplot(data=exam_data, 
        aes(x = MATHS, 
@@ -120,10 +123,6 @@ ggplot(data=exam_data,
   geom_density()
 
 ```
-
-
-
-
 
 ```{r}
 ggplot(data=exam_data, 
@@ -133,8 +132,7 @@ ggplot(data=exam_data,
 
 ```
 
-
-#Plotting a simple boxplot
+# Plotting a simple boxplot
 
 ```{r}
 ggplot(data=exam_data, 
@@ -143,9 +141,12 @@ ggplot(data=exam_data,
   geom_boxplot()            
 
 ```
-##Using notch to visually compare the media
-- if not overlap, means the medians are significantly different
-- if overlap, means the difference between medians may not be statistically significant
+
+## Using notch to visually compare the media 
+
+-   if not overlap, means the medians are significantly different
+
+-   if overlap, means the difference between medians may not be statistically significant
 
 ```{r}
 ggplot(data=exam_data, 
@@ -154,15 +155,15 @@ ggplot(data=exam_data,
   geom_boxplot(notch=TRUE)
 ```
 
+# Plotting a simple violin
 
-#Plotting a simple violin
-
-A violin plot is a data visualization that combines: boxplot (shows median and quartiles) + density plot (shows the distribution shape of the data)
+A violin plot is a data visualization that combines: **boxplot** (shows median and quartiles) + **density plot** (shows the distribution shape of the data)
 
 The “width” of the graphic is indicated by
--Wider parts of the violin mean more data in that range
--Narrower parts mean fewer data there
 
+-   Wider parts of the violin mean more data in that range
+
+-   Narrower parts mean fewer data there
 
 ```{r}
 ggplot(data=exam_data, 
@@ -172,7 +173,7 @@ ggplot(data=exam_data,
 
 ```
 
-#Plotting a simple scatterplot
+# Plotting a simple scatterplot
 
 ```{r}
 ggplot(data=exam_data, 
@@ -182,8 +183,7 @@ ggplot(data=exam_data,
 
 ```
 
-
-#Combine the geom objects
+# **Combine the geom objects**
 
 ```{r}
 ggplot(data=exam_data, 
@@ -194,15 +194,14 @@ ggplot(data=exam_data,
              size = 0.5)        
 ```
 
+## Essential Grammatical Elements in ggplot2: 
 
-#Essential Grammatical Elements in ggplot2: stat
-stat_() function and override the default geom
-geom_() function and override the default stat
+-   stat stat\_() function and override the default geom
 
-
-
+-   geom\_() function and override the default stat
 
 ## Add means value by stat_summary() / geom() method
+
 ```{r}
 
 ggplot(data=exam_data, 
@@ -215,6 +214,7 @@ ggplot(data=exam_data,
 
 
 ```
+
 ```{r}
 ggplot(data=exam_data, 
        aes(y = MATHS, x= GENDER)) +
