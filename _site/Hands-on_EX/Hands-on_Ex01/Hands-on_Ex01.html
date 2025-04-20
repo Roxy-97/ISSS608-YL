@@ -173,6 +173,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#modifying-geometric-object-by-changing-geom-add-fillcolor" id="toc-modifying-geometric-object-by-changing-geom-add-fillcolor" class="nav-link" data-scroll-target="#modifying-geometric-object-by-changing-geom-add-fillcolor">Modifying geometric object by changing geom (add fill=“color”)</a></li>
   <li><a href="#modifying-geometric-object-by-changing-aesadd-fill-sub-group" id="toc-modifying-geometric-object-by-changing-aesadd-fill-sub-group" class="nav-link" data-scroll-target="#modifying-geometric-object-by-changing-aesadd-fill-sub-group">Modifying geometric object by changing aes(add fill =“sub-group”)</a></li>
   </ul></li>
+  </ul></li>
+  <li><a href="#plotting-a-simple-density" id="toc-plotting-a-simple-density" class="nav-link" data-scroll-target="#plotting-a-simple-density">Plotting a simple density</a></li>
+  <li><a href="#plotting-a-simple-boxplot" id="toc-plotting-a-simple-boxplot" class="nav-link" data-scroll-target="#plotting-a-simple-boxplot">Plotting a simple boxplot</a>
+  <ul class="collapse">
+  <li><a href="#using-notch-to-visually-compare-the-media" id="toc-using-notch-to-visually-compare-the-media" class="nav-link" data-scroll-target="#using-notch-to-visually-compare-the-media">Using notch to visually compare the media</a></li>
+  </ul></li>
+  <li><a href="#plotting-a-simple-violin" id="toc-plotting-a-simple-violin" class="nav-link" data-scroll-target="#plotting-a-simple-violin">Plotting a simple violin</a></li>
+  <li><a href="#plotting-a-simple-scatterplot" id="toc-plotting-a-simple-scatterplot" class="nav-link" data-scroll-target="#plotting-a-simple-scatterplot">Plotting a simple scatterplot</a></li>
+  <li><a href="#combine-the-geom-objects" id="toc-combine-the-geom-objects" class="nav-link" data-scroll-target="#combine-the-geom-objects"><strong>Combine the geom objects</strong></a>
+  <ul class="collapse">
+  <li><a href="#essential-grammatical-elements-in-ggplot2" id="toc-essential-grammatical-elements-in-ggplot2" class="nav-link" data-scroll-target="#essential-grammatical-elements-in-ggplot2">Essential Grammatical Elements in ggplot2:</a></li>
   <li><a href="#add-means-value-by-stat_summary-geom-method" id="toc-add-means-value-by-stat_summary-geom-method" class="nav-link" data-scroll-target="#add-means-value-by-stat_summary-geom-method">Add means value by stat_summary() / geom() method</a></li>
   </ul></li>
   </ul>
@@ -376,7 +387,11 @@ dbl (3): ENGLISH, MATHS, SCIENCE
 </div>
 <p>Note：different between using fill and colour</p>
 <p>fill controls inside fill [Works on ： bar charts, histograms，boxplots etc.] colour（color）controls border/outline color [Works on ： Line plots, scatter plots，edges etc.]</p>
-<p>#Plotting a simple density</p>
+</section>
+</section>
+</section>
+<section id="plotting-a-simple-density" class="level1">
+<h1>Plotting a simple density</h1>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>exam_data, </span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> MATHS)) <span class="sc">+</span></span>
@@ -415,7 +430,9 @@ dbl (3): ENGLISH, MATHS, SCIENCE
 </div>
 </div>
 </div>
-<p>#Plotting a simple boxplot</p>
+</section>
+<section id="plotting-a-simple-boxplot" class="level1">
+<h1>Plotting a simple boxplot</h1>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>exam_data, </span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">y =</span> MATHS,       </span>
@@ -429,7 +446,12 @@ dbl (3): ENGLISH, MATHS, SCIENCE
 </div>
 </div>
 </div>
-<p>##Using notch to visually compare the media - if not overlap, means the medians are significantly different - if overlap, means the difference between medians may not be statistically significant</p>
+<section id="using-notch-to-visually-compare-the-media" class="level2">
+<h2 class="anchored" data-anchor-id="using-notch-to-visually-compare-the-media">Using notch to visually compare the media</h2>
+<ul>
+<li><p>if not overlap, means the medians are significantly different</p></li>
+<li><p>if overlap, means the difference between medians may not be statistically significant</p></li>
+</ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>exam_data, </span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">y =</span> MATHS, </span>
@@ -443,9 +465,16 @@ dbl (3): ENGLISH, MATHS, SCIENCE
 </div>
 </div>
 </div>
-<p>#Plotting a simple violin</p>
-<p>A violin plot is a data visualization that combines: boxplot (shows median and quartiles) + density plot (shows the distribution shape of the data)</p>
-<p>The “width” of the graphic is indicated by -Wider parts of the violin mean more data in that range -Narrower parts mean fewer data there</p>
+</section>
+</section>
+<section id="plotting-a-simple-violin" class="level1">
+<h1>Plotting a simple violin</h1>
+<p>A violin plot is a data visualization that combines: <strong>boxplot</strong> (shows median and quartiles) + <strong>density plot</strong> (shows the distribution shape of the data)</p>
+<p>The “width” of the graphic is indicated by</p>
+<ul>
+<li><p>Wider parts of the violin mean more data in that range</p></li>
+<li><p>Narrower parts mean fewer data there</p></li>
+</ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>exam_data, </span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">y =</span> MATHS, </span>
@@ -459,7 +488,9 @@ dbl (3): ENGLISH, MATHS, SCIENCE
 </div>
 </div>
 </div>
-<p>#Plotting a simple scatterplot</p>
+</section>
+<section id="plotting-a-simple-scatterplot" class="level1">
+<h1>Plotting a simple scatterplot</h1>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>exam_data, </span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span> MATHS, </span>
@@ -473,7 +504,9 @@ dbl (3): ENGLISH, MATHS, SCIENCE
 </div>
 </div>
 </div>
-<p>#Combine the geom objects</p>
+</section>
+<section id="combine-the-geom-objects" class="level1">
+<h1><strong>Combine the geom objects</strong></h1>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>exam_data, </span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">y =</span> MATHS, </span>
@@ -489,8 +522,12 @@ dbl (3): ENGLISH, MATHS, SCIENCE
 </div>
 </div>
 </div>
-<p>#Essential Grammatical Elements in ggplot2: stat stat_() function and override the default geom geom_() function and override the default stat</p>
-</section>
+<section id="essential-grammatical-elements-in-ggplot2" class="level2">
+<h2 class="anchored" data-anchor-id="essential-grammatical-elements-in-ggplot2">Essential Grammatical Elements in ggplot2:</h2>
+<ul>
+<li><p>stat stat_() function and override the default geom</p></li>
+<li><p>geom_() function and override the default stat</p></li>
+</ul>
 </section>
 <section id="add-means-value-by-stat_summary-geom-method" class="level2">
 <h2 class="anchored" data-anchor-id="add-means-value-by-stat_summary-geom-method">Add means value by stat_summary() / geom() method</h2>
@@ -522,6 +559,37 @@ dbl (3): ENGLISH, MATHS, SCIENCE
 <div>
 <figure class="figure">
 <p><img src="Hands-on_Ex01_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Adding a best fit curve on a scatterplot （geom_smooth() method)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>exam_data, </span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span> MATHS, <span class="at">y=</span>ENGLISH)) <span class="sc">+</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex01_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>exam_data, </span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span> MATHS, <span class="at">y=</span>ENGLISH)) <span class="sc">+</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">size=</span><span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+ℹ Please use `linewidth` instead.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using method = 'loess' and formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex01_files/figure-html/unnamed-chunk-22-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

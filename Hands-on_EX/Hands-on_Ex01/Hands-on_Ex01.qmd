@@ -212,7 +212,6 @@ ggplot(data=exam_data,
                colour ="red",        
                size=4)               
 
-
 ```
 
 ```{r}
@@ -225,3 +224,22 @@ ggplot(data=exam_data,
              size=4)          # the dot size
 
 ```
+
+Adding a best fit curve on a scatterplot （geom_smooth() method)
+
+
+
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x= MATHS, y=ENGLISH)) +
+  geom_point() 
+
+ggplot(data=exam_data, 
+       aes(x= MATHS, y=ENGLISH)) +
+  geom_point() +
+  geom_smooth(size=0.5)
+
+```
+
+
