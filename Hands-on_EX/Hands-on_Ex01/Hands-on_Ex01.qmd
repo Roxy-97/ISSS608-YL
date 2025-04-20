@@ -28,3 +28,200 @@ ggplot(data= exam_data,
        aes(x=RACE))+
   geom_bar()
 ```
+
+```{r}
+ggplot(data=exam_data,
+       aes(x=MATHS))+
+  geom_bar()
+```
+
+#Plotting a simple dot plot
+
+```{r}
+ggplot(data=exam_data,
+       aes(x=MATHS))+
+  geom_dotplot()
+
+```
+
+## Changing bin/binwith size
+
+```{r}
+
+ggplot(data=exam_data,
+       aes(x=MATHS)) +
+  geom_dotplot(dotsize=0.5)
+
+```
+
+## Y-axis is not very useful, using scale_y_continuous() to hide
+```{r}
+ggplot(data=exam_data, 
+       aes(x = MATHS)) +
+  geom_dotplot(binwidth=2.5,    #group scores into bins that are 2.5 units wide
+               dotsize = 0.5) +      #dotsize=0.5 is half of default size
+   scale_y_continuous(NULL,  #Hide the y-axis title
+                     breaks = NULL)   #Hide Y-axis scales
+
+```
+
+#Plotting a simple histogram
+```{r}
+ggplot(data=exam_data,
+       aes(x=MATHS))+
+  geom_histogram()
+
+```
+
+### Modifying geometric object by changing geom (add fill="color")
+```{r}
+ggplot(data=exam_data, 
+       aes(x= MATHS)) +
+  geom_histogram(bins=20,            
+                 color="black",      
+                 fill="light blue")  
+```
+
+### Modifying geometric object by changing aes(add fill ="sub-group") 
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x= MATHS, 
+           fill = GENDER)) +
+  geom_histogram(bins=20, 
+                 color="grey30")
+
+```
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x= MATHS, 
+           color= GENDER)) +
+  geom_histogram(bins=20, 
+                 color="grey30")
+```
+Note：different between using fill and colour 
+
+fill controls inside fill  [Works on ： bar charts, histograms，boxplots etc.]
+colour（color）controls border/outline color [Works on ： Line plots, scatter plots，edges etc.]
+
+
+#Plotting a simple density
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x = MATHS)) +
+  geom_density()           
+```
+```{r}
+ggplot(data=exam_data, 
+       aes(x = MATHS, 
+           colour = GENDER)) +
+  geom_density()
+
+```
+
+
+
+
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x = MATHS, 
+           fill = GENDER)) +
+  geom_density()
+
+```
+
+
+#Plotting a simple boxplot
+
+```{r}
+ggplot(data=exam_data, 
+       aes(y = MATHS,       
+           x= GENDER)) +    
+  geom_boxplot()            
+
+```
+##Using notch to visually compare the media
+- if not overlap, means the medians are significantly different
+- if overlap, means the difference between medians may not be statistically significant
+
+```{r}
+ggplot(data=exam_data, 
+       aes(y = MATHS, 
+           x= GENDER)) +
+  geom_boxplot(notch=TRUE)
+```
+
+
+#Plotting a simple violin
+
+A violin plot is a data visualization that combines: boxplot (shows median and quartiles) + density plot (shows the distribution shape of the data)
+
+The “width” of the graphic is indicated by
+-Wider parts of the violin mean more data in that range
+-Narrower parts mean fewer data there
+
+
+```{r}
+ggplot(data=exam_data, 
+       aes(y = MATHS, 
+           x= GENDER)) +
+  geom_violin()
+
+```
+
+#Plotting a simple scatterplot
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x= MATHS, 
+           y=ENGLISH)) +
+  geom_point()            
+
+```
+
+
+#Combine the geom objects
+
+```{r}
+ggplot(data=exam_data, 
+       aes(y = MATHS, 
+           x= GENDER)) +
+  geom_boxplot() +                    
+  geom_point(position="jitter", #moves dots slightly left and right to avoid overlap
+             size = 0.5)        
+```
+
+
+#Essential Grammatical Elements in ggplot2: stat
+stat_() function and override the default geom
+geom_() function and override the default stat
+
+
+
+
+## Add means value by stat_summary() / geom() method
+```{r}
+
+ggplot(data=exam_data, 
+       aes(y = MATHS, x= GENDER)) +
+  geom_boxplot() +
+  stat_summary(geom = "point",       
+               fun = "mean",         
+               colour ="red",        
+               size=4)               
+
+
+```
+```{r}
+ggplot(data=exam_data, 
+       aes(y = MATHS, x= GENDER)) +
+  geom_boxplot() +
+  geom_point(stat="summary",    #draw it as a dot     
+             fun="mean",        #the value shown is the mean  
+             colour="red",       # the dot colour   
+             size=4)          # the dot size
+
+```
