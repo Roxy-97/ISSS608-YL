@@ -46,14 +46,14 @@
     "href": "Hands-on_EX/Hands-on_Ex01/Hands-on_Ex01.html#y-axis-is-not-very-useful-using-scale_y_continuous-to-hide",
     "title": "Hands-on Exercise 1",
     "section": "Y-axis is not very useful, using scale_y_continuous() to hide",
-    "text": "Y-axis is not very useful, using scale_y_continuous() to hide\n\nggplot(data=exam_data, \n       aes(x = MATHS)) +\n  geom_dotplot(binwidth=2.5,    #group scores into bins that are 2.5 units wide\n               dotsize = 0.5) +      #dotsize=0.5 is half of default size\n   scale_y_continuous(NULL,  #Hide the y-axis title\n                     breaks = NULL)   #Hide Y-axis scales\n\n\n\n\n\n\n\n\n#Plotting a simple histogram\n\nggplot(data=exam_data,\n       aes(x=MATHS))+\n  geom_histogram()\n\n`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.\n\n\n\n\n\n\n\n\n\n\nModifying geometric object by changing geom (add fill=“color”)\n\nggplot(data=exam_data, \n       aes(x= MATHS)) +\n  geom_histogram(bins=20,            \n                 color=\"black\",      \n                 fill=\"light blue\")  \n\n\n\n\n\n\n\n\n\n\nModifying geometric object by changing aes(add fill =“sub-group”)\n\nggplot(data=exam_data, \n       aes(x= MATHS, \n           fill = GENDER)) +\n  geom_histogram(bins=20, \n                 color=\"grey30\")\n\n\n\n\n\n\n\n\n\nggplot(data=exam_data, \n       aes(x= MATHS, \n           color= GENDER)) +\n  geom_histogram(bins=20, \n                 color=\"grey30\")\n\n\n\n\n\n\n\n\nNote：different between using fill and colour\nfill controls inside fill [Works on ： bar charts, histograms，boxplots etc.] colour（color）controls border/outline color [Works on ： Line plots, scatter plots，edges etc.]"
+    "text": "Y-axis is not very useful, using scale_y_continuous() to hide\n\nggplot(data=exam_data, \n       aes(x = MATHS)) +\n  geom_dotplot(binwidth=2.5,    #group scores into bins that are 2.5 units wide\n               dotsize = 0.5) +      #dotsize=0.5 is half of default size\n   scale_y_continuous(NULL,  #Hide the y-axis title\n                     breaks = NULL)   #Hide Y-axis scales"
   },
   {
     "objectID": "Hands-on_EX/Hands-on_Ex01/Hands-on_Ex01.html#add-means-value-by-stat_summary-geom-method",
     "href": "Hands-on_EX/Hands-on_Ex01/Hands-on_Ex01.html#add-means-value-by-stat_summary-geom-method",
     "title": "Hands-on Exercise 1",
     "section": "Add means value by stat_summary() / geom() method",
-    "text": "Add means value by stat_summary() / geom() method\n\nggplot(data=exam_data, \n       aes(y = MATHS, x= GENDER)) +\n  geom_boxplot() +\n  stat_summary(geom = \"point\",       \n               fun = \"mean\",         \n               colour =\"red\",        \n               size=4)               \n\n\n\n\n\n\n\n\n\nggplot(data=exam_data, \n       aes(y = MATHS, x= GENDER)) +\n  geom_boxplot() +\n  geom_point(stat=\"summary\",    #draw it as a dot     \n             fun=\"mean\",        #the value shown is the mean  \n             colour=\"red\",       # the dot colour   \n             size=4)          # the dot size\n\n\n\n\n\n\n\n\nAdding a best fit curve on a scatterplot （geom_smooth() method)\n\nggplot(data=exam_data, \n       aes(x= MATHS, y=ENGLISH)) +\n  geom_point() \n\n\n\n\n\n\n\nggplot(data=exam_data, \n       aes(x= MATHS, y=ENGLISH)) +\n  geom_point() +\n  geom_smooth(size=0.5)\n\nWarning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.\nℹ Please use `linewidth` instead.\n\n\n`geom_smooth()` using method = 'loess' and formula = 'y ~ x'"
+    "text": "Add means value by stat_summary() / geom() method\n\nggplot(data=exam_data, \n       aes(y = MATHS, x= GENDER)) +\n  geom_boxplot() +\n  stat_summary(geom = \"point\",       \n               fun = \"mean\",         \n               colour =\"red\",        \n               size=4)               \n\n\n\n\n\n\n\n\n\nggplot(data=exam_data, \n       aes(y = MATHS, x= GENDER)) +\n  geom_boxplot() +\n  geom_point(stat=\"summary\",    #draw it as a dot     \n             fun=\"mean\",        #the value shown is the mean  \n             colour=\"red\",       # the dot colour   \n             size=4)          # the dot size"
   },
   {
     "objectID": "Hands-on_EX/Hands-on_Ex01/Hands-on_Ex01.html#using-notch-to-visually-compare-the-media",
@@ -68,5 +68,33 @@
     "title": "Hands-on Exercise 1",
     "section": "Essential Grammatical Elements in ggplot2:",
     "text": "Essential Grammatical Elements in ggplot2:\n\nstat stat_() function and override the default geom\ngeom_() function and override the default stat"
+  },
+  {
+    "objectID": "Hands-on_EX/Hands-on_Ex01/Hands-on_Ex01.html#working-with-facet_wrap",
+    "href": "Hands-on_EX/Hands-on_Ex01/Hands-on_Ex01.html#working-with-facet_wrap",
+    "title": "Hands-on Exercise 1",
+    "section": "Working with facet_wrap() :",
+    "text": "Working with facet_wrap() :\n\nggplot(data=exam_data, \n       aes(x= MATHS)) +\n  geom_histogram(bins=20) +\n    facet_wrap(~ CLASS)"
+  },
+  {
+    "objectID": "Hands-on_EX/Hands-on_Ex01/Hands-on_Ex01.html#working-with-facet_grid",
+    "href": "Hands-on_EX/Hands-on_Ex01/Hands-on_Ex01.html#working-with-facet_grid",
+    "title": "Hands-on Exercise 1",
+    "section": "Working with facet_grid()",
+    "text": "Working with facet_grid()\n\nggplot(data=exam_data, \n       aes(x= MATHS)) +\n  geom_histogram(bins=20) +\n    facet_grid(~ CLASS)"
+  },
+  {
+    "objectID": "Hands-on_EX/Hands-on_Ex01/Hands-on_Ex01.html#for-vertical-version",
+    "href": "Hands-on_EX/Hands-on_Ex01/Hands-on_Ex01.html#for-vertical-version",
+    "title": "Hands-on Exercise 1",
+    "section": "For vertical version",
+    "text": "For vertical version\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar()"
+  },
+  {
+    "objectID": "Hands-on_EX/Hands-on_Ex01/Hands-on_Ex01.html#using-coord_filp-change-to-horizontal-version",
+    "href": "Hands-on_EX/Hands-on_Ex01/Hands-on_Ex01.html#using-coord_filp-change-to-horizontal-version",
+    "title": "Hands-on Exercise 1",
+    "section": "Using coord_filp() change to horizontal version",
+    "text": "Using coord_filp() change to horizontal version\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar() +\n  coord_flip()"
   }
 ]

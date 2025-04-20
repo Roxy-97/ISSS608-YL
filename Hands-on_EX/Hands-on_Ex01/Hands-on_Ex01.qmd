@@ -66,7 +66,7 @@ ggplot(data=exam_data,
 
 ```
 
-#Plotting a simple histogram
+# Plotting a simple histogram
 
 ```{r}
 ggplot(data=exam_data,
@@ -104,9 +104,11 @@ ggplot(data=exam_data,
                  color="grey30")
 ```
 
-Note：different between using fill and colour
+### Note：different between using fill and colour
 
-fill controls inside fill \[Works on ： bar charts, histograms，boxplots etc.\] colour（color）controls border/outline color \[Works on ： Line plots, scatter plots，edges etc.\]
+-   fill controls inside fill \[Works on ： bar charts, histograms，boxplots etc.\]
+
+-   colour（color）controls border/outline color \[Works on ： Line plots, scatter plots， edges etc.\]
 
 # Plotting a simple density
 
@@ -142,7 +144,7 @@ ggplot(data=exam_data,
 
 ```
 
-## Using notch to visually compare the media 
+## Using notch to visually compare the media
 
 -   if not overlap, means the medians are significantly different
 
@@ -194,7 +196,7 @@ ggplot(data=exam_data,
              size = 0.5)        
 ```
 
-## Essential Grammatical Elements in ggplot2: 
+## Essential Grammatical Elements in ggplot2:
 
 -   stat stat\_() function and override the default geom
 
@@ -225,10 +227,7 @@ ggplot(data=exam_data,
 
 ```
 
-Adding a best fit curve on a scatterplot （geom_smooth() method)
-
-
-
+# Adding a best fit curve on a scatterplot （geom_smooth() method)
 
 ```{r}
 ggplot(data=exam_data, 
@@ -242,4 +241,115 @@ ggplot(data=exam_data,
 
 ```
 
+### Default smoothing method
 
+```{r}
+ggplot(data=exam_data, 
+       aes(x= MATHS, 
+           y=ENGLISH)) +
+  geom_point() +
+  geom_smooth(method=lm, 
+              linewidth=0.5)
+
+```
+
+# Essential Grammatical Elements in ggplot2: Facets
+
+Generates small multiples graphics using
+
+-    facet_grid()
+
+-   facet_wrap()
+
+## Working with facet_wrap() :
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x= MATHS)) +
+  geom_histogram(bins=20) +
+    facet_wrap(~ CLASS)
+
+```
+
+## Working with facet_grid()
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x= MATHS)) +
+  geom_histogram(bins=20) +
+    facet_grid(~ CLASS)
+
+
+```
+
+# Essential Grammatical Elements in ggplot2: Coordinates
+
+## For vertical version
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x=RACE)) +
+  geom_bar()
+
+```
+
+## Using coord_filp() change to horizontal version
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x=RACE)) +
+  geom_bar() +
+  coord_flip()
+```
+
+# Changing the y- and x-axis range
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x= MATHS, y=ENGLISH)) +
+  geom_point() +
+  geom_smooth(method=lm, size=0.5)
+
+ggplot(data=exam_data, 
+       aes(x= MATHS, y=ENGLISH)) +
+  geom_point() +
+  geom_smooth(method=lm, 
+              size=0.5) +  
+  coord_cartesian(xlim=c(0,100),
+                  ylim=c(0,100))
+```
+
+# Essential Grammatical Elements in ggplot2:themes 
+
+Built-in themes include:
+
+-   \- theme_gray() (default)
+
+-   \- theme_bw()
+
+-   \- theme_classic()
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x=RACE)) +
+  geom_bar() +
+  coord_flip() +
+  theme_gray()
+
+```
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x=RACE)) +
+  geom_bar() +
+  coord_flip() +
+  theme_classic()
+```
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x=RACE)) +
+  geom_bar() +
+  coord_flip() +
+  theme_minimal()
+```
