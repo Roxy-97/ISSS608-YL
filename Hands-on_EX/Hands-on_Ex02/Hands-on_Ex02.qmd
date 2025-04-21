@@ -1,0 +1,185 @@
+---
+title: "Hands-on Exercise 2"
+author: "Yang Lu"
+---
+
+
+Lesson 2: Designing Graphs to Enlighten
+
+
+
+```{r}
+pacman::p_load(tidyverse)
+```
+
+Installing and loading all required libraries
+
+```{r}
+pacman::p_load(ggrepel, patchwork, 
+               ggthemes, hrbrthemes,
+               tidyverse) 
+```
+
+Importing data 
+
+```{r}
+exam_data <- read_csv("Exam_data.csv")
+```
+
+
+2.3 Beyond ggplot2 Annotation: ggrepel
+
+::: panel-tabset
+
+##overlapping text
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x= MATHS, 
+           y=ENGLISH)) +
+  geom_point() +
+  geom_smooth(method=lm, 
+              size=0.5) +  
+  geom_label(aes(label = ID), 
+             hjust = .5, 
+             vjust = -.5) +
+  coord_cartesian(xlim=c(0,100),
+                  ylim=c(0,100)) +
+  ggtitle("English scores versus Maths scores for Primary 3")
+
+```
+
+## Working with ggrepel
+
+applying geom_Label_repel ：Aim of ggrepel is to repel overlapping text 
+```{r}
+ggplot(data=exam_data, 
+       aes(x= MATHS, 
+           y=ENGLISH)) +
+  geom_point() +
+  geom_smooth(method=lm, 
+              size=0.5) +  
+  geom_label_repel(aes(label = ID), 
+                   fontface = "bold") +
+  coord_cartesian(xlim=c(0,100),
+                  ylim=c(0,100)) +
+  ggtitle("English scores versus Maths scores for Primary 3")
+
+
+```
+:::
+
+2.4 Beyond ggplot2 Themes
+comments:
+ [Themes](https://ggplot2.tidyverse.org/reference/ggtheme.html)
+
+::: panel-tabset
+
+##theme_gray()
+
+```{r}
+ggplot(data=exam_data, 
+             aes(x = MATHS)) +
+  geom_histogram(bins=20,   #The data is split into 20 bars 
+                 boundary = 100,
+                 color="grey25", 
+                 fill="grey90") +
+  theme_gray() +
+  ggtitle("Distribution of Maths scores") 
+
+```
+## theme_bw()
+
+```{r}
+ggplot(data=exam_data, 
+             aes(x = MATHS)) +
+  geom_histogram(bins=20,   #The data is split into 20 bars 
+                 boundary = 100,
+                 color="grey25", 
+                 fill="grey90") +
+  theme_bw() +
+  ggtitle("Distribution of Maths scores") 
+
+```
+
+## theme_classic()
+```{r}
+ggplot(data=exam_data, 
+             aes(x = MATHS)) +
+  geom_histogram(bins=20,   #The data is split into 20 bars 
+                 boundary = 100,
+                 color="grey25", 
+                 fill="grey90") +
+  theme_classic() +
+  ggtitle("Distribution of Maths scores") 
+
+```
+
+## theme_dark()
+```{r}
+ggplot(data=exam_data, 
+             aes(x = MATHS)) +
+  geom_histogram(bins=20,   #The data is split into 20 bars 
+                 boundary = 100,
+                 color="grey25", 
+                 fill="grey90") +
+  theme_dark() +
+  ggtitle("Distribution of Maths scores")
+
+```
+
+
+## theme_light()
+```{r}
+ggplot(data=exam_data, 
+             aes(x = MATHS)) +
+  geom_histogram(bins=20,   #The data is split into 20 bars 
+                 boundary = 100,
+                 color="grey25", 
+                 fill="grey90") +
+  theme_light() +
+  ggtitle("Distribution of Maths scores")
+```
+
+## theme_linedraw() 
+
+```{r}
+ggplot(data=exam_data, 
+             aes(x = MATHS)) +
+  geom_histogram(bins=20,   #The data is split into 20 bars 
+                 boundary = 100,
+                 color="grey25", 
+                 fill="grey90") +
+  theme_linedraw() +
+  ggtitle("Distribution of Maths scores")
+```
+
+
+## theme_minimal()
+
+```{r}
+ggplot(data=exam_data, 
+             aes(x = MATHS)) +
+  geom_histogram(bins=20,   #The data is split into 20 bars 
+                 boundary = 100,
+                 color="grey25", 
+                 fill="grey90") +
+  theme_minimal() +
+  ggtitle("Distribution of Maths scores")
+```
+
+
+## theme_void()
+
+```{r}
+ggplot(data=exam_data, 
+             aes(x = MATHS)) +
+  geom_histogram(bins=20,   #The data is split into 20 bars 
+                 boundary = 100,
+                 color="grey25", 
+                 fill="grey90") +
+  theme_void() +
+  ggtitle("Distribution of Maths scores")
+```
+
+

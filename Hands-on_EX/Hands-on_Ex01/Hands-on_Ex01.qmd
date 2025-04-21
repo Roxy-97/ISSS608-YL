@@ -257,7 +257,7 @@ ggplot(data=exam_data,
 
 Generates small multiples graphics using
 
--    facet_grid()
+-   facet_grid()
 
 -   facet_wrap()
 
@@ -304,6 +304,8 @@ ggplot(data=exam_data,
 
 # Changing the y- and x-axis range
 
+To fixed both x-axia and y-axia range from 0-100
+
 ```{r}
 ggplot(data=exam_data, 
        aes(x= MATHS, y=ENGLISH)) +
@@ -319,7 +321,7 @@ ggplot(data=exam_data,
                   ylim=c(0,100))
 ```
 
-# Essential Grammatical Elements in ggplot2:themes 
+# Essential Grammatical Elements in ggplot2:themes
 
 Built-in themes include:
 
@@ -353,4 +355,3 @@ ggplot(data=exam_data,
   coord_flip() +
   theme_minimal()
 ```
-
