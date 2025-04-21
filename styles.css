@@ -96,3 +96,23 @@ th {
   border-color: #e17055;
   background-color: #fff5f5;
 }
+/* light theme */
+pre {
+  background-color: #1e1e1e !important; /* 深背景 */
+  color: #f8f8f2 !important;            /* 浅字体 */
+  padding: 12px;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-size: 0.95em;
+  font-family: Consolas, Monaco, 'Courier New', monospace;
+}
+
+/* inline code  */
+code {
+  background-color: #e8e8e8 !important;
+  color: #d6336c !important;
+  padding: 2px 5px;
+  border-radius: 4px;
+  font-size: 0.95em;
+  font-weight: 500;
+}
