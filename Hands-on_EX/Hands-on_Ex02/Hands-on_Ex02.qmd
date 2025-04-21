@@ -3,6 +3,7 @@ title: "Hands-on Exercise 2"
 author: "Yang Lu"
 ---
 
+
 # Lesson 2: Designing Graphs to Enlighten
 
 ```{r}
