@@ -10,9 +10,9 @@ website:
         - text: "Hands-on Exercise 1"
           href: "Hands-on_EX/Hands-on_Ex01/Hands-on_Ex01.html"
     right: 
-    - href: index.qmd
-      text: Home
-    - about.qmd
+      - href: index.qmd
+        text: Home
+      - about.qmd
 
 format:
   html:
