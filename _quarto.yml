@@ -19,9 +19,10 @@ website:
 
 format:
   html:
-    theme: cosmo
+    theme: sandstone
     css: styles.css
     toc: true
+
 
 editor: visual
 
