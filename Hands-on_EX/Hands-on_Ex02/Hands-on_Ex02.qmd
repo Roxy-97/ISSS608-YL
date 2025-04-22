@@ -1,7 +1,7 @@
 ---
 title: "Hands-on Exercise 2"
 author: "Yang Lu"
-Modified: "23rd April 2025"
+date: "23rd April 2025"
 ---
 
 # Lesson 2: Designing Graphs to Enlighten
