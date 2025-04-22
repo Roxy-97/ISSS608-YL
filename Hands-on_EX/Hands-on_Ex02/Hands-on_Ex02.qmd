@@ -6,11 +6,23 @@ date: "23 April 2025"
 
 # Lesson 2: Designing Graphs to Enlighten
 
+## **2.1 Overview**
+
+ggplot2 Extensions for Enhanced Graphics
+
+**ggrepel**: Helps control the placement of text labels to avoid overlap, making annotations clearer.
+
+**ggthemes & hrbrthemes**: Provide professional and publication-ready themes to enhance the visual appeal of your plots.
+
+**patchwork**: Allows to easily combine multiple ggplot2 graphs into composite figures for clearer storytelling.
+
+## **2.2 Getting started**
+
+### **2.2.1** Installing and loading all required libraries
+
 ```{r}
 pacman::p_load(tidyverse)
 ```
-
-## Installing and loading all required libraries
 
 ```{r}
 pacman::p_load(ggrepel, patchwork, 
@@ -18,15 +30,15 @@ pacman::p_load(ggrepel, patchwork,
                tidyverse) 
 ```
 
-## Importing data
+### **2.2.2** Importing data
 
 ```{r}
 exam_data <- read_csv("Exam_data.csv")
 ```
 
-# 2.3 Beyond ggplot2 Annotation: ggrepel
+## 2.3 Beyond ggplot2 Annotation: ggrepel
 
-### As default \_overlapping text
+#### As default \_overlapping text
 
 ```{r}
 ggplot(data=exam_data, 
@@ -44,7 +56,7 @@ ggplot(data=exam_data,
 
 ```
 
-### Working with ggrepel
+### **2.3.1 Working with ggrepel**
 
 #### applying **geom_Label_repel** ：Aim of ggrepel is to repel overlapping text
 
@@ -64,7 +76,7 @@ ggplot(data=exam_data,
 
 ```
 
-# 2.4 Beyond ggplot2 Themes
+## 2.4 Beyond ggplot2 Themes
 
 [Themes](https://ggplot2.tidyverse.org/reference/ggtheme.html)
 
@@ -178,9 +190,9 @@ ggplot(data=exam_data,
 ```
 :::
 
-## 2.4.1 Working with ggtheme package
+### 2.4.1 Working with ggtheme package
 
-### Using Economist theme
+#### Using Economist theme
 
 ```{r}
 ggplot(data=exam_data, 
@@ -198,7 +210,7 @@ It also provides some extra geoms and scales for ‘ggplot2’. Consult this vig
 
 [this vignette](https://yutannihilation.github.io/allYourFigureAreBelongToUs/ggthemes/)
 
-## 2.4.2 Working with hrbthems package
+### 2.4.2 Working with hrbthems package
 
 provides a base theme that focuses on typographic elements, including where various labels are placed as well as the fonts that are used.
 
@@ -227,9 +239,9 @@ ggplot(data=exam_data,
 
 ```
 
-# 2.5 Beyond Single Graph
+## 2.5 Beyond Single Graph
 
-### Maths scores as p1
+#### Maths scores as p1
 
 ```{r}
 p1 <- ggplot(data=exam_data, 
@@ -244,7 +256,7 @@ p1 <- ggplot(data=exam_data,
 print(p1) # the graphic save in p1, using print(p1) or directly write p1 to show 
 ```
 
-### English scores as p2
+#### English scores as p2
 
 ```{r}
 p2 <- ggplot(data=exam_data, 
@@ -258,7 +270,7 @@ p2 <- ggplot(data=exam_data,
 print(p2)
 ```
 
-### Drawing a scatterplot for English score versus Maths score
+#### Drawing a scatterplot for English score versus Maths score as p3
 
 ```{r}
 p3 <- ggplot(data=exam_data, 
@@ -274,6 +286,82 @@ p3 <- ggplot(data=exam_data,
 p3
 ```
 
-## 2.5.1 Creating Composite Graphics: pathwork methods
+### 2.5.1 Creating Composite Graphics: pathwork methods
 
-For combining several graphs using
+[grid.arrange()](https://cran.r-project.org/web/packages/gridExtra/vignettes/arrangeGrob.html)
+
+```{r}
+library(gridExtra) # install package
+
+grid.arrange(p1, p2,p3,ncol=2)  
+
+```
+
+[plot_grid()](https://wilkelab.org/cowplot/reference/plot_grid.html)
+
+```{r}
+library(cowplot) 
+
+plot_grid(p1, p2,p3)  
+
+```
+
+### 2.5.2 For combining two ggplot2 graphs - using plus sign+
+
+```{r}
+p1+p2
+
+```
+
+### 2.5.3 Combining three ggplot2 graphs 
+
+-   “/” operator to stack two ggplot2 graphs
+
+-    “\|” operator to place the plots beside each other
+
+-   “()” operator the define the sequence of the plotting.
+
+```{r}
+library(patchwork)
+(p1/p2) | p3
+
+```
+
+### 2.5.4 Creating a composite figure with tag
+
+```{r}
+((p1 / p2) | p3) + 
+  plot_annotation(tag_levels = 'I')
+```
+
+### **2.5.5 Creating figure with insert** - using inset_element()
+
+[inset_element()](https://patchwork.data-imaginist.com/reference/inset_element.html)
+
+```{r}
+p3 + inset_element(p2, 
+                   left = 0.02, 
+                   bottom = 0.7, 
+                   right = 0.5, 
+                   top = 1)
+```
+
+**Insert two elements**
+
+```{r}
+p3 +
+  inset_element(p1,
+                left = 0.05, bottom = 0.55,
+                right = 0.45, top = 0.95) +
+  inset_element(p2,
+                left = 0.55, bottom = 0.05,
+                right = 0.95, top = 0.45)
+                                           
+```
+
+### 2.5.6 Creating a composite figure by using patchwork and ggtheme
+
+```{r}
+patchwork <- (p1 / p2) | p3
+patchwork & theme_economist()
+```
