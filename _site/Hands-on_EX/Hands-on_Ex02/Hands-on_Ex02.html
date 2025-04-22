@@ -174,7 +174,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#as-default-_overlapping-text" id="toc-as-default-_overlapping-text" class="nav-link" data-scroll-target="#as-default-_overlapping-text">As default _overlapping text</a></li>
   <li><a href="#working-with-ggrepel" id="toc-working-with-ggrepel" class="nav-link" data-scroll-target="#working-with-ggrepel">Working with ggrepel</a></li>
   </ul></li>
-  <li><a href="#beyond-ggplot2-themes" id="toc-beyond-ggplot2-themes" class="nav-link" data-scroll-target="#beyond-ggplot2-themes">2.4 Beyond ggplot2 Themes</a></li>
+  <li><a href="#beyond-ggplot2-themes" id="toc-beyond-ggplot2-themes" class="nav-link" data-scroll-target="#beyond-ggplot2-themes">2.4 Beyond ggplot2 Themes</a>
+  <ul class="collapse">
+  <li><a href="#working-with-ggtheme-package" id="toc-working-with-ggtheme-package" class="nav-link" data-scroll-target="#working-with-ggtheme-package">2.4.1 Working with ggtheme package</a>
+  <ul class="collapse">
+  <li><a href="#using-economist-theme" id="toc-using-economist-theme" class="nav-link" data-scroll-target="#using-economist-theme">Using Economist theme</a></li>
+  </ul></li>
+  <li><a href="#working-with-hrbthems-package" id="toc-working-with-hrbthems-package" class="nav-link" data-scroll-target="#working-with-hrbthems-package">2.4.2 Working with hrbthems package</a></li>
+  </ul></li>
+  <li><a href="#beyond-single-graph" id="toc-beyond-single-graph" class="nav-link" data-scroll-target="#beyond-single-graph">2.5 Beyond Single Graph</a>
+  <ul class="collapse">
+  <li><a href="#maths-scores-as-p1" id="toc-maths-scores-as-p1" class="nav-link" data-scroll-target="#maths-scores-as-p1">Maths scores as p1</a></li>
+  <li><a href="#english-scores-as-p2" id="toc-english-scores-as-p2" class="nav-link" data-scroll-target="#english-scores-as-p2">English scores as p2</a></li>
+  <li><a href="#drawing-a-scatterplot-for-english-score-versus-maths-score" id="toc-drawing-a-scatterplot-for-english-score-versus-maths-score" class="nav-link" data-scroll-target="#drawing-a-scatterplot-for-english-score-versus-maths-score">Drawing a scatterplot for English score versus Maths score</a></li>
+  <li><a href="#creating-composite-graphics-pathwork-methods" id="toc-creating-composite-graphics-pathwork-methods" class="nav-link" data-scroll-target="#creating-composite-graphics-pathwork-methods">2.5.1 Creating Composite Graphics: pathwork methods</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -444,8 +458,10 @@ increasing max.overlaps</code></pre>
 </div>
 </div>
 </div>
-<p>2.4.1 Working with ggtheme package</p>
-<p>Using Economist theme</p>
+<section id="working-with-ggtheme-package" class="level2">
+<h2 class="anchored" data-anchor-id="working-with-ggtheme-package">2.4.1 Working with ggtheme package</h2>
+<section id="using-economist-theme" class="level3">
+<h3 class="anchored" data-anchor-id="using-economist-theme">Using Economist theme</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>exam_data, </span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">x =</span> MATHS)) <span class="sc">+</span></span>
@@ -465,7 +481,10 @@ increasing max.overlaps</code></pre>
 </div>
 <p>It also provides some extra geoms and scales for ‘ggplot2’. Consult this vignette to learn more.</p>
 <p><a href="https://yutannihilation.github.io/allYourFigureAreBelongToUs/ggthemes/">this vignette</a></p>
-<p>2.4.2 Working with hrbthems package</p>
+</section>
+</section>
+<section id="working-with-hrbthems-package" class="level2">
+<h2 class="anchored" data-anchor-id="working-with-hrbthems-package">2.4.2 Working with hrbthems package</h2>
 <p>provides a base theme that focuses on typographic elements, including where various labels are placed as well as the fonts that are used.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>exam_data, </span>
@@ -551,8 +570,12 @@ font family not found in Windows font database</code></pre>
 </div>
 </div>
 </div>
-<p>2.5 Beyond Single Graph</p>
-<p>Maths scores as p1</p>
+</section>
+</section>
+<section id="beyond-single-graph" class="level1">
+<h1>2.5 Beyond Single Graph</h1>
+<section id="maths-scores-as-p1" class="level3">
+<h3 class="anchored" data-anchor-id="maths-scores-as-p1">Maths scores as p1</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data=</span>exam_data, </span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">x =</span> MATHS)) <span class="sc">+</span></span>
@@ -572,7 +595,9 @@ font family not found in Windows font database</code></pre>
 </div>
 </div>
 </div>
-<p>English scores as p2</p>
+</section>
+<section id="english-scores-as-p2" class="level3">
+<h3 class="anchored" data-anchor-id="english-scores-as-p2">English scores as p2</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data=</span>exam_data, </span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">x =</span> ENGLISH)) <span class="sc">+</span></span>
@@ -591,7 +616,9 @@ font family not found in Windows font database</code></pre>
 </div>
 </div>
 </div>
-<p>Drawing a scatterplot for English score versus Maths score</p>
+</section>
+<section id="drawing-a-scatterplot-for-english-score-versus-maths-score" class="level3">
+<h3 class="anchored" data-anchor-id="drawing-a-scatterplot-for-english-score-versus-maths-score">Drawing a scatterplot for English score versus Maths score</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data=</span>exam_data, </span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">x=</span> MATHS, </span>
@@ -615,8 +642,13 @@ font family not found in Windows font database</code></pre>
 </div>
 </div>
 </div>
+</section>
+<section id="creating-composite-graphics-pathwork-methods" class="level2">
+<h2 class="anchored" data-anchor-id="creating-composite-graphics-pathwork-methods">2.5.1 Creating Composite Graphics: pathwork methods</h2>
+<p>For combining several graphs using</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
