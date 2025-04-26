@@ -3,6 +3,13 @@ title: "Hands-on Exercise 1"
 author: "Yang Lu"
 date: "19 April 2025"
 date-modified: "last-modified"
+format: html
+editor: visual
+execute: 
+  eval: true  # running the code
+  echo: true  # display the code
+  warning: false # closed the warning message
+  freeze: true 
 ---
 
 # Getting Started

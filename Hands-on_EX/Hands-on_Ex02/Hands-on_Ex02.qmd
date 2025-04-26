@@ -3,6 +3,13 @@ title: "Hands-on Exercise 2"
 author: "Yang Lu"
 date: "23 April 2025"
 date-modified: "last-modified"
+format: html
+editor: visual
+execute: 
+  eval: true  # running the code
+  echo: true  # display the code
+  warning: false # closed the warning message
+  freeze: true 
 ---
 
 # Lesson 2: Designing Graphs to Enlighten
