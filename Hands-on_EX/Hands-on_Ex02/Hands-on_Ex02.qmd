@@ -363,6 +363,8 @@ p3 +
 ### 2.5.6 Creating a composite figure by using patchwork and ggtheme
 
 ```{r}
-patchwork <- (p1 / p2) | p3
+#| fig-width: 18
+#| fig-height: 10
+patchwork <- (p1 / p2) | p3 
 patchwork & theme_economist()
 ```
