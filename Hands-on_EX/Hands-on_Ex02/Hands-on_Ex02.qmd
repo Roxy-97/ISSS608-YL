@@ -2,6 +2,7 @@
 title: "Hands-on Exercise 2"
 author: "Yang Lu"
 date: "23 April 2025"
+date-modified: "last-modified"
 ---
 
 # Lesson 2: Designing Graphs to Enlighten
@@ -313,11 +314,11 @@ p1+p2
 
 ```
 
-### 2.5.3 Combining three ggplot2 graphs 
+### 2.5.3 Combining three ggplot2 graphs
 
 -   “/” operator to stack two ggplot2 graphs
 
--    “\|” operator to place the plots beside each other
+-   “\|” operator to place the plots beside each other
 
 -   “()” operator the define the sequence of the plotting.
 
