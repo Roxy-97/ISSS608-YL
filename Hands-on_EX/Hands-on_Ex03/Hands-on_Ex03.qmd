@@ -1,0 +1,73 @@
+---
+title: "Hands-on Exercise 3"
+author: "Yang Lu"
+date: "30 April 2025"
+date-modified: "last-modified"
+format: html
+editor: visual
+execute: 
+  eval: true  
+  echo: true  
+  warning: false 
+  freeze: true 
+---
+
+# Lesson 3: Programming Interactive Data Visualisation with R
+
+## **3.1 Learning Outcome**
+
+learning objective: learning how to create interactive data visualisation using functions provided by [**ggiraph**](https://davidgohel.github.io/ggiraph/) and [**plotlyr**](https://plotly.com/r/)packages.
+
+## **3.2 Getting Started**
+
+install the R packages
+
+```{r}
+pacman::p_load(ggiraph, plotly, 
+               patchwork, DT, tidyverse) 
+```
+3.3 Importing Data
+
+```{r}
+
+exam_data <- read_csv("Exam_data.csv")
+```
+
+3.4 Interactive Data Visualisation - [ggiraph](https://davidgohel.github.io/ggiraph/index.html) methods
+![ggiraph logo](ggiraph.png){fig-align="center" width="60%"}
+
+
+Interactive is made with ggplot geometries that can understand three arguments:
+
+Tooltip: a column of data-sets that contain tooltips to be displayed when the mouse is over elements.
+Onclick: a column of data-sets that contain a JavaScript function to be executed when elements are clicked.
+Data_id: a column of data-sets that contain an id to be associated with elements.
+
+
+Tooltip effect with tooltip aesthetic
+
+```{r}
+p <- ggplot(data=exam_data, 
+       aes(x = MATHS)) +
+  geom_dotplot_interactive(
+    aes(tooltip = ID),
+    stackgroups = TRUE, 
+    binwidth = 1, 
+    method = "histodot") +
+  scale_y_continuous(NULL, 
+                     breaks = NULL)
+girafe(
+  ggobj = p,
+  width_svg = 6,
+  height_svg = 6*0.618
+)
+```
+
+
+
+
+
+
+
+
+
