@@ -14,12 +14,12 @@ website:
         - text: "Hands-on Exercise 3"
           href: "Hands-on_EX/Hands-on_Ex03/Hands-on_Ex03.html"
         - text: "Hands-on Exercise 4"
-          
-   - text: "Take Home Exercise"
+     
+  - text: "Take-home Exercise"
       menu:  
-        - text: "Take Home Exercise 1"
-        - text: "Take Home Exercise 2"
-        - text: "Take Home Exercise 3"
+        - text: "Take-home Exercise 1"
+        - text: "Take-home Exercise 2"
+        - text: "Take-home Exercise 3"
     
           
           
