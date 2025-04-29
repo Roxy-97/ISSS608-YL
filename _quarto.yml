@@ -5,14 +5,22 @@ website:
   title: "ISSS608-YL"
   navbar:
     left:
-    - text: "Hands-on Exercise"
-      menu: 
+   - text: "Hands-on Exercise"
+      menu:  
         - text: "Hands-on Exercise 1"
           href: "Hands-on_EX/Hands-on_Ex01/Hands-on_Ex01.html"
         - text: "Hands-on Exercise 2"
           href: "Hands-on_EX/Hands-on_Ex02/Hands-on_Ex02.html"
         - text: "Hands-on Exercise 3"
           href: "Hands-on_EX/Hands-on_Ex03/Hands-on_Ex03.html"
+        - text: "Hands-on Exercise 4"
+          
+   - text: "Take Home Exercise"
+      menu:  
+        - text: "Take Home Exercise 1"
+        - text: "Take Home Exercise 2"
+        - text: "Take Home Exercise 3"
+    
           
           
     right: 
