@@ -5,28 +5,30 @@ website:
   title: "ISSS608-YL"
   navbar:
     left:
-   - text: "Hands-on Exercise"
-      menu:  
-        - text: "Hands-on Exercise 1"
-          href: "Hands-on_EX/Hands-on_Ex01/Hands-on_Ex01.html"
-        - text: "Hands-on Exercise 2"
-          href: "Hands-on_EX/Hands-on_Ex02/Hands-on_Ex02.html"
-        - text: "Hands-on Exercise 3"
-          href: "Hands-on_EX/Hands-on_Ex03/Hands-on_Ex03.html"
-        - text: "Hands-on Exercise 4"
-     
-  - text: "Take-home Exercise"
-      menu:  
-        - text: "Take-home Exercise 1"
-        - text: "Take-home Exercise 2"
-        - text: "Take-home Exercise 3"
-    
-          
-          
-    right: 
+      - text: "Hands-on Exercise"
+        menu:
+          - text: "Hands-on Exercise 1"
+            href: "Hands-on_EX/Hands-on_Ex01/Hands-on_Ex01.html"
+          - text: "Hands-on Exercise 2"
+            href: "Hands-on_EX/Hands-on_Ex02/Hands-on_Ex02.html"
+          - text: "Hands-on Exercise 3A"
+            href: "Hands-on_EX/Hands-on_Ex03/Hands-on_Ex03.html"
+          - text: "Hands-on Exercise 3B"
+            href: "Hands-on_EX/Hands-on_Ex04/Hands-on_Ex04.html"
+      - text: "Take-home Exercise"
+        menu:
+          - text: "Take-home Exercise 1"
+            href: "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html"
+          - text: "Take-home Exercise 2"
+            href: "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html"
+          - text: "Take-home Exercise 3"
+            href: "Take-home_Ex/Take-home_Ex03/Take-home_Ex03.html"
+
+    right:
       - href: index.qmd
-        text: Home
-      - about.qmd
+        text: "Home"
+      - href: about.qmd
+        text: "About"
 
 format:
   html:
@@ -34,6 +36,4 @@ format:
     css: styles.css
     toc: true
 
-
 editor: visual
-

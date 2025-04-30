@@ -1,0 +1,19 @@
+---
+title: "Hands-on Exercise 3B"
+author: "Yang Lu"
+date: "30 April 2025"
+date-modified: "last-modified"
+format: html
+editor: visual
+execute: 
+  eval: true  
+  echo: true  
+  warning: false 
+  freeze: true 
+---
+
+# Lesson 4: **Programming Animated Statistical Graphics with R**
+
+## **4.1 Overview**
+
+When telling a visually-driven data story, animated graphics tends to attract the interest of the audience and make deeper impression than static graphics. In this hands-on exercise, you will learn how to create animated data visualisation by using **gganimate** and **plotly r** packages. At the same time, you will also learn how to (i) reshape data by using **tidyr** package, and (ii) process, wrangle and transform data by using **dplyr** package.
