@@ -1,0 +1,78 @@
+---
+title: "Take-home Exercise 01"
+author: "Yang Lu"
+date: "3 May 2025"
+date-modified: "last-modified"
+format: html
+editor: visual
+execute: 
+  eval: true  
+  echo: true  
+  warning: false 
+  freeze: true 
+---
+
+## Overview
+
+------------------------------------------------------------------------
+
+## **Setting the scene**
+
+A local online media company that publishes daily content on digital platforms is planning to release an article on **demographic structures and distribution of Singapore in 2024**.
+
+## **About Data**
+
+I will use the data for this task from the [Singapore Residents by Planning Area/Subzone, Single Year of Age and Sex, June 2024' dataset, published by the Department of Statistics, Singapore (DOS)](https://www.singstat.gov.sg/find-data/search-by-theme/population/geographic-distribution/latest-data)
+
+![](images/clipboard-2786007129.png){width="581"}
+
+## **My Task**
+
+As the graphical editor of the media company, my task is to design and prepare up to **three** data visualisations to support an upcoming article on Singapore’s demographic structure and distribution in 2024.
+
+## Getting started
+
+------------------------------------------------------------------------
+
+### Load packages
+
+Firstly, write below code chunk to install and check the R packages installed.
+
+-   `tidyverse` → Core data wrangling & plotting (`readr`, `dplyr`, `ggplot2`, etc.)
+
+-   `gapminder` → Sample dataset & example pipeline for animated bubble plots.
+
+-   `ggiraph` → Make ggplot2 charts interactive (tooltips, hover/click).
+
+-   `plotly` → Convert plots into fully interactive JavaScript charts.
+
+-   `patchwork` → Combine multiple ggplots into a single layout.
+
+-   `DT` → Render data frames as interactive HTML tables.
+
+-   `gganimate` → Animate ggplot2 visuals via transitions & easing.
+
+-   `gifski` → Render gganimate output as a shareable GIF file.
+
+```{r}
+
+pacman::p_load(tidyverse,ggiraph,
+               plotly, patchwork, 
+               DT,gifski,
+               gapminder,gganimate)
+```
+
+### Import data
+
+```{r}
+
+population_age_sex_2024 <- read_csv("respopagesex2024/respopagesex2024.csv")
+
+```
+
+Review the dataframe's structure
+
+```{r}
+glimpse(population_age_sex_2024)
+
+```

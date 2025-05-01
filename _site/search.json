@@ -320,5 +320,33 @@
     "title": "Hands-on Exercise 3B",
     "section": "",
     "text": "Getting Started\nVisit this link for a very interesting implementation of gganimate by your senior.\nBuilding an animation step-by-step with gganimate.\nCreating a composite gif with multiple gganimate panels"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#setting-the-scene",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#setting-the-scene",
+    "title": "Take-home Exercise 01",
+    "section": "Setting the scene",
+    "text": "Setting the scene\nA local online media company that publishes daily content on digital platforms is planning to release an article on demographic structures and distribution of Singapore in 2024."
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#about-data",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#about-data",
+    "title": "Take-home Exercise 01",
+    "section": "About Data",
+    "text": "About Data\nI will use the data for this task from the Singapore Residents by Planning Area/Subzone, Single Year of Age and Sex, June 2024’ dataset, published by the Department of Statistics, Singapore (DOS)"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#my-task",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#my-task",
+    "title": "Take-home Exercise 01",
+    "section": "My Task",
+    "text": "My Task\nAs the graphical editor of the media company, my task is to design and prepare up to three data visualisations to support an upcoming article on Singapore’s demographic structure and distribution in 2024."
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#getting-started",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#getting-started",
+    "title": "Take-home Exercise 01",
+    "section": "Getting started",
+    "text": "Getting started\n\n\nLoad packages\nFirstly, write below code chunk to install and check the R packages installed.\n\ntidyverse → Core data wrangling & plotting (readr, dplyr, ggplot2, etc.)\ngapminder → Sample dataset & example pipeline for animated bubble plots.\nggiraph → Make ggplot2 charts interactive (tooltips, hover/click).\nplotly → Convert plots into fully interactive JavaScript charts.\npatchwork → Combine multiple ggplots into a single layout.\nDT → Render data frames as interactive HTML tables.\ngganimate → Animate ggplot2 visuals via transitions & easing.\ngifski → Render gganimate output as a shareable GIF file.\n\n\npacman::p_load(tidyverse,ggiraph,\n               plotly, patchwork, \n               DT,gifski,\n               gapminder,gganimate)\n\n\n\nImport data\n\npopulation_age_sex_2024 &lt;- read_csv(\"respopagesex2024/respopagesex2024.csv\")\n\nReview the dataframe’s structure\n\nglimpse(population_age_sex_2024)\n\nRows: 60,424\nColumns: 6\n$ PA   &lt;chr&gt; \"Ang Mo Kio\", \"Ang Mo Kio\", \"Ang Mo Kio\", \"Ang Mo Kio\", \"Ang Mo K…\n$ SZ   &lt;chr&gt; \"Ang Mo Kio Town Centre\", \"Ang Mo Kio Town Centre\", \"Ang Mo Kio T…\n$ Age  &lt;chr&gt; \"0\", \"0\", \"1\", \"1\", \"2\", \"2\", \"3\", \"3\", \"4\", \"4\", \"5\", \"5\", \"6\", …\n$ Sex  &lt;chr&gt; \"Males\", \"Females\", \"Males\", \"Females\", \"Males\", \"Females\", \"Male…\n$ Pop  &lt;dbl&gt; 10, 10, 10, 10, 10, 10, 10, 10, 30, 10, 20, 10, 20, 30, 30, 10, 3…\n$ Time &lt;dbl&gt; 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2024,…"
   }
 ]
