@@ -70,9 +70,98 @@ population_age_sex_2024 <- read_csv("respopagesex2024/respopagesex2024.csv")
 
 ```
 
-Review the dataframe's structure
+### **Review the dataframe's structure**
 
 ```{r}
 glimpse(population_age_sex_2024)
 
 ```
+
+### Checking duplicate
+
+```{r}
+population_age_sex_2024[duplicated(population_age_sex_2024),]
+```
+
+## Filtering data for selected variables
+
+| Variable Abbreviation | Variable Term | Variable Descrption |
+|:---|:---|----|
+| PA | Planning Area | These are the main geographical divisions used for planning and census purposes in Singapore. They are delineated by the Urban Redevelopment Authority (URA). |
+| SZ | Subzone | Each planning area is further divided into subzones, which are smaller areas typically focused around a specific activity or neighborhood center. For example, within the Singapore River planning area, subzones include Boat Quay, Clarke Quay, and Robertson Quay. |
+| Age | Age in years | The age of individuals, measured in completed years. |
+| Sex | Gender | Biological sex classification of the population group, recorded as “Males” or “Females.” |
+| Pop | Population count | The total number of individuals in each age–sex group (or area) for the given year. |
+| Time | Year | The calendar year to which the population data refers (e.g. 2024). |
+
+## What is Singapore’s overall age-sex profile in 2024?
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(forcats)
+library(scales)
+library(plotly)
+
+
+pop_pyramid <- population_age_sex_2024 %>%
+  mutate(
+    Age_num = case_when(
+      Age == "90_and_Over" ~ 85,
+      TRUE                 ~ as.numeric(Age)
+    )
+  ) %>%
+  filter(Time == 2024, !is.na(Age_num)) %>%
+  mutate(
+    AgeGroup = cut(
+      Age_num,
+      breaks = c(seq(0, 85, by = 5), Inf),
+      right = FALSE,
+      labels = paste0(seq(0, 80, by = 5), "-", seq(4, 84, by = 5), c(rep("",17), "+"))
+    )
+  ) %>%
+  group_by(AgeGroup, Sex) %>%
+  summarise(count = sum(Pop), .groups = "drop") %>%
+  mutate(
+    count    = ifelse(Sex == "Males", -count, count),
+    AgeGroup = fct_rev(AgeGroup)
+  )
+
+
+base_plot <- ggplot(pop_pyramid, 
+                    aes(x = count, 
+                        y = AgeGroup, 
+                        fill = Sex,
+                        text = paste0(
+                          AgeGroup, "\n",
+                          Sex, ": ", comma(abs(count)), " people"
+                        ))) +
+  geom_col(width = 0.8, colour = "white") +
+  scale_x_continuous(
+    breaks = pretty_breaks(n = 5),
+    labels = comma,
+    expand = expansion(mult = c(0.02, 0.02))
+  ) +
+  scale_fill_manual(values = c("Males" = "#75E6E1", "Females" = "#E6757A")) +
+  labs(
+    title = "Age-Sex and Population Pyramids of Singapore (2024)",
+    x     = "Population count",
+    y     = "Age group",
+    fill  = NULL
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    panel.grid.major.y = element_blank(),
+    panel.grid.major.x = element_line(colour = "#ECECEC"),
+    axis.text.x        = element_text(margin = margin(t = 5)),
+    legend.position    = "bottom"
+  )
+
+ggplotly(base_plot, tooltip = "text")
+
+
+```
+
+::: Result Insights - The 2024 pyramid reveals a broad central bulge (ages 30–44), reflecting Singapore’s large working-age cohorts. - Child and adolescent bands (0–19) are noticeably narrower, hinting at lower birth rates in recent years. - The sex ratio is near-balanced among younger ages, tilts to a modest female surplus in middle age (35–59), and flips to a male edge in the oldest cohorts (85+). - **Policy implications**\
+- Workforce planning should account for the sizeable mid-career population.\
+- A shrinking youth base may lead to future labour shortages and calls for strategies to bolster the next generation. :::
