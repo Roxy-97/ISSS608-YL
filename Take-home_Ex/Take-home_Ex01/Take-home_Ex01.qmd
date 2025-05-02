@@ -116,7 +116,10 @@ pop_pyramid <- population_age_sex_2024 %>%
       Age_num,
       breaks = c(seq(0, 85, by = 5), Inf),
       right = FALSE,
-      labels = paste0(seq(0, 80, by = 5), "-", seq(4, 84, by = 5), c(rep("",17), "+"))
+      labels = c(
+        paste(seq(0, 80, by = 5), seq(4, 84, by = 5), sep = "-"),
+        "85+"
+      )
     )
   ) %>%
   group_by(AgeGroup, Sex) %>%
@@ -137,12 +140,12 @@ base_plot <- ggplot(pop_pyramid,
   geom_col(width = 0.8, colour = "white") +
   scale_x_continuous(
     breaks = pretty_breaks(n = 5),
-    labels = comma,
+    labels = function(x) comma(abs(x)), #ABS value + comma → all ticks positive
     expand = expansion(mult = c(0.02, 0.02))
   ) +
   scale_fill_manual(values = c("Males" = "#75E6E1", "Females" = "#E6757A")) +
   labs(
-    title = "Age-Sex and Population Pyramids of Singapore (2024)",
+    title = "Singapore's Age and Gender Distribution (2024)",
     x     = "Population count",
     y     = "Age group",
     fill  = NULL
@@ -161,13 +164,15 @@ ggplotly(base_plot, tooltip = "text")
 ::: {.info style="color: #9DBCF3"}
 ## Insights {#sec-insights}
 
--   The 2024 pyramid reveals a broad central bulge (ages 30–44), reflecting Singapore’s large working-age cohorts.
--   Child and adolescent bands (0–19) are noticeably narrower, hinting at lower birth rates in recent years.
--   The sex ratio is near-balanced among younger ages, tilts to a modest female surplus in middle age (35–59), and flips to a male edge in the oldest cohorts (85+).
+-   Singapore’s age distribution shows a prominent bulge in the 30–44 age range, highlighting a strong mid-career workforce in Singapore.
+-   Younger age groups (0–19) appear noticeably narrower, suggesting a decline in birth rates in recent years.
+-   The sex ratio is balanced in younger cohorts, shifts slightly towards females in middle age (35–59), and shows a female majority in the 85+ group.
 
-**Policy implications**\
-- Workforce planning should account for the sizeable mid-career population.\
-- A shrinking youth base may lead to future labour shortages and calls for strategies to bolster the next generation.
+**Policy implications**
+
+-   Workforce planning should prioritize support for the dominant mid-career population to sustain productivity.
+
+-   A smaller youth base could lead to future labor shortages, highlighting the need for long-term talent development and family-friendly policies.
 :::
 
 ## EDA 2: Which Planning Areas(PA) are the most populous, and how is that population split by gender?
@@ -208,7 +213,7 @@ plot_ly(
   layout(
     barmode   = "stack",
     hovermode = "closest",
-    title     = "Singapore Top 10 Most Populous Planning Areas (2024)",
+    title     = "Singapore Top 10 Populous Planning Areas by Gender (2024)",
     xaxis     = list(
       title      = "Population",
       tickformat = ","
@@ -223,17 +228,86 @@ plot_ly(
 
 ```
 
+```{r}
+library(readr)
+library(dplyr)
+library(forcats)
+library(ggplot2)
+library(scales)
+library(patchwork)
+
+
+pa_gender <- population_age_sex_2024 %>%
+  filter(Time == 2024) %>%
+  group_by(PA, Sex) %>%
+  summarise(Pop = sum(Pop), .groups = "drop")
+
+# 2. Identify top 10 PAs by total population
+top_pas <- pa_gender %>%
+  group_by(PA) %>%
+  summarise(Total = sum(Pop), .groups="drop") %>%
+  arrange(desc(Total)) %>%
+  slice_head(n = 10) %>%
+  pull(PA)
+
+plot_data <- pa_gender %>%
+  filter(PA %in% top_pas) %>%
+  mutate(PA = fct_reorder(PA, Pop, .fun = sum))
+
+# 3. Prepare plots
+p1 <- plot_data %>%
+  filter(Sex == "Females") %>%
+  ggplot(aes(x = Pop, y = PA)) +
+  geom_col(fill = "#E6757A") +
+  scale_x_continuous(labels = comma) +
+  labs(title = "P1: Females", x = "Population count", y = NULL) +
+  theme_minimal() +
+  theme(panel.grid.major.y = element_blank())
+
+p2 <- plot_data %>%
+  filter(Sex == "Males") %>%
+  ggplot(aes(x = Pop, y = PA)) +
+  geom_col(fill = "#75E6E1") +
+  scale_x_continuous(labels = comma) +
+  labs(title = "P2: Males", x = "Population count", y = NULL) +
+  theme_minimal() +
+  theme(panel.grid.major.y = element_blank())
+
+p3 <- plot_data %>%
+  group_by(PA) %>%
+  summarise(Total = sum(Pop), .groups="drop") %>%
+  mutate(PA = fct_reorder(PA, Total)) %>%
+  ggplot(aes(x = Total, y = PA)) +
+  geom_col(fill = "gray60") +
+  scale_x_continuous(labels = comma) +
+  labs(title = "P3: Overall population", x = "Population count", y = NULL) +
+  theme_minimal() +
+  theme(panel.grid.major.y = element_blank())
+
+
+(p1 + p2 + p3) +
+  plot_layout(ncol = 2) +
+  plot_annotation(
+    title = "Singapore Top 10 Populous Planning Areas by Gender (2024)",
+    theme = theme(plot.title = element_text(face = "bold"))
+  )
+
+```
+
 ::: {.info style="color: #9DBCF3"}
 ## Insights
 
--   **Tampines** and **Bedok** emerge as the two most populous PAs in 2024, each hosting nearly 280 000 residents, followed closely by Jurong West and Woodlands (\~260 000 – 270 000).\
--   Across all top ten areas, **male counts slightly exceed female** counts, with the largest gender gap in Tampines (\~10 000 more males).\
--   **Younger dormitory towns** like Punggol and Sengkang show narrower sex‐ratios (\~5 000–7 000 difference), hinting at a more balanced or family‐oriented population.\
--   Established estates—Tampines, Bedok, Jurong West—display both high density and a persistent male majority, possibly reflecting workforce demographics in these hubs.\
--   **Policy takeaway**: Resource planning (housing, transport, healthcare) should account for both the sheer volume in these top PAs and their modest but consistent male‐leaning imbalance.\
+-   Tampines and Bedok are the most populous planning areas in 2024, each with nearly 280,000 residents, followed by Jurong West and Woodlands (\~260,000–270,000).
+-   Across all top ten areas, female population slightly exceed male population, with the largest gender gap in Tampines (\~10,000 more females).
+-   Younger towns like Punggol and Sengkang have narrower gender differences (\~5,000–7,000), suggesting a more balanced household composition.
+-   Mature estates such as Tampines, Bedok, and Jurong West have both high population density and a modest female majority. This pattern may reflect long-term residential settlement trends, aging populations, or higher female longevity in mature estates.
+
+**Policy Implications**
+
+-   Urban and social infrastructure planning should consider the female-majority population in Singapore’s most densely populated planning areas. This may signal the need for expanded services in healthcare, eldercare, childcare, and community safety, particularly in mature estates where female residents may be older or more likely to reside long-term.\
 :::
 
-## EDA 3: Comparing Top 5 Subzones（SZ) by Young (25–35) vs. Elderly (70 +) Populations
+## EDA 3: Comparing Top 5 Subzones (SZ) by Young (25–35) vs. Elderly (65+) Populations
 
 ```{r}
 library(dplyr)
@@ -252,7 +326,7 @@ young_top5 <- population_age_sex_2024 %>%
 
 old_top5 <- population_age_sex_2024 %>%
   mutate(AgeNum = as.numeric(Age)) %>%
-  filter(Time == 2024, AgeNum >= 70) %>%
+  filter(Time == 2024, AgeNum >= 65) %>%
   group_by(SZ) %>%
   summarise(Pop = sum(Pop), .groups = "drop") %>%
   slice_max(Pop, n = 5) %>%
@@ -270,7 +344,7 @@ p2 <- ggplot(old_top5, aes(x = SZ, y = Pop, fill = Pop)) +
   geom_col(show.legend = FALSE) +
   coord_flip() +
   scale_y_continuous(labels = comma) +
-  labs(title = "Top 5 Subzones: Age 70+", x = NULL, y = "Population") +
+  labs(title = "Top 5 Subzones: Age 65+", x = NULL, y = "Population") +
   theme_minimal()
 
 p1 + p2 + 
@@ -286,12 +360,15 @@ p1 + p2 +
 ::: {.info style="color: #9DBCF3"}
 ## Insights
 
--   Tampines East leads both 25–35 and 70+ groups, indicating a broad, intergenerational base.\
--   Woodlands East, Yishun East, Tampines West and Yunnan dominate the 25–35 bracket, reflecting an influx of working-age families into these newer estates.\
--   Bedok North, Bedok South and Hong Kah feature in the 70+ top-5, highlighting higher elderly concentrations in these mature precincts.\
--   Tampines West appears in both lists, suggesting a more balanced age profile.\
--   These spatial patterns pinpoint where to prioritize youth services (childcare, schools) versus eldercare resources (healthcare, senior centers).\
--   Planners can leverage this nuanced insight to allocate infrastructure and social programs more effectively.\
+-   Tampines East appears prominently in both the young (25–35) and elderly (65+) groups, indicating a multi-generational community with diverse service needs.
+-   Tampines West also ranks in the top 5 for both age groups, suggesting it is a mature subzone with a stable resident base across life stages.
+-   Woodlands East and Yishun East are key hubs for younger adults, likely due to affordable housing.
+-   Bedok North and Bedok South stand out for their large elderly populations, consistent with Bedok's status as an older, well-established residential area.
+-   Hong Kah shows a high concentration of seniors, possibly reflecting aging-in-place patterns in western Singapore.
+
+**Political Implications**
+
+-   These spatial patterns pinpoint where to prioritize youth services (childcare, schools) versus elder care resources (healthcare, senior centers).
 :::
 
-## Overall insight and conclusion 
+## Summary & Conclusion
