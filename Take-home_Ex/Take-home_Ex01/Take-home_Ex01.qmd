@@ -86,7 +86,7 @@ population_age_sex_2024[duplicated(population_age_sex_2024),]
 ## Filtering data for selected variables
 
 | Variable Abbreviation | Variable Term | Variable Descrption |
-|:------------------|:------------------|----------------------------------|
+|:-------------------|:------------------|---------------------------------|
 | PA | Planning Area | These are the main geographical divisions used for planning and census purposes in Singapore. They are delineated by the Urban Redevelopment Authority (URA). |
 | SZ | Subzone | Each planning area is further divided into subzones, which are smaller areas typically focused around a specific activity or neighborhood center. For example, within the Singapore River planning area, subzones include Boat Quay, Clarke Quay, and Robertson Quay. |
 | Age | Age in years | The age of individuals, measured in completed years. |
@@ -178,7 +178,7 @@ library(dplyr)
 library(forcats)
 library(plotly)
 
-pa_ender <- population_age_sex_2024 %>%
+pa_gender <- population_age_sex_2024 %>%
   filter(Time == 2024) %>%
   group_by(PA, Sex) %>%
   summarise(Pop = sum(Pop), .groups = "drop")
@@ -233,9 +233,65 @@ plot_ly(
 -   **Policy takeaway**: Resource planning (housing, transport, healthcare) should account for both the sheer volume in these top PAs and their modest but consistent male‐leaning imbalance.\
 :::
 
+## EDA 3: Comparing Top 5 Subzones（SZ) by Young (25–35) vs. Elderly (70 +) Populations
 
-## EDA 3: 
+```{r}
+library(dplyr)
+library(ggplot2)
+library(patchwork)
+library(forcats)
+library(scales)
+
+young_top5 <- population_age_sex_2024 %>%
+  mutate(AgeNum = as.numeric(Age)) %>%
+  filter(Time == 2024, AgeNum >= 25, AgeNum <= 35) %>%
+  group_by(SZ) %>%
+  summarise(Pop = sum(Pop), .groups = "drop") %>%
+  slice_max(Pop, n = 5) %>%
+  mutate(SZ = fct_reorder(SZ, Pop))
+
+old_top5 <- population_age_sex_2024 %>%
+  mutate(AgeNum = as.numeric(Age)) %>%
+  filter(Time == 2024, AgeNum >= 70) %>%
+  group_by(SZ) %>%
+  summarise(Pop = sum(Pop), .groups = "drop") %>%
+  slice_max(Pop, n = 5) %>%
+  mutate(SZ = fct_reorder(SZ, Pop))
 
 
+p1 <- ggplot(young_top5, aes(x = SZ, y = Pop, fill = Pop)) +
+  geom_col(show.legend = FALSE) +
+  coord_flip() +
+  scale_y_continuous(labels = comma) +
+  labs(title = "Top 5 Subzones: Age 25–35", x = NULL, y = "Population") +
+  theme_minimal()
+
+p2 <- ggplot(old_top5, aes(x = SZ, y = Pop, fill = Pop)) +
+  geom_col(show.legend = FALSE) +
+  coord_flip() +
+  scale_y_continuous(labels = comma) +
+  labs(title = "Top 5 Subzones: Age 70+", x = NULL, y = "Population") +
+  theme_minimal()
+
+p1 + p2 + 
+  plot_layout(ncol = 2) + 
+  plot_annotation(
+    title = "Comparison of Top 5 Subzones: Young vs. Elderly (2024)",
+    theme = theme(plot.title = element_text(face = "bold"))
+  )
 
 
+```
+
+::: {.info style="color: #9DBCF3"}
+## Insights
+
+-   Tampines East leads both 25–35 and 70+ groups, indicating a broad, intergenerational base.\
+-   Woodlands East, Yishun East, Tampines West and Yunnan dominate the 25–35 bracket, reflecting an influx of working-age families into these newer estates.\
+-   Bedok North, Bedok South and Hong Kah feature in the 70+ top-5, highlighting higher elderly concentrations in these mature precincts.\
+-   Tampines West appears in both lists, suggesting a more balanced age profile.\
+-   These spatial patterns pinpoint where to prioritize youth services (childcare, schools) versus eldercare resources (healthcare, senior centers).\
+-   Planners can leverage this nuanced insight to allocate infrastructure and social programs more effectively.\
+:::
+
+## Overall insight and conclusion 
