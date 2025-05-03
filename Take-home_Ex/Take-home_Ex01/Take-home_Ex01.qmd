@@ -38,28 +38,23 @@ As the graphical editor of the media company, my task is to design and prepare u
 
 Firstly, write below code chunk to install and check the R packages installed.
 
--   `tidyverse` → Core data wrangling & plotting (`readr`, `dplyr`, `ggplot2`, etc.)
+-   **`tidyverse`**— Core data wrangling & plotting (`readr`, `dplyr`, `ggplot2`, etc.)
 
--   `gapminder` → Sample dataset & example pipeline for animated bubble plots.
+-   **`dplyr`** — A grammar of data manipulation: filter, arrange, summarise, and transform data efficiently using intuitive syntax.
 
--   `ggiraph` → Make ggplot2 charts interactive (tooltips, hover/click).
+-   **`ggplot2`** — A powerful and extensible system for creating elegant, layered data visualisations using the Grammar of Graphics.
 
--   `plotly` → Convert plots into fully interactive JavaScript charts.
+-   **`forcats`** — Tools for working with categorical variables and factor reordering.
 
--   `patchwork` → Combine multiple ggplots into a single layout.
+-   **`scales`** — Format axis labels (e.g. comma(), percent()) for ggplot2.
 
--   `DT` → Render data frames as interactive HTML tables.
-
--   `gganimate` → Animate ggplot2 visuals via transitions & easing.
-
--   `gifski` → Render gganimate output as a shareable GIF file.
+-   **`patchwork`** — Seamlessly combines multiple `ggplot2` plots into custom layouts for comparison or storytelling.
 
 ```{r}
 
-pacman::p_load(tidyverse,ggiraph,
-               plotly, patchwork, 
-               DT,gifski,
-               gapminder,gganimate)
+pacman::p_load(tidyverse,dplyr,
+               ggplot2, forcats, 
+               scales,patchwork)
 ```
 
 ### Import data
@@ -74,7 +69,6 @@ population_age_sex_2024 <- read_csv("respopagesex2024/respopagesex2024.csv")
 
 ```{r}
 glimpse(population_age_sex_2024)
-
 ```
 
 ### Checking duplicate
@@ -101,13 +95,12 @@ library(dplyr)
 library(ggplot2)
 library(forcats)
 library(scales)
-library(plotly)
 
 pop_pyramid <- population_age_sex_2024 %>%
   mutate(
     Age_num = case_when(
       Age == "90_and_Over" ~ 85,
-      TRUE                 ~ as.numeric(Age)
+      TRUE ~ as.numeric(Age)
     )
   ) %>%
   filter(Time == 2024, !is.na(Age_num)) %>%
@@ -116,48 +109,42 @@ pop_pyramid <- population_age_sex_2024 %>%
       Age_num,
       breaks = c(seq(0, 85, by = 5), Inf),
       right = FALSE,
-      labels = c(
-        paste(seq(0, 80, by = 5), seq(4, 84, by = 5), sep = "-"),
-        "85+"
-      )
+      labels = c(paste(seq(0, 80, by = 5), seq(4, 84, by = 5), sep = "-"), "85+")
     )
   ) %>%
   group_by(AgeGroup, Sex) %>%
   summarise(count = sum(Pop), .groups = "drop") %>%
   mutate(
-    count    = ifelse(Sex == "Males", -count, count),
-    AgeGroup = fct_rev(AgeGroup)
+    count = ifelse(Sex == "Males", -count, count),
+    AgeGroup = fct_rev(AgeGroup),
+    label = comma(abs(count))
   )
 
-base_plot <- ggplot(pop_pyramid, 
-                    aes(x = count, 
-                        y = AgeGroup, 
-                        fill = Sex,
-                        text = paste0(
-                          AgeGroup, "\n",
-                          Sex, ": ", comma(abs(count)), " people"
-                        ))) +
-  geom_col(width = 0.8, colour = "white") +
+ggplot(pop_pyramid, aes(x = count, y = AgeGroup, fill = Sex)) +
+  geom_col(width = 0.8, colour = "white", alpha = 0.85) +  
+  geom_text(aes(label = label),
+            hjust = ifelse(pop_pyramid$Sex == "Males", 1.05, -0.15),
+            size = 3.0, color = "#333333") +  
   scale_x_continuous(
-    breaks = pretty_breaks(n = 5),
-    labels = function(x) comma(abs(x)), #ABS value + comma → all ticks positive
-    expand = expansion(mult = c(0.02, 0.02))
+    breaks = pretty_breaks(n = 6),
+    labels = function(x) comma(abs(x)),
+    expand = expansion(mult = c(0.25, 0.25))
   ) +
   scale_fill_manual(values = c("Males" = "#75E6E1", "Females" = "#E6757A")) +
   labs(
     title = "Singapore's Age and Gender Distribution (2024)",
-    x     = "Population count",
-    y     = "Age group",
-    fill  = NULL
+    x = "Population count",
+    y = "Age group",
+    fill = NULL
   ) +
-  theme_minimal(base_size = 12) +
+  theme_minimal(base_size = 13) +
   theme(
     panel.grid.major.y = element_blank(),
     panel.grid.major.x = element_line(colour = "#ECECEC"),
-    axis.text.x        = element_text(margin = margin(t = 5)),
-    legend.position    = "bottom"
+    axis.text.x = element_text(margin = margin(t = 5)),
+    legend.position = "bottom",
+    plot.title = element_text(face = "bold", hjust = 0.5)
   )
-ggplotly(base_plot, tooltip = "text")
 
 ```
 
@@ -175,77 +162,24 @@ ggplotly(base_plot, tooltip = "text")
 -   A smaller youth base could lead to future labor shortages, highlighting the need for long-term talent development and family-friendly policies.
 :::
 
+
+
 ## EDA 2: Which Planning Areas(PA) are the most populous, and how is that population split by gender?
 
-```{r}
-library(readr)
-library(dplyr)
-library(forcats)
-library(plotly)
 
+::: panel-tabset
+
+##Overall Population
+
+```{r}
 pa_gender <- population_age_sex_2024 %>%
   filter(Time == 2024) %>%
   group_by(PA, Sex) %>%
   summarise(Pop = sum(Pop), .groups = "drop")
 
-top_pa_totals <- pa_gender %>%
-  group_by(PA) %>%
-  summarise(total = sum(Pop), .groups = "drop") %>%
-  arrange(desc(total)) %>%
-  slice_head(n = 10)
-
-plot_data <- pa_gender %>%
-  filter(PA %in% top_pa_totals$PA) %>%
-  mutate(PA = factor(PA, levels = top_pa_totals$PA))
-
-plot_ly(
-  data        = plot_data,
-  x           = ~Pop,
-  y           = ~PA,
-  color       = ~Sex,
-  colors      = c("Males"   = "#75E6E1",
-                  "Females" = "#E6757A"),
-  type        = "bar",
-  orientation = "h",
-  text        = ~paste0(Sex, ": ", format(Pop, big.mark = ","), " people"),
-  hoverinfo   = "text"
-) %>%
-  layout(
-    barmode   = "stack",
-    hovermode = "closest",
-    title     = "Singapore Top 10 Populous Planning Areas by Gender (2024)",
-    xaxis     = list(
-      title      = "Population",
-      tickformat = ","
-    ),
-    yaxis = list(
-      title          = "",
-      categoryorder  = "array",
-      categoryarray  = top_pa_totals$PA  
-    ),
-    legend = list(orientation = "h", x = 0.3, y = -0.2)
-  )
-
-```
-
-```{r}
-library(readr)
-library(dplyr)
-library(forcats)
-library(ggplot2)
-library(scales)
-library(patchwork)
-
-
-pa_gender <- population_age_sex_2024 %>%
-  filter(Time == 2024) %>%
-  group_by(PA, Sex) %>%
-  summarise(Pop = sum(Pop), .groups = "drop")
-
-# 2. Identify top 10 PAs by total population
 top_pas <- pa_gender %>%
   group_by(PA) %>%
-  summarise(Total = sum(Pop), .groups="drop") %>%
+  summarise(Total = sum(Pop), .groups = "drop") %>%
   arrange(desc(Total)) %>%
   slice_head(n = 10) %>%
   pull(PA)
@@ -254,45 +188,77 @@ plot_data <- pa_gender %>%
   filter(PA %in% top_pas) %>%
   mutate(PA = fct_reorder(PA, Pop, .fun = sum))
 
-# 3. Prepare plots
-p1 <- plot_data %>%
-  filter(Sex == "Females") %>%
-  ggplot(aes(x = Pop, y = PA)) +
-  geom_col(fill = "#E6757A") +
-  scale_x_continuous(labels = comma) +
-  labs(title = "P1: Females", x = "Population count", y = NULL) +
-  theme_minimal() +
-  theme(panel.grid.major.y = element_blank())
 
-p2 <- plot_data %>%
-  filter(Sex == "Males") %>%
-  ggplot(aes(x = Pop, y = PA)) +
-  geom_col(fill = "#75E6E1") +
-  scale_x_continuous(labels = comma) +
-  labs(title = "P2: Males", x = "Population count", y = NULL) +
-  theme_minimal() +
-  theme(panel.grid.major.y = element_blank())
-
-p3 <- plot_data %>%
+p_overall <- plot_data %>%
   group_by(PA) %>%
-  summarise(Total = sum(Pop), .groups="drop") %>%
+  summarise(Total = sum(Pop), .groups = "drop") %>%
   mutate(PA = fct_reorder(PA, Total)) %>%
   ggplot(aes(x = Total, y = PA)) +
   geom_col(fill = "gray60") +
-  scale_x_continuous(labels = comma) +
-  labs(title = "P3: Overall population", x = "Population count", y = NULL) +
-  theme_minimal() +
+  geom_text(aes(label = comma(Total)),
+            hjust = -0.1,
+            size = 3.8,
+            color = "black") +
+  scale_x_continuous(labels = comma,
+                     expand = expansion(mult = c(0, 0.15))) +
+  labs(
+    title = "Top 10 Planning Areas by Population (2024)",
+    x = "Population count",
+    y = NULL
+  ) +
+  theme_minimal(base_size = 13) +
   theme(panel.grid.major.y = element_blank())
 
-
-(p1 + p2 + p3) +
-  plot_layout(ncol = 2) +
-  plot_annotation(
-    title = "Singapore Top 10 Populous Planning Areas by Gender (2024)",
-    theme = theme(plot.title = element_text(face = "bold"))
-  )
+print(p_overall)
 
 ```
+
+## Females
+
+```{r}
+plot_data %>%
+  filter(Sex == "Females") %>%
+  ggplot(aes(x = Pop, y = PA)) +
+  geom_col(fill = "#E6757A") +
+  geom_text(aes(label = comma(Pop)),
+            hjust = -0.1,
+            size = 3.5,
+            color = "black") +
+  scale_x_continuous(labels = comma,
+                     expand = expansion(mult = c(0, 0.15))) +
+  labs(
+    title = "Female Population by Planning Area (2024)",
+    x = "Population count",
+    y = NULL
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(panel.grid.major.y = element_blank())
+
+```
+
+## Males
+
+```{r}
+plot_data %>%
+  filter(Sex == "Males") %>%
+  ggplot(aes(x = Pop, y = PA)) +
+  geom_col(fill = "#75E6E1") +
+  geom_text(aes(label = comma(Pop)),
+          hjust = -0.1,
+          size = 3.5,
+          color = "black")+
+  scale_x_continuous(labels = comma,
+                     expand = expansion(mult = c(0, 0.15))) +
+  labs(
+    title = "Male Population by Planning Area (2024)",
+    x = "Population count",
+    y = NULL
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(panel.grid.major.y = element_blank())
+
+```
+:::
 
 ::: {.info style="color: #9DBCF3"}
 ## Insights
@@ -307,52 +273,64 @@ p3 <- plot_data %>%
 -   Urban and social infrastructure planning should consider the female-majority population in Singapore’s most densely populated planning areas. This may signal the need for expanded services in healthcare, eldercare, childcare, and community safety, particularly in mature estates where female residents may be older or more likely to reside long-term.\
 :::
 
-## EDA 3: Comparing Top 5 Subzones (SZ) by Young (25–35) vs. Elderly (65+) Populations
+## EDA 3: Comparing Top 8 Subzones(SZ) by Youth(21–35) vs. Elderly(65+) Populations
+
+*Glossary*：
+
+[Elderly](https://www.singstat.gov.sg/-/media/files/standards_and_classifications/nsa.ashx) :"Elderly people" in Singapore are defined as individuals aged 65 years and above. This classification aligns with the Ministry of Health (MOH) and the Department of Statistics Singapore (DOS) standards. The age of 65 is significant as it corresponds with the official retirement age and is used in formulating public policies, healthcare planning, and social support programs aimed at the senior population.
+
+[Youth](https://www.mccy.gov.sg/sector/youth#:~:text=In%20Singapore%2C%20youths%20are%20defined,part%20of%20our%20social%20fabric.) :"Young people" or "youth" are officially defined as individuals aged 15 to 35 years. This age range is established by the Ministry of Culture, Community and Youth (MCCY) to encompass the transitional phase from adolescence to adulthood, including secondary school students to young adults entering the workforce.
 
 ```{r}
-library(dplyr)
-library(ggplot2)
-library(patchwork)
-library(forcats)
-library(scales)
-
-young_top5 <- population_age_sex_2024 %>%
+youth_top5 <- population_age_sex_2024 %>%
   mutate(AgeNum = as.numeric(Age)) %>%
-  filter(Time == 2024, AgeNum >= 25, AgeNum <= 35) %>%
+  filter(Time == 2024, AgeNum >= 15, AgeNum <= 35) %>%
   group_by(SZ) %>%
   summarise(Pop = sum(Pop), .groups = "drop") %>%
-  slice_max(Pop, n = 5) %>%
+  slice_max(Pop, n = 8) %>%
   mutate(SZ = fct_reorder(SZ, Pop))
 
-old_top5 <- population_age_sex_2024 %>%
+elderly_top5 <- population_age_sex_2024 %>%
   mutate(AgeNum = as.numeric(Age)) %>%
   filter(Time == 2024, AgeNum >= 65) %>%
   group_by(SZ) %>%
   summarise(Pop = sum(Pop), .groups = "drop") %>%
-  slice_max(Pop, n = 5) %>%
+  slice_max(Pop, n = 8) %>%
   mutate(SZ = fct_reorder(SZ, Pop))
 
-
-p1 <- ggplot(young_top5, aes(x = SZ, y = Pop, fill = Pop)) +
-  geom_col(show.legend = FALSE) +
+# Plot : Youth 
+p1 <- ggplot(youth_top5, aes(x = SZ, y = Pop)) +
+  geom_col(fill = "#66B2FF", width = 0.7) +
+  geom_text(aes(label = comma(Pop)), hjust = -0.1, size = 3.5, color = "black") +
   coord_flip() +
-  scale_y_continuous(labels = comma) +
-  labs(title = "Top 5 Subzones: Age 25–35", x = NULL, y = "Population") +
-  theme_minimal()
+  scale_y_continuous(labels = comma, expand = expansion(mult = c(0, 0.3))) +
+  labs(title = "Top 8 Subzones: Youth (Age 21–35)", x = NULL, y = "Population") +
+  theme_minimal(base_size = 10) +
+  theme(
+    panel.grid.major.y = element_blank(),
+    plot.title = element_text(face = "bold")
+  )
 
-p2 <- ggplot(old_top5, aes(x = SZ, y = Pop, fill = Pop)) +
-  geom_col(show.legend = FALSE) +
+# Plot : Elderly
+p2 <- ggplot(elderly_top5, aes(x = SZ, y = Pop)) +
+  geom_col(fill = "#1E78B4", width = 0.7) +
+  geom_text(aes(label = comma(Pop)), hjust = -0.1, size = 3.5, color = "black") +
   coord_flip() +
-  scale_y_continuous(labels = comma) +
-  labs(title = "Top 5 Subzones: Age 65+", x = NULL, y = "Population") +
-  theme_minimal()
+  scale_y_continuous(labels = comma, expand = expansion(mult = c(0, 0.3))) +
+  labs(title = "Top 8 Subzones: Elderly (Age 65+)", x = NULL, y = "Population") +
+  theme_minimal(base_size = 10) +
+  theme(
+    panel.grid.major.y = element_blank(),
+    plot.title = element_text(face = "bold")
+  )
 
 p1 + p2 + 
-  plot_layout(ncol = 2) + 
+  plot_layout(ncol = 1) + 
   plot_annotation(
-    title = "Comparison of Top 5 Subzones: Young vs. Elderly (2024)",
-    theme = theme(plot.title = element_text(face = "bold"))
+    title = "Comparison of Top 8 Subzones: Youth vs. Elderly (2024)",
+    theme = theme(plot.title = element_text(face = "bold", size = 15, hjust = 0.5))
   )
+
 
 
 ```
@@ -360,7 +338,7 @@ p1 + p2 +
 ::: {.info style="color: #9DBCF3"}
 ## Insights
 
--   Tampines East appears prominently in both the young (25–35) and elderly (65+) groups, indicating a multi-generational community with diverse service needs.
+-   Tampines East appears prominently in both the youth (21–35) and elderly (65+) groups, indicating a multi-generational community with diverse service needs.
 -   Tampines West also ranks in the top 5 for both age groups, suggesting it is a mature subzone with a stable resident base across life stages.
 -   Woodlands East and Yishun East are key hubs for younger adults, likely due to affordable housing.
 -   Bedok North and Bedok South stand out for their large elderly populations, consistent with Bedok's status as an older, well-established residential area.

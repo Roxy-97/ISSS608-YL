@@ -12,7 +12,7 @@ execute:
   freeze: true 
 ---
 
-# Lesson 3: Programming Interactive Data Visualisation with R 
+# Lesson 3: Programming Interactive Data Visualisation with R
 
 ## **3.1 Learning Outcome**
 
@@ -324,6 +324,7 @@ plot_ly(data = exam_data,
         color = ~RACE)
 
 ```
+
 ### 3.7.3 Creating an interactive scatter plot: ggplotly() method
 
 ```{r}
