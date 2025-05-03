@@ -80,7 +80,7 @@ population_age_sex_2024[duplicated(population_age_sex_2024),]
 ## Filtering data for selected variables
 
 | Variable Abbreviation | Variable Term | Variable Descrption |
-|:-------------------|:------------------|---------------------------------|
+|:---|:---|----|
 | PA | Planning Area | These are the main geographical divisions used for planning and census purposes in Singapore. They are delineated by the Urban Redevelopment Authority (URA). |
 | SZ | Subzone | Each planning area is further divided into subzones, which are smaller areas typically focused around a specific activity or neighborhood center. For example, within the Singapore River planning area, subzones include Boat Quay, Clarke Quay, and Robertson Quay. |
 | Age | Age in years | The age of individuals, measured in completed years. |
@@ -165,7 +165,7 @@ ggplot(pop_pyramid, aes(x = count, y = AgeGroup, fill = Sex)) +
 ## EDA 2: Which Planning Areas(PA) are the most populous, and how is that population split by gender?
 
 ::: panel-tabset
-**Overall Population**
+### Overall Population
 
 ```{r}
 pa_gender <- population_age_sex_2024 %>%
@@ -209,7 +209,7 @@ print(p_overall)
 
 ```
 
-## Females
+### Females
 
 ```{r}
 plot_data %>%
@@ -232,7 +232,7 @@ plot_data %>%
 
 ```
 
-## Males
+### Males
 
 ```{r}
 plot_data %>%
