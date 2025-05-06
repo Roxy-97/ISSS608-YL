@@ -1,0 +1,202 @@
+---
+title: "Hands-on Exercise 4B"
+author: "Yang Lu"
+date: "6 May 2025"
+date-modified: "last-modified"
+format: html
+editor: visual
+execute: 
+  eval: true  
+  echo: true  
+  warning: false 
+  freeze: true 
+---
+
+# Lesson 6: **Visual Statistical Analysis**
+
+## **6.1 Learning Outcome**
+
+In this hands-on exercise, you will gain hands-on experience on using:
+
+-   ggstatsplot package to create visual graphics with rich statistical information,
+
+-   performance package to visualise model diagnostics, and
+
+-   parameters package to visualise model parameters
+
+## **6.2 Visual Statistical Analysis with ggstatsplot**
+
+[**ggstatsplot**](https://indrajeetpatil.github.io/ggstatsplot/index.html) ![](https://r4va.netlify.app/chap10/img/image1.jpg){width="32" height="29"} is an extension of [**ggplot2**](https://ggplot2.tidyverse.org/) package for creating graphics with details from statistical tests included in the information-rich plots themselves.
+
+```{=html}
+<pre markdown>
+  
+To provide alternative statistical inference methods by default.
+To follow best practices for statistical reporting. For all statistical tests reported in the plots, the default template abides by the [APA](https://my.ilstu.edu/~jhkahn/apastats.html) gold standard for statistical reporting. For example, here are results from a robust t-test:
+</pre>
+```
+
+![](images/clipboard-1826146409.png)
+
+## **6.3 Getting Started**
+
+### **6.3.1 Installing and launching R packages**
+
+In this exercise, **ggstatsplot** and **tidyverse** will be used.
+
+```{r}
+pacman::p_load(ggstatsplot, tidyverse)
+```
+
+### 6.3.2 Importing data
+
+```{r}
+exam <- read_csv("Exam_data.csv",show_col_types = FALSE)
+exam
+
+```
+
+### **6.3.3 One-sample test: *gghistostats()* method**
+
+ [*gghistostats()*](https://indrajeetpatil.github.io/ggstatsplot/reference/gghistostats.html) is used to to build an visual of one-sample test on English scores.
+
+```{r}
+set.seed(1234) # set R's random-number seed so that sampling or simulation inside ggishistats() yields the same results everytimes
+
+gghistostats(
+  data = exam,
+  x = ENGLISH,
+  type = "bayes",# Perform a Bayesian one-sample test against the null value, rather than a classical t-test.
+  test.value = 60, #Set the null-hypothesis mean 
+  xlab = "English scores"
+)
+```
+
+::: callout-note
+Default information: - statistical details - Bayes Factor - sample sizes - distribution summary
+:::
+
+### **6.3.4 Unpacking the Bayes Factor**
+
+-   A Bayes factor is the ratio of the likelihood of **one particular hypothesis** to the likelihood of another. It can be interpreted as a measure of the strength of evidence in favor of one theory among **two competing theories**.
+
+-   That’s because the Bayes factor gives us a way to evaluate the data in favor of a null hypothesis, and to use external information to do so. It tells us what the weight of the evidence is in favor of a given hypothesis.
+
+-   When we are comparing two hypotheses, H1 (the alternate hypothesis) and H0 (the null hypothesis), the Bayes Factor is often written as B10. It can be defined mathematically as
+
+![](images/clipboard-1494843046.png)
+
+-   The [**Schwarz criterion**](https://www.statisticshowto.com/bayesian-information-criterion/) is one of the easiest ways to calculate rough approximation of the Bayes Factor.
+
+::: callout-note
+**Interpreting BF₁₀:**
+
+-   If **BF₁₀ \> 1**, the data favor **H₁**; the larger the number, the stronger the evidence.
+
+-   If **BF₁₀ \< 1**, the data favor **H₀**; values much less than 1 indicate very strong support for the null.
+:::
+
+### **6.3.5 How to interpret Bayes Factor**
+
+A **Bayes Factor** can be any positive number. One of the most common interpretations is this one—first proposed by Harold Jeffereys (1961) and slightly modified by [Lee and Wagenmakers](https://www-tandfonline-com.libproxy.smu.edu.sg/doi/pdf/10.1080/00031305.1999.10474443?needAccess=true) in 2013:
+
+![](images/clipboard-1537219734.png)
+
+### **6.3.6 Two-sample mean test: *ggbetweenstats()***
+
+In the code chunk below, [*ggbetweenstats()*](https://indrajeetpatil.github.io/ggstatsplot/reference/ggbetweenstats.html) is used to build a visual for two-sample mean test of Maths scores by gender.
+
+```{r}
+ggbetweenstats(
+  data = exam,
+  x = GENDER, 
+  y = MATHS,
+  type = "np", #nonparametric test
+  messages = FALSE #Suppresses any informational messages
+)
+
+```
+
+### **6.3.7 Oneway ANOVA Test: *ggbetweenstats()* method**
+
+In the code chunk below, [*ggbetweenstats()*](https://indrajeetpatil.github.io/ggstatsplot/reference/ggbetweenstats.html) is used to build a visual for One-way ANOVA test on English score by race.
+
+```{r}
+ggbetweenstats(
+  data = exam,
+  x = RACE, 
+  y = ENGLISH,
+  type = "p", # P means parametric one way ANOVA
+  mean.ci = TRUE, # 95$ confidence intervals around each group mean
+  pairwise.comparisons = TRUE, #After the overall ANOVA, performs pairwise tests between every pair of race groups.
+  pairwise.display = "s", # for display the singnificance levels
+  p.adjust.method = "fdr", #Adjusts the pairwise p-values for multiple testing using the false discovery rate.
+  messages = FALSE
+)
+
+```
+
+::: callout-note
+For `pairwise.display`
+
+-   “ns” → only non-significant
+
+-   “s” → only significant
+
+-   “all” → everything
+:::
+
+### [P-value Adjustment Methods]{style="color: red;"}
+
+| Method       | Description                                                  |
+|------------------|------------------------------------------------------|
+| `holm`       | Holm’s step-down procedure (controls family-wise error rate) |
+| `hochberg`   | Hochberg’s step-up modification of Bonferroni                |
+| `hommel`     | Hommel’s method (more powerful than Holm for some cases)     |
+| `bonferroni` | Classic Bonferroni correction                                |
+| `BH` / `fdr` | Benjamini–Hochberg (controls false discovery rate)           |
+| `BY`         | Benjamini–Yekutieli (more conservative FDR under dependency) |
+| `none`       | No adjustment; raw p-values                                  |
+
+#### 6.3.7.1 ggbetweenstats - Summary of tests
+
+![![](images/clipboard-2826439133.png)](images/clipboard-119679591.png)
+
+### **6.3.8 Significant Test of Correlation: *ggscatterstats()***
+
+In the code chunk below, [*ggscatterstats()*](https://indrajeetpatil.github.io/ggstatsplot/reference/ggscatterstats.html) is used to build a visual for Significant Test of Correlation between Maths scores and English scores.
+
+```{r}
+ggscatterstats(
+  data = exam,
+  x = MATHS,
+  y = ENGLISH,
+  marginal = FALSE
+#By default ggscatterstats() also draws little density or boxplot “marginals” along each axis; setting this to FALSE turns those off so you get just the central scatter.
+  )
+
+```
+
+### 6.3.9 Significant Test of Association (Depedence) : ggbarstats() methods
+
+In the code chunk below, the Maths scores is binned into a 4-class variable by using [*cut()*](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/cut).
+
+```{r}
+exam1 <- exam %>% 
+  mutate(MATHS_bins = 
+           cut(MATHS, 
+               breaks = c(0,60,75,85,100))
+)
+
+```
+
+
+
+In this code chunk below [*ggbarstats()*](https://indrajeetpatil.github.io/ggstatsplot/reference/ggbarstats.html) is used to build a visual for Significant Test of Association
+
+```{r}
+ggbarstats(exam1, 
+           x = MATHS_bins, 
+           y = GENDER)
+
+```
