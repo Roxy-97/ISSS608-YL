@@ -2,9 +2,13 @@ project:
   type: website
 
 website:
-  title: "ISSS608-YL"
+  title: ""
 
   navbar:
+    logo:      "images/snorlax.webp"
+    logo-alt:  "Snorlax"
+    logo-href: "index.html"
+
     left:
       - text: "Hands-on Exercise"
         menu:
