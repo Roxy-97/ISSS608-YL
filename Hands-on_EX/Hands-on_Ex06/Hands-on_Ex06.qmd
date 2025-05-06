@@ -28,14 +28,6 @@ In this hands-on exercise, you will gain hands-on experience on using:
 
 [**ggstatsplot**](https://indrajeetpatil.github.io/ggstatsplot/index.html) ![](https://r4va.netlify.app/chap10/img/image1.jpg){width="32" height="29"} is an extension of [**ggplot2**](https://ggplot2.tidyverse.org/) package for creating graphics with details from statistical tests included in the information-rich plots themselves.
 
-```{=html}
-<pre markdown>
-  
-To provide alternative statistical inference methods by default.
-To follow best practices for statistical reporting. For all statistical tests reported in the plots, the default template abides by the [APA](https://my.ilstu.edu/~jhkahn/apastats.html) gold standard for statistical reporting. For example, here are results from a robust t-test:
-</pre>
-```
-
 ![](images/clipboard-1826146409.png)
 
 ## **6.3 Getting Started**
