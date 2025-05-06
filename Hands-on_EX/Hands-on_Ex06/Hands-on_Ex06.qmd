@@ -141,7 +141,7 @@ For `pairwise.display`
 ### [P-value Adjustment Methods]{style="color: red;"}
 
 | Method       | Description                                                  |
-|------------------|------------------------------------------------------|
+|-------------------|-----------------------------------------------------|
 | `holm`       | Holm’s step-down procedure (controls family-wise error rate) |
 | `hochberg`   | Hochberg’s step-up modification of Bonferroni                |
 | `hommel`     | Hommel’s method (more powerful than Holm for some cases)     |
@@ -181,8 +181,6 @@ exam1 <- exam %>%
 )
 
 ```
-
-
 
 In this code chunk below [*ggbarstats()*](https://indrajeetpatil.github.io/ggstatsplot/reference/ggbarstats.html) is used to build a visual for Significant Test of Association
 
