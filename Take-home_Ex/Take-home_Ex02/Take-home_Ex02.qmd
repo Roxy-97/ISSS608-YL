@@ -1,0 +1,398 @@
+---
+title: "Take-home Exercise 01 phase 2"
+author: "Yang Lu"
+date: "9 May 2025"
+date-modified: "last-modified"
+format: html
+editor: visual
+execute: 
+  eval: true  
+  echo: true  
+  warning: false 
+  freeze: true 
+---
+
+## Overview Task
+
+In this exercise, we select a peer submission of Take-home Exercise 1.
+
+-   Critic good design principles
+
+-   Recommendations for further improvement
+
+-   Present a makeover version of the data
+
+## Getting started
+
+### Load required packages
+
+```{r}
+pacman::p_load(tidyverse,dplyr,
+               ggplot2, forcats, 
+               scales,patchwork)
+```
+
+### Import data
+
+The data used in this exercise is the same as the data used in the Take-home Exercise 1
+
+```{r}
+population_age_sex_2024 <- read_csv("respopagesex2024/respopagesex2024.csv")
+population_age_sex_2024
+```
+
+### Data Processing
+
+```{r}
+str(population_age_sex_2024)
+
+```
+
+```{r}
+sort(unique(population_age_sex_2024$Age))
+```
+
+#### Creating a Numeric Age Column
+
+```{r}
+df <- population_age_sex_2024 %>%
+  mutate(
+    AgeNum = suppressWarnings(
+      ifelse(Age == "90_and_Over", 90, as.numeric(Age))
+    )
+  )
+```
+
+#### Creating Age Grouping
+
+```{r}
+df <- df %>%
+  mutate(
+    AgeGroup = case_when(
+      AgeNum <= 12 ~ "Child",
+      AgeNum <= 24 ~ "Youth",
+      AgeNum <= 64 ~ "Adult",
+      TRUE ~ "Senior"
+    )
+  )
+```
+
+## Visualization: **Population by Age / Age Group**
+
+### Original Design
+
+This visualization shows two charts for Singapore’s resident population (2024):
+
+1.  **Total Population by Age** – population by single-age bar chart
+
+2.  **Population by Age Group** – a 4-category bar chart (Child, Youth, Adult, Senior)
+
+The original design is shown below.
+
+![](images/clipboard-2153998124.png){width="532"}
+
+### **Critique for Population by Age / Age Group**
+
+::: {.callout-caution icon="false"}
+## Clarity
+
+**Clear Aspects**
+
+-   Bars are labeled and vertically aligned, allowing easy mapping to axis values.
+
+-   Axis titles (“Age” / “Age-Group” and “Population”) are clearly stated.
+
+-    Insights below the charts succinctly summarize the key takeaways.
+
+**Confusing Aspects**
+
+-   For Total Population by Age chart
+
+    -   The x-axis includes every single age, making it difficult to identify exact values for each one.
+
+    -   The age on the x-axis cuts off after age 75, making the data appear incomplete.
+
+    -   The y-axis has a maximum of 60,000, but some age bars exceeded above the limit and appear visually clipped.
+
+-   Population by Age Group chart
+
+    -   Age groups are labeled as “Child,” “Youth,” etc., without their numeric ranges (e.g. 0–14, 15–24), making the groupings harder to interpret.
+
+    -   The order of age groups “Adult, Child, Senior, Youth,” does not follow a logical age progression, making it harder to grasp at a glance which can confuse viewers on first impression.
+:::
+
+::: {.callout-tip icon="false"}
+## Aesthetics
+
+**Visually Appealing**
+
+-   The minimalist design keeps the focus on the bars by reducing distractions.
+
+-   Bold chart titles and axis labels enhance's readability.
+
+**Visually Distracting**
+
+-   For Total Population by Age chart
+
+    -   The wide age range makes it hard to distinguish where one age group ends and another begings.
+
+    -   Bars do not display actual population values for easier understanding at first glance.
+
+-   For Population by Age Group chart
+
+    -   The absence of data labels on bars forces viewers to rely on the y-axis to estimate values.
+:::
+
+### Remake
+
+::: panel-tabset
+### Total Population by Age (The Plot)
+
+```{r,fig.width=18, fig.height=10}
+#| echo: false
+library(tidyverse)
+library(scales)
+
+
+bin_labels <- c(paste0(seq(0, 85, by = 5), "-", seq(4, 89, by = 5)), "90+")
+
+pop_5yr <- df %>%
+  mutate(
+    AgeNum = suppressWarnings(
+      ifelse(Age %in% c("90_and_over","90_and_above"), 90, as.numeric(Age))
+    ),
+    AgeBin = cut(
+      AgeNum,
+      breaks = c(seq(0, 90, by = 5), Inf),
+      labels = bin_labels,
+      right = FALSE
+    )
+  ) %>%
+  replace_na(list(AgeBin = "90+")) %>%
+  group_by(AgeBin) %>%
+  summarise(Pop = sum(Pop, na.rm = TRUE), .groups = "drop") %>%
+  mutate(AgeBin = factor(AgeBin, levels = bin_labels))
+
+
+ggplot(pop_5yr, aes(x = AgeBin, y = Pop)) +
+  geom_col(fill = "#28D6D7", color = "white") +
+  geom_text(
+    aes(label = comma(Pop)),
+    vjust = -0.3,               
+    size = 5,                   
+    color = "#D72928"
+  ) +
+  scale_y_continuous(
+    breaks = seq(0, 350000, 50000),
+    limits = c(0, 440000),      
+    labels = comma,
+    expand = expansion(add = c(0, 0))
+  ) +
+  labs(
+    title = "Singapore Resident Population (Y2024)",
+    x     = "Age",
+    y     = "Population"
+  ) +
+  theme_minimal(base_size = 25) +
+  theme(
+    axis.text.x        = element_text(angle = 45, hjust = 1),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor   = element_blank()
+  )
+
+
+```
+
+### Total Population by Age (The code chunk)
+
+```{r,fig.width=18, fig.height=10}
+#| eval: false
+
+library(tidyverse)
+library(scales)
+
+bin_labels <- c(paste0(seq(0, 85, by = 5), "-", seq(4, 89, by = 5)), "90+")
+
+pop_5yr <- df %>%
+  mutate(
+    AgeNum = suppressWarnings(
+      ifelse(Age %in% c("90_and_over","90_and_above"), 90, as.numeric(Age))
+    ),
+    AgeBin = cut(
+      AgeNum,
+      breaks = c(seq(0, 90, by = 5), Inf),
+      labels = bin_labels,
+      right = FALSE
+    )
+  ) %>%
+  replace_na(list(AgeBin = "90+")) %>%
+  group_by(AgeBin) %>%
+  summarise(Pop = sum(Pop, na.rm = TRUE), .groups = "drop") %>%
+  mutate(AgeBin = factor(AgeBin, levels = bin_labels))
+
+
+ggplot(pop_5yr, aes(x = AgeBin, y = Pop)) +
+  geom_col(fill = "#28D6D7", color = "white") +
+  geom_text(
+    aes(label = comma(Pop)),
+    vjust = -0.3,               
+    size = 5,                   
+    color = "#D72928"
+  ) +
+  scale_y_continuous(
+    breaks = seq(0, 350000, 50000),
+    limits = c(0, 440000),      
+    labels = comma,
+    expand = expansion(add = c(0, 0))
+  ) +
+  labs(
+    title = "Singapore Resident Population (Y2024)",
+    x     = "Age",
+    y     = "Population"
+  ) +
+  theme_minimal(base_size = 25) +
+  theme(
+    axis.text.x        = element_text(angle = 45, hjust = 1),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor   = element_blank()
+  )
+
+
+```
+
+### population by age group (The Plot)
+
+```{r}
+#| echo: false
+library(tidyverse)
+library(RColorBrewer)
+library(scales)
+
+df2 <- df %>%
+  mutate(
+    AgeNum = suppressWarnings(
+      ifelse(Age %in% c("90_and_over","90_and_above"),
+             90,
+             as.numeric(Age))
+    )
+  ) %>%
+
+  mutate(
+    AgeGroup = case_when(
+      AgeNum <= 12 ~ "Child (0–12)",
+      AgeNum <= 24 ~ "Youth (13–24)",
+      AgeNum <= 64 ~ "Adult (25–64)",
+      TRUE         ~ "Senior (65+)"
+    ),
+    AgeGroup = factor(
+      AgeGroup,
+      levels = c("Child (0–12)",
+                 "Youth (13–24)",
+                 "Adult (25–64)",
+                 "Senior (65+)")
+    )
+  )
+
+p2_new <- df2 %>%
+  group_by(AgeGroup) %>%
+  summarise(Pop = sum(Pop, na.rm = TRUE), .groups = "drop") %>%
+  ggplot(aes(x = AgeGroup, y = Pop, fill = AgeGroup)) +
+    geom_col(color = "white") +
+    geom_text(aes(label = comma(Pop)), vjust = -0.3, size = 3) +
+    scale_y_continuous(labels = comma, expand = expansion(mult = c(0, .05))) +
+    scale_fill_brewer(palette = "Set2", name = "Age Group") +
+    labs(
+      title   = "Population by Age Group",
+      x       = NULL,
+      y       = "Population",
+      caption = "Data source: Singapore Department of Statistics (June 2024)"
+    ) +
+    theme_minimal(base_size = 14) +
+    theme(
+      legend.position   = "right",
+      legend.title      = element_text(size = 12, face = "bold"),
+      legend.text       = element_text(size = 10),
+      axis.text.x       = element_text(angle = 45, hjust = 1, size = 12),
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor   = element_blank(),
+      plot.caption      = element_text(size = 9, hjust = 1, face = "italic")
+    )
+
+print(p2_new)
+
+```
+
+### population by age group (The code chunk )
+
+```{r}
+#| eval: false
+library(tidyverse)
+library(RColorBrewer)
+library(scales)
+
+df2 <- df %>%
+  mutate(
+    AgeNum = suppressWarnings(
+      ifelse(Age %in% c("90_and_over","90_and_above"),
+             90,
+             as.numeric(Age))
+    )
+  ) %>%
+
+  mutate(
+    AgeGroup = case_when(
+      AgeNum <= 12 ~ "Child (0–12)",
+      AgeNum <= 24 ~ "Youth (13–24)",
+      AgeNum <= 64 ~ "Adult (25–64)",
+      TRUE         ~ "Senior (65+)"
+    ),
+    AgeGroup = factor(
+      AgeGroup,
+      levels = c("Child (0–12)",
+                 "Youth (13–24)",
+                 "Adult (25–64)",
+                 "Senior (65+)")
+    )
+  )
+
+p2_new <- df2 %>%
+  group_by(AgeGroup) %>%
+  summarise(Pop = sum(Pop, na.rm = TRUE), .groups = "drop") %>%
+  ggplot(aes(x = AgeGroup, y = Pop, fill = AgeGroup)) +
+    geom_col(color = "white") +
+    geom_text(aes(label = comma(Pop)), vjust = -0.3, size = 3) +
+    scale_y_continuous(labels = comma, expand = expansion(mult = c(0, .05))) +
+    scale_fill_brewer(palette = "Set2", name = "Age Group") +
+    labs(
+      title   = "Population by Age Group",
+      x       = NULL,
+      y       = "Population",
+      caption = "Data source: Singapore Department of Statistics (June 2024)"
+    ) +
+    theme_minimal(base_size = 14) +
+    theme(
+      legend.position   = "right",
+      legend.title      = element_text(size = 12, face = "bold"),
+      legend.text       = element_text(size = 10),
+      axis.text.x       = element_text(angle = 45, hjust = 1, size = 12),
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor   = element_blank(),
+      plot.caption      = element_text(size = 9, hjust = 1, face = "italic")
+    )
+
+print(p2_new)
+
+```
+:::
+
+::: {.callout-note style="background-color: #D9FEF8;" icon="false"}
+## Refinements
+
+-   **Clearer Age Grouping**: Replaced 91 single-age bins with broader 5-year intervals (e.g., 0–4, 5–9, ..., 85–89, 90+), making cohort sizes easier to interpret at a glance.
+
+-   **Labeled Group Names**: Added numeric ranges to group labels — e.g., “Child (0–12)”, “Youth (13–24)” — so each label conveys full meaning without requiring external reference.
+
+-   **Value Labels on Bars**: Population counts are now displayed directly above each bar in a contrasting color, reducing reliance on the y-axis for exact values.
+
+-   **Improved Text Legibility**: Increased base font sizes (including for titles, axis labels, and bar labels), ensuring readability even in high-resolution displays or print.
+:::
