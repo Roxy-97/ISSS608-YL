@@ -396,3 +396,11 @@ print(p2_new)
 
 -   **Improved Text Legibility**: Increased base font sizes (including for titles, axis labels, and bar labels), ensuring readability even in high-resolution displays or print.
 :::
+
+## Summary and conclusion
+
+By grouping ages into 5-year bins and enriching the labels, we transformed a busy histogram and a loosely ordered bar chart into concise, self-contained visuals. These redesigned plots not only improve readability and accessibility but also make the demographic story of Singapore—its strong working-age base, shrinking youth cohorts, and emerging aging population—more transparent for policymakers and stakeholders.
+
+## **Reference**
+
+<https://cabbage-wonderland.netlify.app/takehome_ex/takehome_ex01/takehome_ex01#overview>
