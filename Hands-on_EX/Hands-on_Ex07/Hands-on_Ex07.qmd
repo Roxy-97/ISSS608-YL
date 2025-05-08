@@ -452,98 +452,22 @@ exam %>%
 
 showing 95% and 99% confidence intervals.
 
-::: panel-tabset
-### The code chunk
 
 ```{r}
-#| eval: false
-exam %>%
-  ggplot(aes(x = RACE, 
-             y = MATHS)) +
-  stat_pointinterval(
-    show.legend = FALSE) +   
-  labs(
-    title = "Visualising confidence intervals of mean math score",
-    subtitle = "Mean Point + Multiple-interval plot")
 
-```
-
-### The Plot
-
-```{r}
-#| echo: false
-exam %>%
-  ggplot(aes(x = RACE, 
-             y = MATHS)) +
-  stat_pointinterval(
-    show.legend = FALSE) +   
-  labs(
-    title = "Visualising confidence intervals of mean math score",
-    subtitle = "Mean Point + Multiple-interval plot")
-```
-:::
-
-::: panel-tabset
-### 95% confidence interval
-
-```{r}
-p95 <- ggplot(exam, aes(
-    x = reorder(RACE, MATHS, FUN = mean, .desc = TRUE),
-    y = MATHS
-  )) +
-  stat_pointinterval(
-    .width       = 0.95,      
-    point_size   = 1.5,       
-    interval_size = 0.5,      
-    color        = "red",     
-    fill         = "steelblue",
-    show.legend  = FALSE
-  ) +
-  labs(
-    x     = "Race",
-    y     = "Maths score",
-    title = "95% CI of mean maths score by race"
-  ) +
-  theme_minimal()
-
-print(p95)
-
-```
-
-### For 99% confidence interval
-
-```{r}
-p99 <- ggplot(exam, aes(
-    x = reorder(RACE, MATHS, FUN = mean, .desc = TRUE),
-    y = MATHS
-  )) +
-  stat_pointinterval(
-    .width       = 0.99,      
-    point_size   = 1.5,       
-    interval_size = 0.5,      
-    color        = "red",     
-    fill         = "steelblue",
-    show.legend  = FALSE
-  ) +
-  labs(
-    x     = "Race",
-    y     = "Maths score",
-    title = "99% CI of mean maths score by race"
-  ) +
-  theme_minimal()
-print(p99)
-```
-:::
-
-```{r}
 exam %>%
   ggplot(aes(x = RACE, y = MATHS)) +
-  stat_pointinterval(.width = 0.99,
-  .point = median,
-  .interval = qi) +
+  stat_pointinterval(
+    .width    = c(0.95, 0.99),  # inner = 95%, outer = 99%
+    .point    = median,         # central estimate = median
+    .interval = qi              # quantile‐interval for CIs
+  ) +
   labs(
-    title = "Visualising confidence intervals of median math score",
-    subtitle = "Median Point + Multiple-interval plot")
+    title    = "Visualising confidence intervals of median math score",
+    subtitle = "Median point + 95% & 99% intervals"
+  ) +
+  theme_minimal()
+
 
 
 ```
