@@ -452,7 +452,6 @@ exam %>%
 
 showing 95% and 99% confidence intervals.
 
-
 ```{r}
 
 exam %>%
@@ -494,7 +493,7 @@ exam %>%
 
 ### **7.5.1 Installing ungeviz package**
 
-```{r}
+```{r eval=FALSE}
 devtools::install_github("wilkelab/ungeviz")
 ```
 
