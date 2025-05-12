@@ -1,0 +1,15 @@
+---
+title: "Hands-on Exercise 5"
+author: "Yang Lu"
+date: "14 May 2025"
+date-modified: "last-modified"
+format: html
+editor: visual
+execute: 
+  eval: true  
+  echo: true  
+  warning: false 
+  freeze: true 
+---
+
+# Lesson 9: **Modelling, Visualising and Analysing Network Data with R**
