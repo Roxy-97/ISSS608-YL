@@ -4,6 +4,8 @@ author: "Yang Lu"
 date: "14 May 2025"
 date-modified: "last-modified"
 format: html
+code-fold: true
+code-summary: "Show the code"
 editor: visual
 execute: 
   eval: true  
@@ -13,3 +15,180 @@ execute:
 ---
 
 # Lesson 9: **Modelling, Visualising and Analysing Network Data with R**
+
+## **9.1 Overview**
+
+In this hands-on exercise, you will learn how to model, analyse and visualise network data using R.
+
+By the end of this hands-on exercise, you will be able to:
+
+-   create graph object data frames, manipulate them using appropriate functions of *dplyr*, *lubridate*, and *tidygraph*,
+
+-   build network graph visualisation using appropriate functions of *ggraph*,
+
+-   compute network geometrics using *tidygraph*,
+
+-   build advanced graph visualisation by incorporating the network geometrics, and
+
+-   build interactive network visualisation using *visNetwork* package.
+
+## **9.2 Getting Started**
+
+### **9.2.1 Installing and launching R packages**
+
+In this hands-on exercise, four network data modelling and visualisation packages will be installed and launched. They are igraph, tidygraph, ggraph and visNetwork. Beside these four packages, tidyverse and [lubridate](https://lubridate.tidyverse.org/), an R package specially designed to handle and wrangling time data will be installed and launched too.
+
+```{r}
+pacman::p_load(igraph, tidygraph, ggraph, 
+               visNetwork, lubridate, clock,
+               tidyverse, graphlayouts, 
+               concaveman, ggforce)
+
+```
+
+## **9.3 The Data**
+
+The data sets used in this hands-on exercise is from an oil exploration and extraction company. There are two data sets. One contains the nodes data and the other contains the edges (also know as link) data.
+
+### **9.3.1 The edges data**
+
+-   *GAStech-email_edges.csv* which consists of two weeks of 9063 emails correspondances between 55 employees.
+
+    ![](images/clipboard-3937314188.png)
+
+### **9.3.2 The nodes data**
+
+-   *GAStech_email_nodes.csv* which consist of the names, department and title of the 55 employees.
+
+    ![](images/clipboard-2624225880.png)
+
+### **9.3.3 Importing network data from files**
+
+In this step, will import GAStech_email_node.csv and GAStech_email_edges-v2.csv into RStudio environment by using `read_csv()` of **readr** package.
+
+```{r}
+GAStech_nodes <- read_csv("GAStech_email_node.csv")
+GAStech_edges <- read_csv("GAStech_email_edge-v2.csv")
+
+```
+
+### **9.3.4 Reviewing the imported data**
+
+Next, we will examine the structure of the data frame using *glimpse()* of **dplyr**.
+
+```{r}
+glimpse(GAStech_edges)
+glimpse(GAStech_nodes)
+```
+
+::: callout-warning
+The output report of GAStech_edges above reveals that the ***SentDate*** is treated as **“Character**” data type instead of "***date**"* data type. This is an error!
+
+Before we continue, it is important for us to change the data type of *SentDate* field back to “Date”” data type.
+:::
+
+### **9.3.5 Wrangling time**
+
+The code chunk below will be used to perform the changes.
+
+```{r}
+GAStech_edges <- GAStech_edges %>%
+  mutate(SendDate = dmy(SentDate)) %>%
+  mutate(Weekday = wday(SentDate,
+                        label = TRUE,
+                        abbr = FALSE))
+```
+
+::: {.callout-note icon="false"}
+## Things to learn from the code chunk above
+
+-   both *dmy()* and *wday()* are functions of **lubridate** package. [lubridate](https://r4va.netlify.app/cran.r-project.org/web/packages/lubridate/vignettes/lubridate.html) is an R package that makes it easier to work with dates and times.
+
+-   *dmy()* transforms the SentDate to Date data type.
+
+-   *wday()* returns the day of the week as a decimal number or an ordered factor if label is TRUE. The argument abbr is FALSE keep the daya spells in full, i.e. Monday. The function will create a new column in the data.frame i.e. Weekday and the output of *wday()* will save in this newly created field.
+
+-   the values in the *Weekday* field are in ordinal scale.
+
+**code breakdown**\
+GAStech_edges \<- GAStech_edges %\>%
+
+#1)Convert the character like "6/1/2014" into a Date object (2014-01-06) format
+
+mutate(SendDate = dmy(SendDate)) %\>%
+
+#2)Create a new column Weekday from the Date
+
+mutate( Weekday = wday(
+
+SendDate, label = TRUE, \# Return an ordered factor with weekday names
+
+abbr = FALSE \# FALSE means full names "Monday" not "Mon" ) )
+:::
+
+### 9.3.6 Reviewing the revised data fields
+
+Table below shows the data structure of the reformatted `GAStech_edges` data frame
+
+```{r}
+glimpse(GAStech_edges)
+```
+
+### **9.3.7 Wrangling attributes**
+
+A close examination of *GAStech_edges* data.frame reveals that it consists of individual e-mail flow records. This is not very useful for visualisation.
+
+In view of this, we will aggregate the individual by *date, senders, receivers, main subject and day of the week.*
+
+```{r}
+GAStech_edges_aggregated <- GAStech_edges %>%
+  filter(MainSubject == "Work related") %>%
+  group_by(source, target, Weekday) %>%
+    summarise(Weight = n()) %>%
+  filter(source!=target) %>%
+  filter(Weight > 1) %>%
+  ungroup()
+GAStech_edges_aggregated
+```
+
+::: {.callout-note icon="false"}
+## Things to learn from the code chunk above:
+
+-   four functions from **dplyr** package are used. They are: *filter()*, *group()*, *summarise()*, and *ungroup()*.
+
+-   The output data.frame is called **GAStech_edges_aggregated**.
+
+-   A new field called *Weight* has been added in GAStech_edges_aggregated.
+
+**Code breakdown**
+
+-   `filter(MainSubject == "Work related")`
+
+    select only emails whose main subject is " Work related"
+
+-   `group_by(source, target, Weekday)`
+
+    Groups the data by sender (`source`), recipient (`target`), and day of week (`Weekday`).
+
+-   `summarise(Weight = n())`
+
+    Count the number of emails in each group, and stores it in a new column called "weight"
+
+-   `filter (source != target)`
+
+    Removes self sent emails ( which means the sender and recipient is same person)
+
+-   `filter (weight >1)`
+
+    Keep only edges where at least two emails were exchanged
+
+-   `ungroup()`
+
+    Remove grouping so that the resulting data frame is no longer grouped
+:::
+
+### **9.3.8 Reviewing the revised edges file**
+
+```{r}
+glimpse(GAStech_edges_aggregated)
+```
