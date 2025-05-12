@@ -230,6 +230,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#wrangling-attributes" id="toc-wrangling-attributes" class="nav-link" data-scroll-target="#wrangling-attributes"><strong>9.3.7 Wrangling attributes</strong></a></li>
   <li><a href="#reviewing-the-revised-edges-file" id="toc-reviewing-the-revised-edges-file" class="nav-link" data-scroll-target="#reviewing-the-revised-edges-file"><strong>9.3.8 Reviewing the revised edges file</strong></a></li>
   </ul></li>
+  <li><a href="#creating-network-objects-using-tidygraph" id="toc-creating-network-objects-using-tidygraph" class="nav-link" data-scroll-target="#creating-network-objects-using-tidygraph"><strong>9.4 Creating network objects using tidygraph</strong></a>
+  <ul class="collapse">
+  <li><a href="#the-tbl_graph-object" id="toc-the-tbl_graph-object" class="nav-link" data-scroll-target="#the-tbl_graph-object"><strong>9.4.1 The tbl_graph object</strong></a></li>
+  <li><a href="#the-dplyr-verbs-in-tidygraph" id="toc-the-dplyr-verbs-in-tidygraph" class="nav-link" data-scroll-target="#the-dplyr-verbs-in-tidygraph"><strong>9.4.2 The dplyr verbs in tidygraph</strong></a></li>
+  <li><a href="#using-tbl_graph-to-build-tidygraph-data-model." id="toc-using-tbl_graph-to-build-tidygraph-data-model." class="nav-link" data-scroll-target="#using-tbl_graph-to-build-tidygraph-data-model."><strong>9.4.3 Using <code>tbl_graph()</code> to build tidygraph data model.</strong></a></li>
+  <li><a href="#reviewing-the-output-tidygraphs-graph-object" id="toc-reviewing-the-output-tidygraphs-graph-object" class="nav-link" data-scroll-target="#reviewing-the-output-tidygraphs-graph-object"><strong>9.4.4 Reviewing the output tidygraph’s graph object</strong></a></li>
+  </ul></li>
   </ul></li>
   </ul>
 </nav>
@@ -524,6 +531,123 @@ $ source  &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 $ target  &lt;dbl&gt; 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 6,…
 $ Weekday &lt;ord&gt; Sunday, Monday, Tuesday, Wednesday, Friday, Sunday, Monday, Tu…
 $ Weight  &lt;int&gt; 5, 2, 3, 4, 6, 5, 2, 3, 4, 6, 5, 2, 3, 4, 6, 5, 2, 3, 4, 6, 5,…</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="creating-network-objects-using-tidygraph" class="level2">
+<h2 class="anchored" data-anchor-id="creating-network-objects-using-tidygraph"><strong>9.4 Creating network objects using tidygraph</strong></h2>
+<p>In this section, will learn how to create a graph data model by using <strong>tidygraph</strong> package.</p>
+<p>It provides a tidy API for graph/network manipulation. While network data itself is not tidy, it can be envisioned as two tidy tables, one for node data and one for edge data. tidygraph provides a way to switch between the two tables and provides dplyr verbs for manipulating them. Furthermore it provides access to a lot of graph algorithms with return values that facilitate their use in a tidy workflow.</p>
+<p>Before getting started, you are advised to read these two articles:</p>
+<ul>
+<li><p><a href="https://www.data-imaginist.com/2017/introducing-tidygraph/">Introducing tidygraph</a></p></li>
+<li><p><a href="https://www.data-imaginist.com/2018/tidygraph-1-1-a-tidy-hope/">tidygraph 1.1 - A tidy hope</a></p></li>
+</ul>
+<section id="the-tbl_graph-object" class="level3">
+<h3 class="anchored" data-anchor-id="the-tbl_graph-object"><strong>9.4.1 The tbl_graph object</strong></h3>
+<p>Two functions of <strong>tidygraph</strong> package can be used to create network objects, they are:</p>
+<ul>
+<li><p><a href="https://tidygraph.data-imaginist.com/reference/tbl_graph.html"><code>tbl_graph()</code></a> creates a <strong>tbl_graph</strong> network object from nodes and edges data.</p></li>
+<li><p><a href="https://tidygraph.data-imaginist.com/reference/tbl_graph.html"><code>as_tbl_graph()</code></a> converts network data and objects to a <strong>tbl_graph</strong> network.</p></li>
+</ul>
+<p>Below are network data and objects supported by <code>as_tbl_graph()</code></p>
+<ul>
+<li><p>a node data.frame and an edge data.frame,</p></li>
+<li><p>data.frame, list, matrix from base,</p></li>
+<li><p>igraph from igraph,</p></li>
+<li><p>network from network,</p></li>
+<li><p>dendrogram and hclust from stats,</p></li>
+<li><p>Node from data.tree,</p></li>
+<li><p>phylo and evonet from ape, and</p></li>
+<li><p>graphNEL, graphAM, graphBAM from graph (in Bioconductor).</p></li>
+</ul>
+</section>
+<section id="the-dplyr-verbs-in-tidygraph" class="level3">
+<h3 class="anchored" data-anchor-id="the-dplyr-verbs-in-tidygraph"><strong>9.4.2 The dplyr verbs in tidygraph</strong></h3>
+<ul>
+<li><em>activate()</em> verb from <strong>tidygraph</strong> serves as a switch between tibbles for nodes and edges. All dplyr verbs applied to <strong>tbl_graph</strong> object are applied to the active tibble.</li>
+</ul>
+<p><img src="images/clipboard-1887082531.png" class="img-fluid" width="490"></p>
+<ul>
+<li>In the above the <em><code>.N()</code></em> function is used to gain access to the node data while manipulating the edge data. Similarly <em><code>.E()</code></em> will give you the edge data and <em><code>.G()</code></em> will give you the <strong>tbl_graph</strong> object itself.</li>
+</ul>
+</section>
+<section id="using-tbl_graph-to-build-tidygraph-data-model." class="level3">
+<h3 class="anchored" data-anchor-id="using-tbl_graph-to-build-tidygraph-data-model."><strong>9.4.3 Using <code>tbl_graph()</code> to build tidygraph data model.</strong></h3>
+<p>In this section, will use <code>tbl_graph()</code> of <strong>tinygraph</strong> package to build an tidygraph’s network graph data.frame.</p>
+<p>Before typing the codes, you are recommended to review to reference guide of <a href="https://tidygraph.data-imaginist.com/reference/tbl_graph.html"><code>tbl_graph()</code></a></p>
+<div class="callout callout-style-default callout-caution no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Functions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><p><code>as_tbl_graph(data.frame)</code>: Method for edge table and set membership table</p></li>
+<li><p><code>as_tbl_graph(Node)</code>: Method to deal with Node objects from the data.tree package</p></li>
+<li><p><code>as_tbl_graph(dendrogram)</code>: Method for dendrogram objects</p></li>
+<li><p><code>as_tbl_graph(graphNEL)</code>: Method for handling graphNEL objects from the graph package (on Bioconductor)</p></li>
+<li><p><code>as_tbl_graph(graphAM)</code>: Method for handling graphAM objects from the graph package (on Bioconductor)</p></li>
+<li><p><code>as_tbl_graph(graphBAM)</code>: Method for handling graphBAM objects from the graph package (on Bioconductor)</p></li>
+<li><p><code>as_tbl_graph(hclust)</code>: Method for hclust objects</p></li>
+<li><p><code>as_tbl_graph(igraph)</code>: Method for igraph object. Simply subclasses the object into a <code>tbl_graph</code></p></li>
+<li><p><code>as_tbl_graph(list)</code>: Method for adjacency lists and lists of node and edge tables</p></li>
+<li><p><code>as_tbl_graph(matrix)</code>: Method for edgelist, adjacency and incidence matrices</p></li>
+<li><p><code>as_tbl_graph(network)</code>: Method to handle network objects from the <code>network</code> package. Requires this packages to work.</p></li>
+<li><p><code>as_tbl_graph(phylo)</code>: Method for handling phylo objects from the ape package</p></li>
+<li><p><code>as_tbl_graph(evonet)</code>: Method for handling evonet objects from the ape package</p></li>
+<li><p><code>as_tbl_graph(default)</code>: Default method. tries to call <code>igraph::as.igraph()</code> on the input.</p></li>
+</ul>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>GAStech_graph <span class="ot">&lt;-</span> <span class="fu">tbl_graph</span>(<span class="at">nodes =</span> GAStech_nodes,</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>                           <span class="at">edges =</span> GAStech_edges_aggregated, </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">directed =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="reviewing-the-output-tidygraphs-graph-object" class="level3">
+<h3 class="anchored" data-anchor-id="reviewing-the-output-tidygraphs-graph-object"><strong>9.4.4 Reviewing the output tidygraph’s graph object</strong></h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>GAStech_graph</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tbl_graph: 54 nodes and 1372 edges
+#
+# A directed multigraph with 1 component
+#
+# Node Data: 54 × 4 (active)
+      id label               Department     Title                               
+   &lt;dbl&gt; &lt;chr&gt;               &lt;chr&gt;          &lt;chr&gt;                               
+ 1     1 Mat.Bramar          Administration Assistant to CEO                    
+ 2     2 Anda.Ribera         Administration Assistant to CFO                    
+ 3     3 Rachel.Pantanal     Administration Assistant to CIO                    
+ 4     4 Linda.Lagos         Administration Assistant to COO                    
+ 5     5 Ruscella.Mies.Haber Administration Assistant to Engineering Group Mana…
+ 6     6 Carla.Forluniau     Administration Assistant to IT Group Manager       
+ 7     7 Cornelia.Lais       Administration Assistant to Security Group Manager 
+ 8    44 Kanon.Herrero       Security       Badging Office                      
+ 9    45 Varja.Lagos         Security       Badging Office                      
+10    46 Stenig.Fusil        Security       Building Control                    
+# ℹ 44 more rows
+#
+# Edge Data: 1,372 × 4
+   from    to Weekday Weight
+  &lt;int&gt; &lt;int&gt; &lt;ord&gt;    &lt;int&gt;
+1     1     2 Sunday       5
+2     1     2 Monday       2
+3     1     2 Tuesday      3
+# ℹ 1,369 more rows</code></pre>
 </div>
 </div>
 

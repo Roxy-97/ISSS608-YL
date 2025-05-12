@@ -192,3 +192,101 @@ GAStech_edges_aggregated
 ```{r}
 glimpse(GAStech_edges_aggregated)
 ```
+
+## **9.4 Creating network objects using tidygraph**
+
+In this section, will learn how to create a graph data model by using **tidygraph** package.
+
+It provides a tidy API for graph/network manipulation. While network data itself is not tidy, it can be envisioned as two tidy tables, one for node data and one for edge data. tidygraph provides a way to switch between the two tables and provides dplyr verbs for manipulating them. Furthermore it provides access to a lot of graph algorithms with return values that facilitate their use in a tidy workflow.
+
+Before getting started, you are advised to read these two articles:
+
+-   [Introducing tidygraph](https://www.data-imaginist.com/2017/introducing-tidygraph/)
+
+-   [tidygraph 1.1 - A tidy hope](https://www.data-imaginist.com/2018/tidygraph-1-1-a-tidy-hope/)
+
+### **9.4.1 The tbl_graph object**
+
+Two functions of **tidygraph** package can be used to create network objects, they are:
+
+-   [`tbl_graph()`](https://tidygraph.data-imaginist.com/reference/tbl_graph.html) creates a **tbl_graph** network object from nodes and edges data.
+
+-   [`as_tbl_graph()`](https://tidygraph.data-imaginist.com/reference/tbl_graph.html) converts network data and objects to a **tbl_graph** network.
+
+Below are network data and objects supported by `as_tbl_graph()`
+
+-   a node data.frame and an edge data.frame,
+
+-   data.frame, list, matrix from base,
+
+-   igraph from igraph,
+
+-   network from network,
+
+-   dendrogram and hclust from stats,
+
+-   Node from data.tree,
+
+-   phylo and evonet from ape, and
+
+-   graphNEL, graphAM, graphBAM from graph (in Bioconductor).
+
+### **9.4.2 The dplyr verbs in tidygraph**
+
+-   *activate()* verb from **tidygraph** serves as a switch between tibbles for nodes and edges. All dplyr verbs applied to **tbl_graph** object are applied to the active tibble.
+
+![](images/clipboard-1887082531.png){width="490"}
+
+-   In the above the *`.N()`* function is used to gain access to the node data while manipulating the edge data. Similarly *`.E()`* will give you the edge data and *`.G()`* will give you the **tbl_graph** object itself.
+
+### **9.4.3 Using `tbl_graph()` to build tidygraph data model.**
+
+In this section, will use `tbl_graph()` of **tinygraph** package to build an tidygraph’s network graph data.frame.
+
+Before typing the codes, you are recommended to review to reference guide of [`tbl_graph()`](https://tidygraph.data-imaginist.com/reference/tbl_graph.html)
+
+::: {.callout-caution icon="false"}
+## Functions
+
+-   `as_tbl_graph(data.frame)`: Method for edge table and set membership table
+
+-   `as_tbl_graph(Node)`: Method to deal with Node objects from the data.tree package
+
+-   `as_tbl_graph(dendrogram)`: Method for dendrogram objects
+
+-   `as_tbl_graph(graphNEL)`: Method for handling graphNEL objects from the graph package (on Bioconductor)
+
+-   `as_tbl_graph(graphAM)`: Method for handling graphAM objects from the graph package (on Bioconductor)
+
+-   `as_tbl_graph(graphBAM)`: Method for handling graphBAM objects from the graph package (on Bioconductor)
+
+-   `as_tbl_graph(hclust)`: Method for hclust objects
+
+-   `as_tbl_graph(igraph)`: Method for igraph object. Simply subclasses the object into a `tbl_graph`
+
+-   `as_tbl_graph(list)`: Method for adjacency lists and lists of node and edge tables
+
+-   `as_tbl_graph(matrix)`: Method for edgelist, adjacency and incidence matrices
+
+-   `as_tbl_graph(network)`: Method to handle network objects from the `network` package. Requires this packages to work.
+
+-   `as_tbl_graph(phylo)`: Method for handling phylo objects from the ape package
+
+-   `as_tbl_graph(evonet)`: Method for handling evonet objects from the ape package
+
+-   `as_tbl_graph(default)`: Default method. tries to call `igraph::as.igraph()` on the input.
+:::
+
+```{r}
+GAStech_graph <- tbl_graph(nodes = GAStech_nodes,
+                           edges = GAStech_edges_aggregated, 
+                           directed = TRUE)
+
+```
+
+### **9.4.4 Reviewing the output tidygraph’s graph object**
+
+```{r}
+GAStech_graph
+
+```
