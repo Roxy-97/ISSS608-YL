@@ -712,9 +712,63 @@ Explain the code chunk above
 </div>
 <div class="callout-body-container callout-body">
 <p>activate(edges) means switch the context to the edges tibble</p>
+<p><strong><code>activate()</code></strong> selects whether subsequent <code>mutate()</code>, <code>filter()</code>, <code>arrange()</code>, etc., act on the <strong>nodes</strong> table or the <strong>edges</strong> table within your graph.</p>
 </div>
 </div>
 <p>Visit the reference guide of&nbsp;<a href="https://tidygraph.data-imaginist.com/reference/activate.html"><em>activate()</em></a>&nbsp;to find out more about the function.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Summary about Nodes VS Edges
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 27%">
+<col style="width: 51%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Aspect</th>
+<th>Nodes</th>
+<th>Edges</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Definition</td>
+<td>The “points” or entities in a network.</td>
+<td>The “lines” connecting two nodes, representing relationships or interactions.</td>
+</tr>
+<tr class="even">
+<td>Corresponding tibble</td>
+<td>Each row is a node with its own set of attributes (e.g.&nbsp;<code>id</code>, <code>label</code>, <code>Department</code>, <code>Title</code>).</td>
+<td>Each row is an edge, typically containing <code>from</code>/<code>to</code> or <code>source</code>/<code>target</code>, plus attributes (e.g.&nbsp;<code>SendDate</code>, <code>Weekday</code>, <code>Weight</code>).</td>
+</tr>
+<tr class="odd">
+<td>Typical operations</td>
+<td>Add/modify node attributes (<code>mutate()</code>), filter nodes (<code>filter()</code>), compute degree (<code>centrality_degree()</code>), etc.</td>
+<td>Filter, sort or aggregate edges (<code>filter(Weight&gt;1)</code>, <code>arrange(desc(Weight))</code>, <code>summarise()</code>), or extract subgraphs.</td>
+</tr>
+<tr class="even">
+<td>In <code>tbl_graph</code></td>
+<td>Active by default—<code>dplyr</code> verbs act on nodes unless you call <code>activate(edges)</code>.</td>
+<td>Must call <code>activate(edges)</code> first; then <code>filter()</code>/<code>mutate()</code>/<code>arrange()</code> will apply to the edges tibble.</td>
+</tr>
+<tr class="odd">
+<td>In short</td>
+<td>Nodes = <strong>Who</strong>.</td>
+<td>Edges = <strong>Who–Who interactions</strong>.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 
 
 </section>

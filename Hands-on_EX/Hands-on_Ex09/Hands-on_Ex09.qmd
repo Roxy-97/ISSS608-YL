@@ -315,6 +315,20 @@ GAStech_graph %>%
 ## Explain the code chunk above
 
 activate(edges) means switch the context to the edges tibble
+
+**`activate()`** selects whether subsequent `mutate()`, `filter()`, `arrange()`, etc., act on the **nodes** table or the **edges** table within your graph.
 :::
 
 Visit the reference guide of [*activate()*](https://tidygraph.data-imaginist.com/reference/activate.html) to find out more about the function.
+
+::: {.callout-tip icon="false"}
+## Summary about Nodes VS Edges
+
+| Aspect | Nodes | Edges |
+|---------------|--------------------|-------------------------------------|
+| Definition | The “points” or entities in a network. | The “lines” connecting two nodes, representing relationships or interactions. |
+| Corresponding tibble | Each row is a node with its own set of attributes (e.g. `id`, `label`, `Department`, `Title`). | Each row is an edge, typically containing `from`/`to` or `source`/`target`, plus attributes (e.g. `SendDate`, `Weekday`, `Weight`). |
+| Typical operations | Add/modify node attributes (`mutate()`), filter nodes (`filter()`), compute degree (`centrality_degree()`), etc. | Filter, sort or aggregate edges (`filter(Weight>1)`, `arrange(desc(Weight))`, `summarise()`), or extract subgraphs. |
+| In `tbl_graph` | Active by default—`dplyr` verbs act on nodes unless you call `activate(edges)`. | Must call `activate(edges)` first; then `filter()`/`mutate()`/`arrange()` will apply to the edges tibble. |
+| In short | Nodes = **Who**. | Edges = **Who–Who interactions**. |
+:::
