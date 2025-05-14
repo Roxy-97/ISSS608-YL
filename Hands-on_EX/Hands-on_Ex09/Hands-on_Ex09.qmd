@@ -290,3 +290,31 @@ GAStech_graph <- tbl_graph(nodes = GAStech_nodes,
 GAStech_graph
 
 ```
+
+### **9.4.5 Reviewing the output tidygraph’s graph object**
+
+-   The output above reveals that *GAStech_graph* is a tbl_graph object with 54 nodes and 4541 edges.
+
+-   The command also prints the first six rows of “Node Data” and the first three of “Edge Data”.
+
+-   It states that the Node Data is **active**. The notion of an active tibble within a tbl_graph object makes it possible to manipulate the data in one tibble at a time.
+
+### **9.4.6 Changing the active object**
+
+The nodes tibble data frame is activated by default, but you can change which tibble data frame is active with the *activate()* function. Thus, if we wanted to rearrange the rows in the edges tibble to list those with the highest “weight” first, we could use *activate()* and then *arrange()*.
+
+For example
+
+```{r}
+GAStech_graph %>%
+  activate(edges) %>%
+  arrange(desc(Weight))
+```
+
+::: {.callout-note icon="false"}
+## Explain the code chunk above
+
+activate(edges) means switch the context to the edges tibble
+:::
+
+Visit the reference guide of [*activate()*](https://tidygraph.data-imaginist.com/reference/activate.html) to find out more about the function.

@@ -236,6 +236,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#the-dplyr-verbs-in-tidygraph" id="toc-the-dplyr-verbs-in-tidygraph" class="nav-link" data-scroll-target="#the-dplyr-verbs-in-tidygraph"><strong>9.4.2 The dplyr verbs in tidygraph</strong></a></li>
   <li><a href="#using-tbl_graph-to-build-tidygraph-data-model." id="toc-using-tbl_graph-to-build-tidygraph-data-model." class="nav-link" data-scroll-target="#using-tbl_graph-to-build-tidygraph-data-model."><strong>9.4.3 Using <code>tbl_graph()</code> to build tidygraph data model.</strong></a></li>
   <li><a href="#reviewing-the-output-tidygraphs-graph-object" id="toc-reviewing-the-output-tidygraphs-graph-object" class="nav-link" data-scroll-target="#reviewing-the-output-tidygraphs-graph-object"><strong>9.4.4 Reviewing the output tidygraph’s graph object</strong></a></li>
+  <li><a href="#reviewing-the-output-tidygraphs-graph-object-1" id="toc-reviewing-the-output-tidygraphs-graph-object-1" class="nav-link" data-scroll-target="#reviewing-the-output-tidygraphs-graph-object-1"><strong>9.4.5 Reviewing the output tidygraph’s graph object</strong></a></li>
+  <li><a href="#changing-the-active-object" id="toc-changing-the-active-object" class="nav-link" data-scroll-target="#changing-the-active-object"><strong>9.4.6 Changing the active object</strong></a></li>
   </ul></li>
   </ul></li>
   </ul>
@@ -270,7 +272,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">May 13, 2025</p>
+      <p class="date-modified">May 14, 2025</p>
     </div>
   </div>
     
@@ -650,6 +652,69 @@ Functions
 # ℹ 1,369 more rows</code></pre>
 </div>
 </div>
+</section>
+<section id="reviewing-the-output-tidygraphs-graph-object-1" class="level3">
+<h3 class="anchored" data-anchor-id="reviewing-the-output-tidygraphs-graph-object-1"><strong>9.4.5 Reviewing the output tidygraph’s graph object</strong></h3>
+<ul>
+<li><p>The output above reveals that <em>GAStech_graph</em> is a tbl_graph object with 54 nodes and 4541 edges.</p></li>
+<li><p>The command also prints the first six rows of “Node Data” and the first three of “Edge Data”.</p></li>
+<li><p>It states that the Node Data is <strong>active</strong>. The notion of an active tibble within a tbl_graph object makes it possible to manipulate the data in one tibble at a time.</p></li>
+</ul>
+</section>
+<section id="changing-the-active-object" class="level3">
+<h3 class="anchored" data-anchor-id="changing-the-active-object"><strong>9.4.6 Changing the active object</strong></h3>
+<p>The nodes tibble data frame is activated by default, but you can change which tibble data frame is active with the <em>activate()</em> function. Thus, if we wanted to rearrange the rows in the edges tibble to list those with the highest “weight” first, we could use <em>activate()</em> and then <em>arrange()</em>.</p>
+<p>For example</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>GAStech_graph <span class="sc">%&gt;%</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">activate</span>(edges) <span class="sc">%&gt;%</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(Weight))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tbl_graph: 54 nodes and 1372 edges
+#
+# A directed multigraph with 1 component
+#
+# Edge Data: 1,372 × 4 (active)
+    from    to Weekday   Weight
+   &lt;int&gt; &lt;int&gt; &lt;ord&gt;      &lt;int&gt;
+ 1    40    41 Saturday      13
+ 2    41    43 Monday        11
+ 3    35    31 Tuesday       10
+ 4    40    41 Monday        10
+ 5    40    43 Monday        10
+ 6    36    32 Sunday         9
+ 7    40    43 Saturday       9
+ 8    41    40 Monday         9
+ 9    19    15 Wednesday      8
+10    35    38 Tuesday        8
+# ℹ 1,362 more rows
+#
+# Node Data: 54 × 4
+     id label           Department     Title           
+  &lt;dbl&gt; &lt;chr&gt;           &lt;chr&gt;          &lt;chr&gt;           
+1     1 Mat.Bramar      Administration Assistant to CEO
+2     2 Anda.Ribera     Administration Assistant to CFO
+3     3 Rachel.Pantanal Administration Assistant to CIO
+# ℹ 51 more rows</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Explain the code chunk above
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>activate(edges) means switch the context to the edges tibble</p>
+</div>
+</div>
+<p>Visit the reference guide of&nbsp;<a href="https://tidygraph.data-imaginist.com/reference/activate.html"><em>activate()</em></a>&nbsp;to find out more about the function.</p>
 
 
 </section>
