@@ -29,7 +29,8 @@ body {
 /* =========================
    Top Navbar (fixed)
    ========================= */
-.navbar {
+.navbar.navbar-inverse, /* your main blue bar */
+.navbar.navbar-inverse .dropdown-menu {
   position: fixed;
   top: 0;
   left: 0;
@@ -43,69 +44,42 @@ body {
   z-index: 1000;
 }
 
-/* 确保下拉菜单不盖住二级导航 */
-.navbar .dropdown-menu {
-  z-index: 900;
-}
-
 /* Navbar Logo & Menu */
-.navbar .logo {
+.navbar.navbar-inverse .logo {
   font-size: 1.25rem;
   font-weight: 600;
   margin-right: 2rem;
 }
-.navbar ul {
+.navbar.navbar-inverse ul {
   list-style: none;
   display: flex;
   gap: 1rem;
 }
-.navbar ul li a {
+.navbar.navbar-inverse ul li a {
   color: inherit;
   text-decoration: none;
   padding: 0.5rem 1rem;
   border-radius: 4px;
   transition: background 0.2s, color 0.2s;
 }
-.navbar ul li a:hover,
-.navbar ul li a.active {
+.navbar.navbar-inverse ul li a:hover,
+.navbar.navbar-inverse ul li a.active {
   background: var(--accent);
   color: #fff;
 }
 
 /* 推开主内容，避免被固定标题遮住 */
 .content {
-  margin-top: 4rem;  /* 与 .navbar 高度一致 */
+  margin-top: 4rem;  /* 与 .navbar-inverse 高度一致 */
   padding: 2rem;
 }
 
 /* =========================
-   Secondary Nav (“pill” list)
+   Hide the secondary pills bar
    ========================= */
-.subnav {
-  position: relative;
-  z-index: 1100;
-  display: flex;
-  gap: 0.5rem;
-  padding: 0.5rem 2rem;
-  /* 去掉背景和阴影 */
-  background: transparent;
-  box-shadow: none;
-}
-
-.subnav a {
-  display: inline-block;
-  background: transparent;
-  color: var(--text);
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  text-decoration: none;
-  transition: background 0.2s, color 0.2s;
-  margin: 0 0.25rem;
-}
-.subnav a:hover,
-.subnav a.active {
-  background: var(--accent);
-  color: #fff;
+/* This hides the second navbar that immediately follows the main one */
+.navbar + .navbar {
+  display: none !important;
 }
 
 /* =========================
@@ -114,27 +88,6 @@ body {
 h1 { font-size: 2rem; margin-bottom: 1rem; }
 h2 { font-size: 1.75rem; margin-bottom: 0.75rem; }
 h3 { font-size: 1.5rem; margin-bottom: 0.5rem; }
-
-/* =========================
-   Exercise Cards
-   ========================= */
-.exercise-card {
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  transition: background 0.2s, box-shadow 0.2s;
-}
-.exercise-card:hover {
-  background: #E5F5FF;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-.exercise-card a {
-  color: var(--nav-bg);
-  font-weight: 500;
-  text-decoration: none;
-}
 
 /* =========================
    Code Blocks
