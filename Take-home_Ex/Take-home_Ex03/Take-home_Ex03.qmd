@@ -1,0 +1,44 @@
+---
+title: "Hands-on Exercise 5"
+author: "Yang Lu"
+date: "15 May 2025"
+date-modified: "last-modified"
+format: html
+code-fold: true
+code-summary: "Show the code"
+editor: visual
+execute: 
+  eval: true  
+  echo: true  
+  warning: false 
+  freeze: true 
+---
+
+# VAST Challenge 2025-Mini-Challenge 3
+
+For the exercise, our group will choose MC 3 as our main topic, the detail background referring to \[VAST MC3\](<https://vast-challenge.github.io/2025/MC3.html>)
+
+## 2.Setting up
+
+2.1 loading packages
+
+```{r}
+pacman::p_load(
+  jsonlite,
+  tidyverse)
+```
+
+
+2.2 Loading data 
+
+```{r}
+mc3_schema<- fromJSON("MC3_schema.json")
+glimpse(mc3_schema)
+
+```
+
+```{r}
+mc3_graph<- fromJSON("MC3_graph.json")
+glimpse(mc3_graph)
+
+```
