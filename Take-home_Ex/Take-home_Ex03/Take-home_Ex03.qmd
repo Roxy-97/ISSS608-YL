@@ -22,23 +22,72 @@ For the exercise, our group will choose MC 3 as our main topic, the detail backg
 
 2.1 loading packages
 
+\[add the description about those packages\]
+
+SmartEDA,
+
+tidygraph,
+
+ggraph
+
 ```{r}
 pacman::p_load(
   jsonlite,
-  tidyverse)
+  tidyverse,
+  SmartEDA,
+  tidygraph,
+  ggraph)
 ```
 
-
-2.2 Loading data 
+2.2 Loading data
 
 ```{r}
-mc3_schema<- fromJSON("MC3_schema.json")
+mc3_schema<- fromJSON("data/MC3_schema.json")
 glimpse(mc3_schema)
 
 ```
 
 ```{r}
-mc3_graph<- fromJSON("MC3_graph.json")
+mc1_graph<- fromJSON("data/MC1_graph.json")
+glimpse(mc1_graph)
+
+```
+
+```{r}
+mc3_graph<- fromJSON("data/MC3_graph.json")
 glimpse(mc3_graph)
 
 ```
+
+inspect
+
+the str() to using to overview the dataset, and getting the maximum data in whole dtaset.
+
+```{r}
+
+str(mc3_graph,max.level = 1)
+
+```
+
+```{r}
+str(mc3_schema,max.level = 1)
+
+```
+
+```{r}
+str(mc1_graph,max.level = 1)
+
+```
+
+```{r}
+nodes_tbl < -as_tibble(mc3_schema$nodes)
+edges_tbl < -as_tibble(mc3_$edges)
+
+```
+
+```{r}
+nodes_tbl < -as_tibble(mc1_graph$nodes)
+edges_tbl < -as_tibble(mc1_graph$edges)
+
+```
+
