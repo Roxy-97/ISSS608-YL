@@ -3,12 +3,23 @@
 
 /* CSS Variables */
 :root {
-  --bg: #F5F7FA;
-  --nav-bg: #3C5AA6;
-  --accent: #A3BE8C;
-  --text: #2E3440;
-  --code-bg: #2E3440;
-  --code-text: #ECEFF4;
+  /* 页面主背景：Snorlax 蓝 */
+  --bg: #E7FCFD;
+
+  /* 顶部导航背景：深色，保证和主背景有区分 */
+  --nav-bg: #34E8F0;
+
+  /* 强调色（悬停、按钮等）*/
+  --accent: #FBD1CFC;
+
+  /* 正文文字色：浅色，和深背景对比 */
+  --text: #020231;
+
+  /* 代码区背景：更深的区块背景 */
+  --code-bg: #FCFCBA;
+
+  /* 代码文字色 */
+  --code-text: #020231;
 }
 
 /* Reset & Box Sizing */
@@ -29,13 +40,13 @@ body {
 /* =========================
    Top Navbar (fixed)
    ========================= */
-.navbar.navbar-inverse, /* your main blue bar */
+.navbar.navbar-inverse,
 .navbar.navbar-inverse .dropdown-menu {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 4rem;       /* 调整为你的标题栏高度 */
+  height: 4rem;
   background: var(--nav-bg);
   color: #fff;
   display: flex;
@@ -44,7 +55,6 @@ body {
   z-index: 1000;
 }
 
-/* Navbar Logo & Menu */
 .navbar.navbar-inverse .logo {
   font-size: 1.25rem;
   font-weight: 600;
@@ -68,16 +78,13 @@ body {
   color: #fff;
 }
 
-/* 推开主内容，避免被固定标题遮住 */
+
 .content {
-  margin-top: 4rem;  /* 与 .navbar-inverse 高度一致 */
+  margin-top: 4rem;
   padding: 2rem;
 }
 
-/* =========================
-   Hide the secondary pills bar
-   ========================= */
-/* This hides the second navbar that immediately follows the main one */
+
 .navbar + .navbar {
   display: none !important;
 }
@@ -109,7 +116,7 @@ blockquote {
   border-left: 4px solid var(--accent);
   margin: 1rem 0;
   padding-left: 1rem;
-  color: #555;
+  color: #bbb;
   font-style: italic;
 }
 
@@ -117,7 +124,7 @@ blockquote {
    Links in Content
    ========================= */
 .content a {
-  color: var(--nav-bg);
+  color: var(--code-text);
   text-decoration: underline;
   transition: color 0.2s;
 }
