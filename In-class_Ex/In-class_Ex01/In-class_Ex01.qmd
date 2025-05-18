@@ -111,7 +111,6 @@ set.seed(1234)
 ### visualising the whole graph
 
 ```{r}
-#| eval: false
 ggraph(graph,layout="fr") +
   geom_edge_link(alpha=0.3,
                  colour="gray")+
