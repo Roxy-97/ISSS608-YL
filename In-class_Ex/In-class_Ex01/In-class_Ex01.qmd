@@ -14,15 +14,11 @@ execute:
   freeze: true 
 ---
 
-
 # VAST Challenge 2025-Mini-Challenge 1
-
-
 
 ## 2.Setting up
 
 2.1 loading packages
-
 
 ```{r}
 pacman::p_load(
@@ -35,29 +31,23 @@ pacman::p_load(
 
 2.2 Loading data
 
-
 ```{r}
 kg <- fromJSON("data/MC1_graph.json")
 glimpse(kg)
 
 ```
 
-
 the str() to using to overview the dataset, and getting the maximum data in whole dtaset.
-
 
 ```{r}
 str(kg,max.level = 1)
 
 ```
 
-
 ```{r}
 nodes_tbl <- as_tibble(kg$nodes)
 edges_tbl <- as_tibble(kg$links)
 ```
-
-
 
 ```{r}
 ggplot(data=nodes_tbl,
@@ -66,8 +56,16 @@ ggplot(data=nodes_tbl,
 
 ```
 
+```{r}
+ggplot(data = edges_tbl,
+       aes(y = `Edge Type`)) +
+  geom_bar()
 
-## step 1  mapping from node id to row index
+```
+
+## **Creating Knowledge Graph**
+
+### step 1 mapping from node id to row index
 
 ```{r}
 id_map <-tibble(id=nodes_tbl$id,
@@ -77,7 +75,7 @@ id_map <-tibble(id=nodes_tbl$id,
 
 this ensure each id from your node list is mapped to the correct row number
 
-# step 2 map source and target IDS to the row indices
+### step 2 map source and target IDS to the row indices
 
 ```{r}
 edges_tbl <- edges_tbl %>%
@@ -87,13 +85,15 @@ edges_tbl <- edges_tbl %>%
   rename(to = index)
 ```
 
-# step 3 filter out any unmatched (invalid) edges
+### step 3 filter out any unmatched (invalid) edges
+
 ```{r}
 edges_tbl <-edges_tbl %>%
   filter(!is.na(from),!is.na(to))
 
 ```
-# step 4 creating the graph
+
+### step 4 creating the graph
 
 ```{r}
 
@@ -102,7 +102,7 @@ graph <-tbl_graph(nodes=nodes_tbl,
                   directed=kg$directed)
 ```
 
-visualising the knowledge graoh
+## visualising the knowledge graph
 
 ```{r}
 set.seed(1234)
@@ -123,53 +123,50 @@ ggraph(graph,layout="fr") +
   theme_void()
 ```
 
-
-
+## **Visualising the sub-graph**
 
 ### step 1: filter edges to only"memberOf"
 
 ```{r}
-graph_memberof <-graph %>%
+graph_memberof <- graph %>%
   activate(edges) %>%
-  filter('Edge Type'=="Memberof")
+  filter(`Edge Type` == "MemberOf")
 ```
 
-### step 2: extract only connected nodes 
+### step 2: extract only connected nodes
 
 ```{r}
-use_node_indices <-graph_memberof %>%
-  activate(edges)%>%
-  as_tibble()%>%
-  select(from,to)%>%
-  unlist()%>%
+used_node_indices <- graph_memberof %>%
+  activate(edges) %>%
+  as_tibble() %>%
+  select(from, to) %>%
+  unlist() %>%
   unique()
 ```
 
-
-###step 3 keep only those nodes
+### step 3 keep only those nodes
 
 ```{r}
-graph_memberof <-graph_memberof %>%
-  activate(nodes)%>%
-  mutate(row_id=row_number()) %>%
-  filter(row_id %in% use_node_indices)%>%
-  select(-row_id)
+graph_memberof <- graph_memberof %>%
+  activate(nodes) %>%
+  mutate(row_id = row_number()) %>%
+  filter(row_id %in% used_node_indices) %>%
+  select(-row_id)  # optional cleanup
 
 ```
 
+### step 4. plot the sub graph
 
-### plot the sub graph
 ```{r}
-ggraph(graph_memberof,
-       layout = "fr")+
-  geom_edge_link(alpha=0.5,
-                colour="gray")+
-  geom_edge_point(aes(colour="Node Tpye"),
-                  size=1)+
-  geom_node_text(aes(label = name),
-                 repel = TRUE,
-                 size=2.5)+
+ggraph(graph_memberof, 
+       layout = "fr") +
+  geom_edge_link(alpha = 0.5, 
+                 colour = "gray") +
+  geom_node_point(aes(color = `Node Type`), 
+                  size = 1) +
+  geom_node_text(aes(label = name), 
+                 repel = TRUE, 
+                 size = 2.5) +
   theme_void()
 
 ```
-
