@@ -4,19 +4,19 @@
 /* CSS Variables */
 :root {
   /* 页面主背景：Snorlax 蓝 */
-  --bg: #E7FCFD;
+  --bg: #CFE7E8;
 
   /* 顶部导航背景：深色，保证和主背景有区分 */
-  --nav-bg: #34E8F0;
+  --nav-bg: #3E7887;
 
   /* 强调色（悬停、按钮等）*/
-  --accent: #FBD1CF;
+  --accent: #C8908E;
 
   /* 正文文字色：浅色，和深背景对比 */
   --text: #020231;
 
   /* 代码区背景：更深的区块背景 */
-  --code-bg: #FCFCBA;
+  --code-bg: #D5ABA9;
 
   /* 代码文字色 */
   --code-text: #020231;
