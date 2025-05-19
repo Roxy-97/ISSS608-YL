@@ -9,7 +9,7 @@
 <meta name="author" content="Yang Lu">
 <meta name="dcterms.date" content="2025-05-15">
 
-<title>Hands-on Exercise 5</title>
+<title>Take home Exercise 3</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -186,6 +186,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
     </ul>
   </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-in-class-exercise" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">In-class Exercise</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-in-class-exercise">    
+        <li>
+    <a class="dropdown-item" href="../../In-class_Ex/In-class_Ex01/In-class_Ex01.html">
+ <span class="dropdown-text">In-class Exercise 1</span></a>
+  </li>  
+    </ul>
+  </li>
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
@@ -214,7 +225,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#vast-challenge-2025-mini-challenge-3" id="toc-vast-challenge-2025-mini-challenge-3" class="nav-link active" data-scroll-target="#vast-challenge-2025-mini-challenge-3">VAST Challenge 2025-Mini-Challenge 3</a>
   <ul class="collapse">
-  <li><a href="#setting-up" id="toc-setting-up" class="nav-link" data-scroll-target="#setting-up">2.Setting up</a></li>
+  <li><a href="#background" id="toc-background" class="nav-link" data-scroll-target="#background">1.0 Background</a>
+  <ul class="collapse">
+  <li><a href="#overall-tasks" id="toc-overall-tasks" class="nav-link" data-scroll-target="#overall-tasks"><strong>2.0 Overall Tasks</strong></a></li>
+  </ul></li>
+  <li><a href="#setting-up" id="toc-setting-up" class="nav-link" data-scroll-target="#setting-up">3.0 Setting up</a>
+  <ul class="collapse">
+  <li><a href="#loading-packages" id="toc-loading-packages" class="nav-link" data-scroll-target="#loading-packages">3.1 Loading packages</a></li>
+  </ul></li>
+  <li><a href="#not-loading" id="toc-not-loading" class="nav-link" data-scroll-target="#not-loading">[not loading ]</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -224,7 +243,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Hands-on Exercise 5</h1>
+<h1 class="title">Take home Exercise 3</h1>
 </div>
 
 
@@ -248,7 +267,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">May 17, 2025</p>
+      <p class="date-modified">May 19, 2025</p>
     </div>
   </div>
     
@@ -261,43 +280,97 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="vast-challenge-2025-mini-challenge-3" class="level1">
 <h1>VAST Challenge 2025-Mini-Challenge 3</h1>
-<p>For the exercise, our group will choose MC 3 as our main topic, the detail background referring to [VAST MC3](<a href="https://vast-challenge.github.io/2025/MC3.html" class="uri">https://vast-challenge.github.io/2025/MC3.html</a>)</p>
+<p>For the exercise, our group will choose MC 3 as our main topic, the detail background referring to <a href="https://vast-challenge.github.io/2025/MC3.html">VAST MC3</a></p>
+<section id="background" class="level2">
+<h2 class="anchored" data-anchor-id="background">1.0 Background</h2>
+<p><strong>Oceanus: From Fishing Nets to Tourism Tensions</strong></p>
+<p>Once defined by its fishing traditions, Oceanus has transformed dramatically in the last decade. After a crackdown on illegal fishing, those involved redirected investments toward ocean tourism, creating community friction. When international star Sailor Shift announced plans to film locally, investigative journalist Clepper Jessen uncovered troubling connections around the temporary closure of Nemo Reef. His work exposed expedited approvals and secretive arrangements linking island officials, Sailor’s team, influential local families, and conservationists The Green Guardians—suggesting a story of corruption hiding beneath paradise’s surface.</p>
+<section id="overall-tasks" class="level3">
+<h3 class="anchored" data-anchor-id="overall-tasks"><strong>2.0 Overall Tasks</strong></h3>
+<p>Clepper has built a knowledge graph from two weeks of intercepted radio communications in Oceanus. Here are the key tasks to be analyzed:</p>
+<p><strong>Task 1: Temporal Communication Patterns</strong></p>
+<ol type="1">
+<li><p>Create visual analytics to identify daily patterns in communication timing</p></li>
+<li><p>Analyze how these patterns changed over the two-week observation period</p></li>
+<li><p>Select a specific entity and determine who influences them based on these patterns</p></li>
+</ol>
+<p><strong>Task 2: Relationship Analysis</strong></p>
+<ol type="1">
+<li><p>Develop visualizations to explore connections between vessels and people</p></li>
+<li><p>Identify closely associated groups</p></li>
+<li><p>Determine predominant topics for each group (e.g., environmentalism, Sailor Shift, fishing/leisure vessels)</p></li>
+</ol>
+<p><strong>Task 3: Pseudonym Identification</strong></p>
+<ol type="1">
+<li><p>Expand visualizations to reveal who is using pseudonyms</p></li>
+<li><p>Identify known pseudonyms (“Boss”, “The Lookout”) and discover additional ones</p></li>
+<li><p>Account for pseudonyms potentially used by multiple entities</p></li>
+<li><p>Demonstrate how these visualizations simplify entity identification</p></li>
+<li><p>Explain how understanding pseudonyms changes interpretation of activities</p></li>
+</ol>
+<p><strong>Task 4: Nadia Conti Investigation</strong></p>
+<ol type="1">
+<li><p>Use visual analytics to provide evidence regarding possible illegal activity by Nadia Conti</p></li>
+<li><p>Create a visual summary of Nadia’s actions</p></li>
+<li><p>Assess whether Clepper’s suspicions are justified</p></li>
+</ol>
+<p>Each task builds on previous analysis to uncover the potential corruption surrounding the Nemo Reef closure and connections between officials, Sailor Shift’s team, influential families, and The Green Guardians.</p>
+</section>
+</section>
 <section id="setting-up" class="level2">
-<h2 class="anchored" data-anchor-id="setting-up">2.Setting up</h2>
-<p>2.1 loading packages</p>
+<h2 class="anchored" data-anchor-id="setting-up">3.0 Setting up</h2>
+<section id="loading-packages" class="level3">
+<h3 class="anchored" data-anchor-id="loading-packages">3.1 Loading packages</h3>
+<p>add lubridata,dplyr</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Package</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">jsonlite</td>
+<td style="text-align: left;">JSON parsing and generation</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">tidyverse</td>
+<td style="text-align: left;">Core data-science suite (dplyr, ggplot2, etc.)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SmartEDA</td>
+<td style="text-align: left;">Automated exploratory data analysis</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">tidygraph</td>
+<td style="text-align: left;">Tidy tools for graph-data manipulation and analysis</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ggraph</td>
+<td style="text-align: left;">Grammar-based graph/network visualization</td>
+</tr>
+</tbody>
+</table>
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  jsonlite,</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  tidyverse,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  SmartEDA,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  tidygraph,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  ggraph,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  lubridate,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>2.2 Loading data</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>mc3_schema<span class="ot">&lt;-</span> <span class="fu">fromJSON</span>(<span class="st">"MC3_schema.json"</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(mc3_schema)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>List of 1
- $ schema:List of 2
-  ..$ nodes:List of 3
-  .. ..$ Entity      :List of 2
-  .. ..$ Event       :List of 2
-  .. ..$ Relationship:List of 2
-  ..$ edges:List of 3
-  .. ..$ description: chr "Connections between nodes in the knowledge graph"
-  .. ..$ is_inferred: chr "bool"
-  .. ..$ types      :'data.frame':  6 obs. of  5 variables:</code></pre>
-</div>
-</div>
-<div class="cell">
-<details class="code-fold">
-<summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>mc3_graph<span class="ot">&lt;-</span> <span class="fu">fromJSON</span>(<span class="st">"MC3_graph.json"</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(mc3_graph)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>MC3_graph <span class="ot">&lt;-</span> <span class="fu">fromJSON</span>(<span class="st">"data/MC3_graph.json"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(MC3_graph)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>List of 5
@@ -349,6 +422,257 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   ..$ target     : chr [1:3226] "Relationship_Suspicious_217" "Event_Communication_370" "Event_Assessment_600" "Relationship_Colleagues_430" ...
   ..$ type       : chr [1:3226] NA "sent" NA NA ...</code></pre>
 </div>
+</div>
+</section>
+</section>
+<section id="not-loading" class="level2">
+<h2 class="anchored" data-anchor-id="not-loading">[not loading ]</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>MC3_schema <span class="ot">&lt;-</span> <span class="fu">fromJSON</span>(<span class="st">"data/MC3_schema.json"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(MC3_schema)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 1
+ $ schema:List of 2
+  ..$ nodes:List of 3
+  .. ..$ Entity      :List of 2
+  .. ..$ Event       :List of 2
+  .. ..$ Relationship:List of 2
+  ..$ edges:List of 3
+  .. ..$ description: chr "Connections between nodes in the knowledge graph"
+  .. ..$ is_inferred: chr "bool"
+  .. ..$ types      :'data.frame':  6 obs. of  5 variables:</code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(MC3_graph,<span class="at">max.level =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 5
+ $ directed  : logi TRUE
+ $ multigraph: logi FALSE
+ $ graph     :List of 4
+ $ nodes     :'data.frame': 1159 obs. of  31 variables:
+ $ edges     :'data.frame': 3226 obs. of  5 variables:</code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>nodes_tbl <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(MC3_graph<span class="sc">$</span>nodes)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>edges_tbl <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(MC3_graph<span class="sc">$</span>edges)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>after slpit to nodes and edges, the data shouw 3226 edges and 1159 nodes</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>nodes_tbl,</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">aes</span>(<span class="at">y=</span><span class="st">`</span><span class="at">type</span><span class="st">`</span>))<span class="sc">+</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>nodes_tbl,</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">aes</span>(<span class="at">y=</span><span class="st">`</span><span class="at">sub_type</span><span class="st">`</span>))<span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Generate Node Sub-Type Inventory</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract unique sub_types for each node type</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>entities      <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(nodes_tbl<span class="sc">$</span>sub_type[nodes_tbl<span class="sc">$</span>type <span class="sc">==</span> <span class="st">"Entity"</span>]))</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>events        <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(nodes_tbl<span class="sc">$</span>sub_type[nodes_tbl<span class="sc">$</span>type <span class="sc">==</span> <span class="st">"Event"</span>]))</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>relationships <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(nodes_tbl<span class="sc">$</span>sub_type[nodes_tbl<span class="sc">$</span>type <span class="sc">==</span> <span class="st">"Relationship"</span>]))</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>node_inventory <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Entities      =</span> entities,</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">Events        =</span> events,</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">Relationships =</span> relationships</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>List down</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (grp <span class="cf">in</span> <span class="fu">names</span>(node_inventory)) {</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"**"</span>, grp, <span class="st">"** ("</span>, <span class="fu">length</span>(node_inventory[[grp]]), <span class="st">"):</span><span class="sc">\n</span><span class="st">"</span>, <span class="at">sep =</span> <span class="st">""</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="fu">paste0</span>(<span class="st">"  - "</span>, node_inventory[[grp]]), <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>**Entities** (5):
+  - Group
+  - Location
+  - Organization
+  - Person
+  - Vessel
+
+**Events** (11):
+  - Assessment
+  - Collaborate
+  - Communication
+  - Criticize
+  - Enforcement
+  - Fishing
+  - HarborReport
+  - Monitoring
+  - TourActivity
+  - TransponderPing
+  - VesselMovement
+
+**Relationships** (9):
+  - AccessPermission
+  - Colleagues
+  - Coordinates
+  - Friends
+  - Jurisdiction
+  - Operates
+  - Reports
+  - Suspicious
+  - Unfriendly</code></pre>
+</div>
+</div>
+<p>based on the above list, we noticed that based on the task requirement, now we only focus on type=“even” and sub_type =“communication” , next step is to create communication nodes</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>comm_nodes <span class="ot">&lt;-</span>nodes_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(type<span class="sc">==</span><span class="st">"Event"</span>,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>         sub_type <span class="sc">==</span> <span class="st">"Communication"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">event_id =</span> id,timestamp)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(comm_nodes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 584
+Columns: 2
+$ event_id  &lt;chr&gt; "Event_Communication_1", "Event_Communication_2", "Event_Com…
+$ timestamp &lt;chr&gt; "2040-10-01 08:09:00", "2040-10-01 08:10:00", "2040-10-01 08…</code></pre>
+</div>
+</div>
+<p>#for edges to define sender and receiver</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>edges_tbl,</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">aes</span>(<span class="at">y=</span><span class="st">`</span><span class="at">type</span><span class="st">`</span>))<span class="sc">+</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>sent_edges <span class="ot">&lt;-</span>edges_tbl <span class="sc">%&gt;%</span> <span class="fu">filter</span>(type<span class="sc">==</span><span class="st">"sent"</span>)<span class="sc">%&gt;%</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">sender =</span> source,<span class="at">event_id=</span>target)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>recv_edges <span class="ot">&lt;-</span>edges_tbl <span class="sc">%&gt;%</span> <span class="fu">filter</span>(type<span class="sc">==</span><span class="st">"received"</span>)<span class="sc">%&gt;%</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">event_id =</span> source,<span class="at">receiver=</span>target)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>using inner_join to combine sender and received</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>msgs <span class="ot">&lt;-</span> sent_edges <span class="sc">%&gt;%</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(recv_edges, <span class="at">by=</span><span class="st">"event_id"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(comm_nodes, <span class="at">by=</span><span class="st">"event_id"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ts =</span> <span class="fu">ymd_hms</span>(timestamp, <span class="at">tz=</span><span class="st">"UTC"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as_date</span>(ts), <span class="at">hour =</span> <span class="fu">hour</span>(ts))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>visualizing the heatmap data</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>heatmap_data <span class="ot">&lt;-</span> msgs <span class="sc">%&gt;%</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(date, hour) <span class="sc">%&gt;%</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">complete</span>(</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">date =</span> <span class="fu">seq</span>(<span class="fu">min</span>(date), <span class="fu">max</span>(date), <span class="at">by =</span> <span class="st">"1 day"</span>),</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">hour =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">23</span>,</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">list</span>(<span class="at">n =</span> <span class="dv">0</span>)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(heatmap_data, <span class="fu">aes</span>(<span class="at">x=</span>hour, <span class="at">y=</span>date, <span class="at">fill=</span>n)) <span class="sc">+</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="at">color=</span><span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">23</span>,</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>  )<span class="sc">+</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_date</span>(</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="fu">min</span>(heatmap_data<span class="sc">$</span>date), <span class="fu">max</span>(heatmap_data<span class="sc">$</span>date), <span class="at">by =</span> <span class="st">"1 day"</span>),</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">date_labels =</span> <span class="st">"%b %d"</span>,</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a> <span class="fu">scale_fill_distiller</span>(</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">name    =</span> <span class="st">"Messages"</span>,</span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="st">"Spectral"</span>,</span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">direction =</span> <span class="dv">1</span></span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Daily Communication Patterns"</span>,</span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">x     =</span> <span class="st">"Hour of Day"</span>,</span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">y     =</span> <span class="st">"Date"</span></span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x  =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y  =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>),</span>
+<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid  =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>timestamp included data and time, so first step we need to split to get the day and hour</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>edges_time <span class="ot">&lt;-</span>nodes_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ts=</span><span class="fu">ymd_hms</span>(timestamp)) <span class="sc">%&gt;%</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">date =</span> <span class="fu">as_date</span>(ts),</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">day =</span> <span class="fu">day</span>(ts),</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">hour =</span> <span class="fu">hour</span>(ts)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 
 

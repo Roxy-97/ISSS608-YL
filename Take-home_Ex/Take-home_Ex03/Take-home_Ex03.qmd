@@ -1,11 +1,9 @@
 ---
-title: "Hands-on Exercise 5"
+title: "Take home Exercise 3"
 author: "Yang Lu"
 date: "15 May 2025"
 date-modified: "last-modified"
 format: html
-code-fold: true
-code-summary: "Show the code"
 editor: visual
 execute: 
   eval: true  
@@ -16,19 +14,69 @@ execute:
 
 # VAST Challenge 2025-Mini-Challenge 3
 
-For the exercise, our group will choose MC 3 as our main topic, the detail background referring to \[VAST MC3\](<https://vast-challenge.github.io/2025/MC3.html>)
+For the exercise, our group will choose MC 3 as our main topic, the detail background referring to [VAST MC3](https://vast-challenge.github.io/2025/MC3.html)
 
-## 2.Setting up
+## 1.0 Background
 
-2.1 loading packages
+**Oceanus: From Fishing Nets to Tourism Tensions**
 
-\[add the description about those packages\]
+Once defined by its fishing traditions, Oceanus has transformed dramatically in the last decade. After a crackdown on illegal fishing, those involved redirected investments toward ocean tourism, creating community friction. When international star Sailor Shift announced plans to film locally, investigative journalist Clepper Jessen uncovered troubling connections around the temporary closure of Nemo Reef. His work exposed expedited approvals and secretive arrangements linking island officials, Sailor's team, influential local families, and conservationists The Green Guardians—suggesting a story of corruption hiding beneath paradise's surface.
 
-SmartEDA,
+### **2.0 Overall Tasks**
 
-tidygraph,
+Clepper has built a knowledge graph from two weeks of intercepted radio communications in Oceanus. Here are the key tasks to be analyzed:
 
-ggraph
+**Task 1: Temporal Communication Patterns**
+
+1.  Create visual analytics to identify daily patterns in communication timing
+
+2.  Analyze how these patterns changed over the two-week observation period
+
+3.  Select a specific entity and determine who influences them based on these patterns
+
+**Task 2: Relationship Analysis**
+
+1.  Develop visualizations to explore connections between vessels and people
+
+2.  Identify closely associated groups
+
+3.  Determine predominant topics for each group (e.g., environmentalism, Sailor Shift, fishing/leisure vessels)
+
+**Task 3: Pseudonym Identification**
+
+1.  Expand visualizations to reveal who is using pseudonyms
+
+2.  Identify known pseudonyms ("Boss", "The Lookout") and discover additional ones
+
+3.  Account for pseudonyms potentially used by multiple entities
+
+4.  Demonstrate how these visualizations simplify entity identification
+
+5.  Explain how understanding pseudonyms changes interpretation of activities
+
+**Task 4: Nadia Conti Investigation**
+
+1.  Use visual analytics to provide evidence regarding possible illegal activity by Nadia Conti
+
+2.  Create a visual summary of Nadia's actions
+
+3.  Assess whether Clepper's suspicions are justified
+
+Each task builds on previous analysis to uncover the potential corruption surrounding the Nemo Reef closure and connections between officials, Sailor Shift's team, influential families, and The Green Guardians.
+
+## 3.0 Setting up
+
+### 3.1 Loading packages
+
+add lubridata,dplyr
+
+| Package   | Description                                         |
+|:----------|:----------------------------------------------------|
+| jsonlite  | JSON parsing and generation                         |
+| tidyverse | Core data-science suite (dplyr, ggplot2, etc.)      |
+| SmartEDA  | Automated exploratory data analysis                 |
+| tidygraph | Tidy tools for graph-data manipulation and analysis |
+| ggraph    | Grammar-based graph/network visualization           |
 
 ```{r}
 pacman::p_load(
@@ -36,58 +84,172 @@ pacman::p_load(
   tidyverse,
   SmartEDA,
   tidygraph,
-  ggraph)
+  ggraph,
+  lubridate,
+  dplyr)
 ```
 
 2.2 Loading data
 
 ```{r}
-mc3_schema<- fromJSON("data/MC3_schema.json")
-glimpse(mc3_schema)
+MC3_graph <- fromJSON("data/MC3_graph.json")
+glimpse(MC3_graph)
+```
+
+## \[not loading \]
+
+```{r}
+MC3_schema <- fromJSON("data/MC3_schema.json")
+glimpse(MC3_schema)
+```
+
+```{r}
+str(MC3_graph,max.level = 1)
 
 ```
 
 ```{r}
-mc1_graph<- fromJSON("data/MC1_graph.json")
-glimpse(mc1_graph)
+nodes_tbl <- as_tibble(MC3_graph$nodes)
+edges_tbl <- as_tibble(MC3_graph$edges)
+```
+
+after slpit to nodes and edges, the data shouw 3226 edges and 1159 nodes
+
+```{r}
+ggplot(data=nodes_tbl,
+      aes(y=`type`))+
+  geom_bar()
 
 ```
 
 ```{r}
-mc3_graph<- fromJSON("data/MC3_graph.json")
-glimpse(mc3_graph)
+ggplot(data=nodes_tbl,
+      aes(y=`sub_type`))+
+  geom_bar()
 
 ```
 
-inspect
-
-the str() to using to overview the dataset, and getting the maximum data in whole dtaset.
+Generate Node Sub-Type Inventory
 
 ```{r}
 
-str(mc3_graph,max.level = 1)
+# Extract unique sub_types for each node type
+entities      <- sort(unique(nodes_tbl$sub_type[nodes_tbl$type == "Entity"]))
+events        <- sort(unique(nodes_tbl$sub_type[nodes_tbl$type == "Event"]))
+relationships <- sort(unique(nodes_tbl$sub_type[nodes_tbl$type == "Relationship"]))
+
+node_inventory <- list(
+  Entities      = entities,
+  Events        = events,
+  Relationships = relationships
+)
+
+
+```
+List down
+
+```{r}
+for (grp in names(node_inventory)) {
+  cat("**", grp, "** (", length(node_inventory[[grp]]), "):\n", sep = "")
+  cat(paste0("  - ", node_inventory[[grp]]), sep = "\n")
+  cat("\n")
+}
+
+
+
+```
+
+based on the above list, we noticed that based on the task requirement, now we only focus on type="even" and sub_type ="communication" , next step is to create communication nodes
+
+```{r}
+comm_nodes <-nodes_tbl %>%
+  filter(type=="Event",
+         sub_type == "Communication") %>%
+  select(event_id = id,timestamp)
+
+glimpse(comm_nodes)
+```
+
+#for edges to define sender and receiver
+
+```{r}
+ggplot(data=edges_tbl,
+      aes(y=`type`))+
+  geom_bar()
 
 ```
 
 ```{r}
-str(mc3_schema,max.level = 1)
+sent_edges <-edges_tbl %>% filter(type=="sent")%>%
+  select(sender = source,event_id=target)
 
+recv_edges <-edges_tbl %>% filter(type=="received")%>%
+  select(event_id = source,receiver=target)
 ```
+
+using inner_join to combine sender and received
 
 ```{r}
-str(mc1_graph,max.level = 1)
+msgs <- sent_edges %>%
+  inner_join(recv_edges, by="event_id") %>%
+  inner_join(comm_nodes, by="event_id") %>%
+  mutate(ts = ymd_hms(timestamp, tz="UTC")) %>%
+  mutate(date = as_date(ts), hour = hour(ts))
 
 ```
+
+visualizing the heatmap data
 
 ```{r}
-nodes_tbl < -as_tibble(mc3_schema$nodes)
-edges_tbl < -as_tibble(mc3_$edges)
+heatmap_data <- msgs %>%
+  count(date, hour) %>%
+  complete(
+    date = seq(min(date), max(date), by = "1 day"),
+    hour = 0:23,
+    fill = list(n = 0)
+  )
+
+ggplot(heatmap_data, aes(x=hour, y=date, fill=n)) +
+  geom_tile(color="white") +
+  scale_x_continuous(
+    breaks = 0:23,
+    expand = c(0,0)
+  )+
+  scale_y_date(
+    breaks = seq(min(heatmap_data$date), max(heatmap_data$date), by = "1 day"),
+    date_labels = "%b %d",
+    expand = c(0, 0)
+  ) +
+ scale_fill_distiller(
+    name    = "Messages",
+    palette = "Spectral",
+    direction = 1
+  ) +
+  
+  labs(
+    title = "Daily Communication Patterns",
+    x     = "Hour of Day",
+    y     = "Date"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x  = element_text(angle = 45, hjust = 1),
+    axis.text.y  = element_text(size = 8),
+    panel.grid  = element_blank()
+  )
+
 
 ```
+
+timestamp included data and time, so first step we need to split to get the day and hour
 
 ```{r}
-nodes_tbl < -as_tibble(mc1_graph$nodes)
-edges_tbl < -as_tibble(mc1_graph$edges)
+edges_time <-nodes_tbl %>%
+  mutate(ts=ymd_hms(timestamp)) %>%
+  mutate(
+    date = as_date(ts),
+    day = day(ts),
+    hour = hour(ts)
+)
 
 ```
-
