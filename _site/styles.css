@@ -78,12 +78,10 @@ body {
   color: #fff;
 }
 
-
 .content {
   margin-top: 4rem;
   padding: 2rem;
 }
-
 
 .navbar + .navbar {
   display: none !important;
@@ -92,9 +90,9 @@ body {
 /* =========================
    Headings
    ========================= */
-h1 { font-size: 2rem; margin-bottom: 1rem; }
+h1 { font-size: 2rem;   margin-bottom: 1rem; }
 h2 { font-size: 1.75rem; margin-bottom: 0.75rem; }
-h3 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+h3 { font-size: 1.5rem;  margin-bottom: 0.5rem;  }
 
 /* =========================
    Code Blocks
@@ -130,4 +128,69 @@ blockquote {
 }
 .content a:hover {
   color: var(--accent);
+}
+
+/* ==============================
+   Callout 通用样式
+   ============================== */
+div.callout {
+  margin:         1.5rem 0;
+  padding:        1rem 1.5rem;
+  border-radius:  0.5rem;
+  color:          var(--text);
+}
+
+/* =========================================
+   NOTE Callout
+   ========================================= */
+div.callout.note {
+  background-color: #EAF8F8 !important;      /* 亮淡青绿 */
+  border-left:      4px solid var(--nav-bg) !important;
+}
+
+/* =========================================
+   INFO Callout
+   ========================================= */
+div.callout.info {
+  background-color: #EEF6FD !important;      /* 亮淡天蓝 */
+  border-left:      4px solid var(--nav-bg) !important;
+}
+
+/* =========================================
+   TIP Callout
+   ========================================= */
+div.callout.tip {
+  background-color: #F5FFF5 !important;      /* 亮淡薄荷绿 */
+  border-left:      4px solid var(--accent) !important;
+}
+
+/* =========================================
+   WARNING Callout
+   ========================================= */
+div.callout.warning {
+  background-color: #FFF5F5 !important;      /* 亮淡珊瑚粉 */
+  border-left:      4px solid var(--accent) !important;
+}
+
+/* =========================================
+   SELF-NOTE Callout
+   ========================================= */
+div.callout.self-note {
+  border-left: 4px solid var(--nav-bg) !important;
+}
+
+div.callout.self-note .callout-header {
+  background-color: #EAF8F8 !important;      /* 与 NOTE 一致 */
+  color:           var(--text)   !important;
+  padding:         0.5rem 1rem   !important;
+  border-top-left-radius: 0.5rem !important;
+  border-top-right-radius: 0.5rem !important;
+}
+
+div.callout.self-note .callout-body {
+  background-color: #FFFFFF !important;      /* 纯白，突出主体 */
+  padding:          1rem 1.5rem !important;
+  color:            var(--text)   !important;
+  border-bottom-left-radius: 0.5rem !important;
+  border-bottom-right-radius: 0.5rem !important;
 }
