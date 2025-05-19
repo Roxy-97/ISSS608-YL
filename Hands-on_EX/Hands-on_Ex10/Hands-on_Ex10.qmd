@@ -4,8 +4,6 @@ author: "Yang Lu"
 date: "21 May 2025"
 date-modified: "last-modified"
 format: html
-code-fold: true
-code-summary: "Show the code"
 editor: visual
 execute: 
   eval: true  
