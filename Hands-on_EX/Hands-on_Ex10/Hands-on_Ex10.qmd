@@ -369,3 +369,137 @@ ggplot(top4_attacks,
 
 
 ```
+
+## **10.5 Plotting Cycle Plot**
+
+In this section, will learn how to plot a **cycle plot** showing the `time-series patterns` and `trend of visitor arrivals` from Vietnam programmatically by using **ggplot2 functions.**
+
+![](images/clipboard-3164097906.png)
+
+### **10.5.1 Step 1: Data Import**
+
+For the purpose of this hands-on exercise, *arrivals_by_air.xlsx* will be used.
+
+The code chunk below imports *arrivals_by_air.xlsx* by using `read_excel()` of **readxl** package and save it as a tibble data frame called *air*.
+
+```{r}
+air <- read_excel("data/arrivals_by_air.xlsx")
+kable(head(air))
+```
+
+### **10.5.2 Step 2: Deriving month and year fields**
+
+Next, two new fields called *month* and *year* are derived from *Month-Year* field.
+
+```{r}
+air$month <- factor(month(air$`Month-Year`),  # extract month number (1–12)
+                    levels=1:12,    # define valid levels
+                    labels=month.abb, 
+                    ordered=TRUE)     # keep them in calendar order
+air$year <- year(ymd(air$`Month-Year`))  # parse “Month-Year” as a date
+
+
+```
+
+### **10.5.3 Step 3: Extracting the targer country**
+
+Next, the code chunk below is use to extract data for the target country (i.e. Vietnam)
+
+```{r}
+Vietnam <- air %>% 
+  select(`Vietnam`,   # keep only the Vietnam column + month & year
+         month, 
+         year) %>%
+  filter(year >= 2010) 
+
+```
+
+### **10.5.4 Step 4: Computing year average arrivals by month**
+
+The code chunk below uses `group_by()` and `summarise()` of **dplyr** to compute year average arrivals by month.
+
+```{r}
+hline.data <- Vietnam %>% 
+  group_by(month) %>%
+  summarise(avgvalue = mean(`Vietnam`))
+
+
+```
+
+::: {.callout-caution icon="false"}
+## Self-note
+
+summarise(avgvalue = mean(Vietnam))
+
+-   For each month group, compute the average of the `Vietnam` column (i.e. arrivals).
+
+<!-- -->
+
+-   Store that in a new tibble `hline.data` with columns `month` and `avgvalue`.
+:::
+
+### **10.5.5 Step 5: Plotting the cycle plot**
+
+The code chunk below is used to plot the cycle plot as shown in Slide 12/23.
+
+```{r,warning=FALSE}
+ggplot() + 
+  geom_line(data=Vietnam,
+            aes(x=year, 
+                y=`Vietnam`, 
+                group=month), 
+            colour="black") +
+  geom_hline(aes(yintercept=avgvalue),  #Add a horizontal dashed red line at each month’s long-term average.
+             data=hline.data, 
+             linetype=6, 
+             colour="red", 
+             size=0.5) + 
+  facet_grid(~month) + #Create a separate small panel for each month (Jan–Dec).
+  labs(axis.text.x = element_blank(),
+       title = "Visitor arrivals from Vietnam by air, Jan 2010-Dec 2019") +
+  xlab("") +
+  ylab("No. of Visitors") +
+  theme_tufte(base_family = "Helvetica")
+
+
+```
+
+## **10.6 Plotting Slopegraph**
+
+In this section will learn how to plot a [slopegraph](https://www.storytellingwithdata.com/blog/2020/7/27/what-is-a-slopegraph) by using R.
+
+Before getting start, make sure that **CGPfunctions** has been installed and loaded onto R environment. Then, refer to [Using newggslopegraph](https://cran.r-project.org/web/packages/CGPfunctions/vignettes/Using-newggslopegraph.html) to learn more about the function. Lastly, read more about `newggslopegraph()` and its arguments by referring to this [link](https://www.rdocumentation.org/packages/CGPfunctions/versions/0.6.3/topics/newggslopegraph).
+
+### **10.6.1 Step 1: Data Import**
+
+Import the rice data set into R environment by using the code chunk below.
+
+```{r}
+rice <- read_csv("data/rice.csv")
+
+```
+
+### **10.6.2 Step 2: Plotting the slopegraph**
+
+Next, code chunk below will be used to plot a basic slopegraph as shown below.
+
+```{r}
+rice %>% 
+# 1. Treat Year as a categorical variable so lines jump between exactly two levels
+  mutate(Year = factor(Year)) %>%  
+#2. Keep only the two endpoints we care about (1961 and 1980)
+  filter(Year %in% c(1961, 1980)) %>%
+#3. Draw the slop graph
+  newggslopegraph(Year, Yield, Country,
+                Title = "Rice Yield of Top 11 Asian Counties",
+                SubTitle = "1961-1980",
+                Caption = "Prepared by: Yang Lu")
+
+
+```
+
+::: {.callout-note icon="false"}
+## Things to learn from code chunk above:
+
+For effective data visualisation design, `factor()` is used convert the value type of *Year* field from numeric to factor.
+:::
