@@ -67,7 +67,7 @@ Each task builds on previous analysis to uncover the potential corruption surrou
 ### 3.1 Loading packages
 
 | Package | Description |
-|:---------------|:------------------------------------------------------|
+|:-----------------|:-----------------------------------------------------|
 | jsonlite | JSON parsing and generation |
 | tidyverse | Core data-science suite (dplyr, ggplot2, etc.) |
 | SmartEDA | Automated exploratory data analysis |
@@ -120,13 +120,17 @@ glimpse(MC3_schema)
 ### 3.3 Examining the data structure
 
 ```{r}
-kable(head(MC3_graph))
-```
-
-```{r}
 nodes_tbl <- as_tibble(MC3_graph$nodes)
 edges_tbl <- as_tibble(MC3_graph$edges)
 ```
+
+```{r}
+kable(head(nodes_tbl, 10))
+kable(head(edges_tbl, 10))
+
+
+```
+
 
 after slpit to nodes and edges, the data shouw 3226 edges and 1159 nodes
 
@@ -399,9 +403,8 @@ walk(plot_list, ~{
 
 ```
 
-:::panel-tabset
-
-### subtype:Group - 
+::: panel-tabset
+### subtype:Group -
 
 ```{r,warning=FALSE}
 
@@ -456,7 +459,9 @@ ggraph(ego_graph, layout = "kk") +
   labs(title = paste("Influence Network of", target)) +
   theme_graph()
 ```
+
 ### subtype: Location
+
 ```{r,warning=FALSE}
 
 ee_edges <- msgs %>% select(from = sender, to = receiver)
@@ -510,8 +515,6 @@ ggraph(ego_graph, layout = "kk") +
   labs(title = paste("Influence Network of", target)) +
   theme_graph()
 ```
-
-
 
 ###Organization
 
@@ -569,9 +572,8 @@ ggraph(ego_graph, layout = "kk") +
   theme_graph()
 ```
 
-
-
 ### Person
+
 ```{r,warning=FALSE}
 
 ee_edges <- msgs %>% select(from = sender, to = receiver)
@@ -627,10 +629,8 @@ ggraph(ego_graph, layout = "kk") +
 
 ```
 
-
-
-
 ### Vessel
+
 ```{r,warning=FALSE}
 
 ee_edges <- msgs %>% select(from = sender, to = receiver)
