@@ -28,11 +28,9 @@ Clepper has built a knowledge graph from two weeks of intercepted radio communic
 
 **Task 1: Temporal Communication Patterns**
 
-1.  Create visual analytics to identify daily patterns in communication timing
+1.  Create visual analytics to identify daily patterns in communication timing and analyze how these patterns changed over the two-week observation period
 
-2.  Analyze how these patterns changed over the two-week observation period
-
-3.  Select a specific entity and determine who influences them based on these patterns
+2.  Select a specific entity and determine who influences them based on these patterns
 
 **Task 2: Relationship Analysis**
 
@@ -68,15 +66,24 @@ Each task builds on previous analysis to uncover the potential corruption surrou
 
 ### 3.1 Loading packages
 
-add lubridata,dplyr
-
-| Package   | Description                                         |
-|:----------|:----------------------------------------------------|
-| jsonlite  | JSON parsing and generation                         |
-| tidyverse | Core data-science suite (dplyr, ggplot2, etc.)      |
-| SmartEDA  | Automated exploratory data analysis                 |
+| Package | Description |
+|:---------------|:------------------------------------------------------|
+| jsonlite | JSON parsing and generation |
+| tidyverse | Core data-science suite (dplyr, ggplot2, etc.) |
+| SmartEDA | Automated exploratory data analysis |
 | tidygraph | Tidy tools for graph-data manipulation and analysis |
-| ggraph    | Grammar-based graph/network visualization           |
+| ggraph | Grammar-based graph/network visualization |
+| lubridate | Easy parsing and manipulation of dates/times |
+| dplyr | Grammar of data manipulation (filter, mutate, etc.) |
+| patchwork | Combine multiple ggplots into a unified layout |
+| purrr | Functional programming tools for lists and vectors |
+| scales | Scale functions for visualization (axis breaks, formatting) |
+| RColorBrewer | Color palettes for maps and plots |
+| plotly | Interactive web-based charts |
+| igraph | Network analysis and graph algorithms |
+| viridis | Color scales for scientific visualization (colorblind-friendly) |
+| forcats | Tools for working with categorical variables (factors) |
+| knitr | Dynamic report generation and literate programming |
 
 ```{r}
 pacman::p_load(
@@ -86,26 +93,34 @@ pacman::p_load(
   tidygraph,
   ggraph,
   lubridate,
-  dplyr)
+  dplyr,
+  patchwork,
+  purrr,
+  scales,
+  RColorBrewer,
+  plotly,
+  igraph,
+  viridis,
+  forcats,
+  knitr)
 ```
 
-2.2 Loading data
+### 3.2 Loading data
 
 ```{r}
 MC3_graph <- fromJSON("data/MC3_graph.json")
 glimpse(MC3_graph)
 ```
 
-## \[not loading \]
-
 ```{r}
-MC3_schema <- fromJSON("data/MC3_schema.json")
+MC3_schema <- fromJSON("data/MC3_schema.json") # didint load 
 glimpse(MC3_schema)
 ```
 
-```{r}
-str(MC3_graph,max.level = 1)
+### 3.3 Examining the data structure
 
+```{r}
+kable(head(MC3_graph))
 ```
 
 ```{r}
@@ -115,10 +130,35 @@ edges_tbl <- as_tibble(MC3_graph$edges)
 
 after slpit to nodes and edges, the data shouw 3226 edges and 1159 nodes
 
+## 4.Initial EDA
+
+It is time for us to apply appropriate EDA methods to examine the data.
+
+In the code chunk below, ExpCatViz() of SmartEDA package is used to reveal the frequency distribution of all categorical fields in nodes_tbl tibble dataframe.
+
+```{r}
+ExpCatViz(data = nodes_tbl,
+          col = "red")
+```
+
+On the other hands, code chunk below uses ExpCATViz() of SmartEDA package to reveal the frequency distribution of all categorical fields in mc3_edges tibble dataframe.
+
+```{r}
+ExpCatViz(data=edges_tbl,
+          col="lightblue")
+
+
+```
+
+## 5.0 Task 1-Clepper found that messages frequently came in at around the same time each day.
+
+### Task 1.1: Create visual analytics to identify daily patterns in communication timing and analyze how these patterns changed over the two-week observation period
+
 ```{r}
 ggplot(data=nodes_tbl,
       aes(y=`type`))+
   geom_bar()
+
 
 ```
 
@@ -146,7 +186,8 @@ node_inventory <- list(
 
 
 ```
-List down
+
+List down Type and relevant sub types
 
 ```{r}
 for (grp in names(node_inventory)) {
@@ -159,7 +200,7 @@ for (grp in names(node_inventory)) {
 
 ```
 
-based on the above list, we noticed that based on the task requirement, now we only focus on type="even" and sub_type ="communication" , next step is to create communication nodes
+based on the above list, we noticed that based on the task requirement, now we only focus on type="event" and sub_type ="communication" , next step is to create communication nodes
 
 ```{r}
 comm_nodes <-nodes_tbl %>%
@@ -170,7 +211,7 @@ comm_nodes <-nodes_tbl %>%
 glimpse(comm_nodes)
 ```
 
-#for edges to define sender and receiver
+Define sender and receiver
 
 ```{r}
 ggplot(data=edges_tbl,
@@ -178,6 +219,8 @@ ggplot(data=edges_tbl,
   geom_bar()
 
 ```
+
+extract data from sender and receiver
 
 ```{r}
 sent_edges <-edges_tbl %>% filter(type=="sent")%>%
@@ -187,7 +230,7 @@ recv_edges <-edges_tbl %>% filter(type=="received")%>%
   select(event_id = source,receiver=target)
 ```
 
-using inner_join to combine sender and received
+using inner_join to combine sender and receiver
 
 ```{r}
 msgs <- sent_edges %>%
@@ -198,7 +241,7 @@ msgs <- sent_edges %>%
 
 ```
 
-visualizing the heatmap data
+visualizing the heat map
 
 ```{r}
 heatmap_data <- msgs %>%
@@ -233,7 +276,7 @@ ggplot(heatmap_data, aes(x=hour, y=date, fill=n)) +
   ) +
   theme_minimal() +
   theme(
-    axis.text.x  = element_text(angle = 45, hjust = 1),
+    axis.text.x  = element_text(hjust = 0.5),
     axis.text.y  = element_text(size = 8),
     panel.grid  = element_blank()
   )
@@ -241,15 +284,404 @@ ggplot(heatmap_data, aes(x=hour, y=date, fill=n)) +
 
 ```
 
-timestamp included data and time, so first step we need to split to get the day and hour
+Compare the shape of daily rhythm between week 1 and week 2
 
 ```{r}
-edges_time <-nodes_tbl %>%
-  mutate(ts=ymd_hms(timestamp)) %>%
+ # Mark Week 1 vs Week 2
+msgs <- msgs %>%
   mutate(
-    date = as_date(ts),
-    day = day(ts),
-    hour = hour(ts)
+    week = if_else(date <= min(date) + days(6), "Week 1", "Week 2")
+  )
+
+# Count and normalize within each week
+week_patterns <- msgs %>%
+  count(week, hour) %>%
+  group_by(week) %>%
+  mutate(proportion = n / sum(n))
+
+
+hour_breaks <- seq(min(week_patterns$hour), max(week_patterns$hour), by = 1)
+prop_breaks <- seq(
+  0,
+  ceiling(max(week_patterns$proportion) * 100) / 100,
+  by = 0.02
 )
 
+ggplot(week_patterns, aes(x = hour, y = proportion, color = week)) +
+  geom_line(size = 1.2) +
+  geom_point(size = 3) +
+  scale_x_continuous(breaks = hour_breaks) +
+  scale_y_continuous(
+    breaks = prop_breaks,
+    labels = percent_format(accuracy = 1)
+  ) +
+  labs(
+    title = "Hourly Communication Patterns: Week 1 vs Week 2",
+    x     = "Hour of Day",
+    y     = "Percent of Total Messages"
+  ) +
+  theme_light(base_size = 12) +
+  theme(
+    plot.title      = element_text(face = "bold", size = 16, hjust = 0.5),
+    legend.position = "top",
+    legend.title    = element_blank(),
+    panel.grid.major = element_line(color = "grey80"),
+    panel.grid.minor = element_line(color = "grey90"),
+    axis.text.x     = element_text(vjust = 0.5),
+    axis.text.y     = element_text(size = 8)
+  )
+
+
+
 ```
+
+### Task 1.2: Focus on a specific entity and use this information to determine who has influence over them.
+
+```{r}
+library(viridis)
+
+
+entity_info <- nodes_tbl %>%
+  filter(type == "Entity") %>%
+  select(id, target_subtype = sub_type)
+
+msgs2 <- msgs %>%
+  left_join(entity_info, by = c("receiver" = "id"))
+
+
+top_inf <- msgs2 %>%
+  filter(!is.na(receiver)) %>%
+  count(target_subtype, receiver, sender, sort = TRUE) %>%
+  group_by(target_subtype, receiver) %>%
+  slice_max(n, n = 10) %>%
+  ungroup()
+
+
+plot_list <- top_inf %>%
+  group_split(target_subtype) %>%
+  map(~{
+    subtype <- unique(.x$target_subtype)
+    ggplot(.x, aes(
+        x     = reorder(sender, n, .desc=TRUE),
+        y     = n,
+        fill  = receiver,
+        text  = paste0(
+          "Subtype: ", subtype, "<br>",
+          "Sender: ", sender, "<br>",
+          "Receiver: ", receiver, "<br>",
+          "Count: ", n
+        )
+      )) +
+      geom_col(color = "white") +                    
+      scale_fill_viridis_d(option = "turbo", name="Receiver") +
+      coord_flip() +
+      labs(
+        title = paste("Subtype:", subtype),
+        x     = "Influencer (Sender)",
+        y     = "Message Count"
+      ) +
+      theme_minimal(base_size = 12) +
+      theme(
+        strip.text       = element_text(face = "bold"),
+        axis.text.y      = element_text(size = 8),
+        panel.grid.major = element_line(color = "grey80"),
+        panel.grid.minor = element_line(color = "grey90"),
+        legend.position  = "bottom"
+      )
+  })
+
+
+walk(plot_list, ~{
+  plt <- ggplotly(.x, tooltip = "text")
+  print(plt)
+})
+
+
+```
+
+:::panel-tabset
+
+### subtype:Group - 
+
+```{r,warning=FALSE}
+
+ee_edges <- msgs %>% select(from = sender, to = receiver)
+entity_nodes <- nodes_tbl %>%
+  filter(type == "Entity") %>%
+  select(id, name)
+
+entity_graph <- tbl_graph(nodes = entity_nodes, edges = ee_edges, directed = TRUE)
+
+
+target <- "Neptune"
+
+
+g_ig <- as.igraph(entity_graph, strict = FALSE)
+
+
+root_idx <- which(V(g_ig)$name == target)
+
+
+ego_vs <- unique(c(
+  root_idx,
+  neighbors(g_ig, root_idx, mode = "in"),
+  neighbors(g_ig, root_idx, mode = "out")
+))
+
+
+subg <- induced_subgraph(g_ig, vids = ego_vs)
+
+
+ego_graph <- as_tbl_graph(subg)
+
+
+ggraph(ego_graph, layout = "kk") +
+  geom_edge_link(
+    aes(label = NULL),
+    arrow = arrow(length = unit(4, "mm")),
+    end_cap = circle(3, 'mm'),
+    color = "grey70"
+  ) +
+  geom_node_point(
+    aes(filter = (name == target)),
+    size  = 6,
+    color = "firebrick"
+  ) +
+  geom_node_point(
+    aes(filter = (name != target)),
+    size  = 4,
+    color = "steelblue"
+  ) +
+  geom_node_text(aes(label = name), repel = TRUE, size = 3) +
+  labs(title = paste("Influence Network of", target)) +
+  theme_graph()
+```
+### subtype: Location
+```{r,warning=FALSE}
+
+ee_edges <- msgs %>% select(from = sender, to = receiver)
+entity_nodes <- nodes_tbl %>%
+  filter(type == "Entity") %>%
+  select(id, name)
+
+entity_graph <- tbl_graph(nodes = entity_nodes, edges = ee_edges, directed = TRUE)
+
+
+target <- "Oceanus City Council"
+
+
+g_ig <- as.igraph(entity_graph, strict = FALSE)
+
+
+root_idx <- which(V(g_ig)$name == target)
+
+
+ego_vs <- unique(c(
+  root_idx,
+  neighbors(g_ig, root_idx, mode = "in"),
+  neighbors(g_ig, root_idx, mode = "out")
+))
+
+
+subg <- induced_subgraph(g_ig, vids = ego_vs)
+
+
+ego_graph <- as_tbl_graph(subg)
+
+
+ggraph(ego_graph, layout = "kk") +
+  geom_edge_link(
+    aes(label = NULL),
+    arrow = arrow(length = unit(4, "mm")),
+    end_cap = circle(3, 'mm'),
+    color = "grey70"
+  ) +
+  geom_node_point(
+    aes(filter = (name == target)),
+    size  = 6,
+    color = "firebrick"
+  ) +
+  geom_node_point(
+    aes(filter = (name != target)),
+    size  = 4,
+    color = "steelblue"
+  ) +
+  geom_node_text(aes(label = name), repel = TRUE, size = 3) +
+  labs(title = paste("Influence Network of", target)) +
+  theme_graph()
+```
+
+
+
+###Organization
+
+```{r,warning=FALSE}
+
+ee_edges <- msgs %>% select(from = sender, to = receiver)
+entity_nodes <- nodes_tbl %>%
+  filter(type == "Entity") %>%
+  select(id, name)
+
+entity_graph <- tbl_graph(nodes = entity_nodes, edges = ee_edges, directed = TRUE)
+
+
+target <- "Green Guardians"
+
+
+g_ig <- as.igraph(entity_graph, strict = FALSE)
+
+
+root_idx <- which(V(g_ig)$name == target)
+
+
+ego_vs <- unique(c(
+  root_idx,
+  neighbors(g_ig, root_idx, mode = "in"),
+  neighbors(g_ig, root_idx, mode = "out")
+))
+
+
+subg <- induced_subgraph(g_ig, vids = ego_vs)
+
+
+ego_graph <- as_tbl_graph(subg)
+
+
+ggraph(ego_graph, layout = "kk") +
+  geom_edge_link(
+    aes(label = NULL),
+    arrow = arrow(length = unit(4, "mm")),
+    end_cap = circle(3, 'mm'),
+    color = "grey70"
+  ) +
+  geom_node_point(
+    aes(filter = (name == target)),
+    size  = 6,
+    color = "firebrick"
+  ) +
+  geom_node_point(
+    aes(filter = (name != target)),
+    size  = 4,
+    color = "steelblue"
+  ) +
+  geom_node_text(aes(label = name), repel = TRUE, size = 3) +
+  labs(title = paste("Influence Network of", target)) +
+  theme_graph()
+```
+
+
+
+### Person
+```{r,warning=FALSE}
+
+ee_edges <- msgs %>% select(from = sender, to = receiver)
+entity_nodes <- nodes_tbl %>%
+  filter(type == "Entity") %>%
+  select(id, name)
+
+entity_graph <- tbl_graph(nodes = entity_nodes, edges = ee_edges, directed = TRUE)
+
+
+target <- "The Intern"
+
+
+g_ig <- as.igraph(entity_graph, strict = FALSE)
+
+
+root_idx <- which(V(g_ig)$name == target)
+
+
+ego_vs <- unique(c(
+  root_idx,
+  neighbors(g_ig, root_idx, mode = "in"),
+  neighbors(g_ig, root_idx, mode = "out")
+))
+
+
+subg <- induced_subgraph(g_ig, vids = ego_vs)
+
+
+ego_graph <- as_tbl_graph(subg)
+
+
+ggraph(ego_graph, layout = "kk") +
+  geom_edge_link(
+    aes(label = NULL),
+    arrow = arrow(length = unit(4, "mm")),
+    end_cap = circle(3, 'mm'),
+    color = "grey70"
+  ) +
+  geom_node_point(
+    aes(filter = (name == target)),
+    size  = 6,
+    color = "firebrick"
+  ) +
+  geom_node_point(
+    aes(filter = (name != target)),
+    size  = 4,
+    color = "steelblue"
+  ) +
+  geom_node_text(aes(label = name), repel = TRUE, size = 3) +
+  labs(title = paste("Influence Network of", target)) +
+  theme_graph()
+
+```
+
+
+
+
+### Vessel
+```{r,warning=FALSE}
+
+ee_edges <- msgs %>% select(from = sender, to = receiver)
+entity_nodes <- nodes_tbl %>%
+  filter(type == "Entity") %>%
+  select(id, name)
+
+entity_graph <- tbl_graph(nodes = entity_nodes, edges = ee_edges, directed = TRUE)
+
+
+target <- "Reef Guardian"
+
+
+g_ig <- as.igraph(entity_graph, strict = FALSE)
+
+
+root_idx <- which(V(g_ig)$name == target)
+
+
+ego_vs <- unique(c(
+  root_idx,
+  neighbors(g_ig, root_idx, mode = "in"),
+  neighbors(g_ig, root_idx, mode = "out")
+))
+
+
+subg <- induced_subgraph(g_ig, vids = ego_vs)
+
+
+ego_graph <- as_tbl_graph(subg)
+
+
+ggraph(ego_graph, layout = "kk") +
+  geom_edge_link(
+    aes(label = NULL),
+    arrow = arrow(length = unit(4, "mm")),
+    end_cap = circle(3, 'mm'),
+    color = "grey70"
+  ) +
+  geom_node_point(
+    aes(filter = (name == target)),
+    size  = 6,
+    color = "firebrick"
+  ) +
+  geom_node_point(
+    aes(filter = (name != target)),
+    size  = 4,
+    color = "steelblue"
+  ) +
+  geom_node_text(aes(label = name), repel = TRUE, size = 3) +
+  labs(title = paste("Influence Network of", target)) +
+  theme_graph()
+```
+:::
