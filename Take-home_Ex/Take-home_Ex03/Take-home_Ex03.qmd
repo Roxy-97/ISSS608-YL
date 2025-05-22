@@ -404,7 +404,7 @@ walk(plot_list, ~{
 ```
 
 ::: panel-tabset
-### subtype:Group -
+### Subtype:Group
 
 ```{r,warning=FALSE}
 
@@ -460,7 +460,7 @@ ggraph(ego_graph, layout = "kk") +
   theme_graph()
 ```
 
-### subtype: Location
+### Subtype: Location
 
 ```{r,warning=FALSE}
 
@@ -516,7 +516,7 @@ ggraph(ego_graph, layout = "kk") +
   theme_graph()
 ```
 
-###Organization
+### Subtype:Organization
 
 ```{r,warning=FALSE}
 
@@ -572,7 +572,7 @@ ggraph(ego_graph, layout = "kk") +
   theme_graph()
 ```
 
-### Person
+### Subtype:Person
 
 ```{r,warning=FALSE}
 
