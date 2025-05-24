@@ -67,7 +67,7 @@ Each task builds on previous analysis to uncover the potential corruption surrou
 ### 3.1 Loading packages
 
 | Package | Description |
-|:-----------------|:-----------------------------------------------------|
+|:---|:---|
 | jsonlite | JSON parsing and generation |
 | tidyverse | Core data-science suite (dplyr, ggplot2, etc.) |
 | SmartEDA | Automated exploratory data analysis |
@@ -130,7 +130,6 @@ kable(head(edges_tbl, 10))
 
 
 ```
-
 
 after slpit to nodes and edges, the data shouw 3226 edges and 1159 nodes
 
@@ -685,3 +684,9 @@ ggraph(ego_graph, layout = "kk") +
   theme_graph()
 ```
 :::
+
+Task 2: Clepper has noticed that people often communicate with (or about) the same people or vessels, and that grouping them together may help with the investigation.
+
+Task 2.1 :Develop visualizations to explore connections between vessels and people
+
+based on the request, now we have to filter people and vessel
