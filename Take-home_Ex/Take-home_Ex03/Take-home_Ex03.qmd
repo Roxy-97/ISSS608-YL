@@ -67,7 +67,7 @@ Each task builds on previous analysis to uncover the potential corruption surrou
 ### 3.1 Loading packages
 
 | Package | Description |
-|:---|:---|
+|:-----------------------------------|:-----------------------------------|
 | jsonlite | JSON parsing and generation |
 | tidyverse | Core data-science suite (dplyr, ggplot2, etc.) |
 | SmartEDA | Automated exploratory data analysis |
@@ -102,7 +102,9 @@ pacman::p_load(
   igraph,
   viridis,
   forcats,
-  knitr)
+  knitr,
+  visNetwork,
+  htmltools)
 ```
 
 ### 3.2 Loading data
@@ -155,7 +157,7 @@ ExpCatViz(data=edges_tbl,
 
 ## 5.0 Task 1-Clepper found that messages frequently came in at around the same time each day.
 
-### Task 1.1: Create visual analytics to identify daily patterns in communication timing and analyze how these patterns changed over the two-week observation period
+### Task 1.1: Create visual analytics to identify daily patterns in communication timing 
 
 ```{r}
 ggplot(data=nodes_tbl,
@@ -172,7 +174,7 @@ ggplot(data=nodes_tbl,
 
 ```
 
-Generate Node Sub-Type Inventory
+**Generate Node Sub-Type Inventory**
 
 ```{r}
 
@@ -190,7 +192,7 @@ node_inventory <- list(
 
 ```
 
-List down Type and relevant sub types
+**List down type and relevant sub types**
 
 ```{r}
 for (grp in names(node_inventory)) {
@@ -214,7 +216,7 @@ comm_nodes <-nodes_tbl %>%
 glimpse(comm_nodes)
 ```
 
-Define sender and receiver
+**Define sender and receiver**
 
 ```{r}
 ggplot(data=edges_tbl,
@@ -223,7 +225,7 @@ ggplot(data=edges_tbl,
 
 ```
 
-extract data from sender and receiver
+**extract data from sender and receiver**
 
 ```{r}
 sent_edges <-edges_tbl %>% filter(type=="sent")%>%
@@ -233,7 +235,7 @@ recv_edges <-edges_tbl %>% filter(type=="received")%>%
   select(event_id = source,receiver=target)
 ```
 
-using inner_join to combine sender and receiver
+**using inner_join to combine sender and receiver**
 
 ```{r}
 msgs <- sent_edges %>%
@@ -244,7 +246,7 @@ msgs <- sent_edges %>%
 
 ```
 
-visualizing the heat map
+**visualizing the heat map**
 
 ```{r}
 heatmap_data <- msgs %>%
@@ -287,7 +289,7 @@ ggplot(heatmap_data, aes(x=hour, y=date, fill=n)) +
 
 ```
 
-Compare the shape of daily rhythm between week 1 and week 2
+### Task 1.2 Compare the shape of daily rhythm between week 1 and week 2
 
 ```{r}
  # Mark Week 1 vs Week 2
@@ -338,12 +340,9 @@ ggplot(week_patterns, aes(x = hour, y = proportion, color = week)) +
 
 ```
 
-### Task 1.2: Focus on a specific entity and use this information to determine who has influence over them.
+### Task 1.3: Focus on a specific entity and use this information to determine who has influence over them.
 
 ```{r}
-library(viridis)
-
-
 entity_info <- nodes_tbl %>%
   filter(type == "Entity") %>%
   select(id, target_subtype = sub_type)
@@ -358,7 +357,6 @@ top_inf <- msgs2 %>%
   group_by(target_subtype, receiver) %>%
   slice_max(n, n = 10) %>%
   ungroup()
-
 
 plot_list <- top_inf %>%
   group_split(target_subtype) %>%
@@ -394,10 +392,8 @@ plot_list <- top_inf %>%
   })
 
 
-walk(plot_list, ~{
-  plt <- ggplotly(.x, tooltip = "text")
-  print(plt)
-})
+plots <- map(plot_list, ~ggplotly(.x, tooltip = "text"))
+tagList(plots)
 
 
 ```
@@ -685,8 +681,223 @@ ggraph(ego_graph, layout = "kk") +
 ```
 :::
 
-Task 2: Clepper has noticed that people often communicate with (or about) the same people or vessels, and that grouping them together may help with the investigation.
+## Task 2: Clepper has noticed that people often communicate with (or about) the same people or vessels, and that grouping them together may help with the investigation.
 
-Task 2.1 :Develop visualizations to explore connections between vessels and people
+### Task 2.1 :Develop visualizations to explore connections between vessels and people
 
 based on the request, now we have to filter people and vessel
+
+#### Step1:Clean the nodes and edges data
+
+clean the raw nodes and edges data to ensure there are no missing values, all IDs are unique, and types are consistent.
+
+```{r}
+
+mc3_nodes_cleaned <- nodes_tbl %>%
+  mutate(id = as.character(id)) %>%
+  filter(!is.na(id)) %>%
+  distinct(id, .keep_all = TRUE) %>%
+  select(-thing_collected)
+
+mc3_edges_cleaned <- edges_tbl %>%
+  rename(from_id = source, to_id = target) %>%
+  mutate(across(c(from_id, to_id), as.character)) %>%
+  filter(from_id %in% mc3_nodes_cleaned$id, to_id %in% mc3_nodes_cleaned$id) %>%
+  filter(!is.na(from_id), !is.na(to_id))
+
+
+```
+
+#### Step 2: Extract person–vessel indirect links
+
+Identify "Person" and "Vessel" nodes, and link them through "Relationship" nodes to extract all person–relationship–vessel triples.
+
+```{r}
+people_nodes <- mc3_nodes_cleaned %>% filter(sub_type == "Person")
+vessel_nodes <- mc3_nodes_cleaned %>% filter(sub_type == "Vessel")
+
+person_relationship_edges <- mc3_edges_cleaned %>%
+  filter(from_id %in% people_nodes$id & grepl("^Relationship_", to_id))
+
+relationship_vessel_edges <- mc3_edges_cleaned %>%
+  filter(grepl("^Relationship_", from_id) & to_id %in% vessel_nodes$id)
+
+person_to_relationship <- person_relationship_edges %>%
+  select(person_id = from_id, relationship_id = to_id)
+relationship_to_vessel <- relationship_vessel_edges %>%
+  select(relationship_id = from_id, vessel_id = to_id)
+
+person_vessel_links <- person_to_relationship %>%
+  inner_join(relationship_to_vessel, by = "relationship_id") %>%
+  select(person_id, vessel_id, relationship_id)
+
+
+```
+
+#### Step 3: Add labels and types for nodes and edges 
+
+Add labels to each person and vessel node, and add relationship type to edges for visualization.
+
+```{r}
+
+person_vessel_links <- person_vessel_links %>%
+  left_join(people_nodes %>% select(id, person_label = label), by = c("person_id" = "id")) %>%
+  left_join(vessel_nodes %>% select(id, vessel_label = label), by = c("vessel_id" = "id"))
+
+edges_pv <- person_vessel_links %>%
+  mutate(
+    from = person_label,
+    to = vessel_label,
+    relationship_type = gsub("Relationship_|_[0-9]+", "", relationship_id)
+  ) %>%
+  select(from, to, relationship_type)
+
+
+```
+
+#### Step 4: Prepare nodes/edges table for visualization 
+
+Combine all nodes (person + vessel) into a nodes dataframe with type and color, and add color to the edge dataframe.
+
+```{r}
+nodes <- data.frame(
+  id = unique(c(edges_pv$from, edges_pv$to)),
+  label = unique(c(edges_pv$from, edges_pv$to))
+) %>%
+  left_join(
+    bind_rows(
+      people_nodes %>% select(label, type = sub_type),
+      vessel_nodes %>% select(label, type = sub_type)
+    ),
+    by = "label"
+  ) %>%
+  mutate(
+    shape = ifelse(type == "Person", 16, 17), # 
+    color = ifelse(type == "Person", "#FF8888", "#44C6C6")
+  ) %>%
+  select(id, label, type, shape, color)
+
+relation_types <- sort(unique(edges_pv$relationship_type))
+
+if (length(relation_types) <= 8) {
+  relation_colors <- RColorBrewer::brewer.pal(length(relation_types), "Dark2")
+} else {
+  relation_colors <- colorRampPalette(RColorBrewer::brewer.pal(8, "Dark2"))(length(relation_types))
+}
+relation_color_map <- setNames(relation_colors, relation_types)
+
+edges <- edges_pv %>%
+  mutate(
+    from = as.character(from),
+    to = as.character(to),
+    relationship = relationship_type,
+    color = relation_color_map[relationship_type]
+  ) %>%
+  select(from, to, relationship, color)
+
+
+
+
+```
+
+#### Step 5: Plot static network with node/edge legends
+
+Use ggraph to plot a static network diagram. Node types (person/vessel) have different shapes and colors, and the legend on the right automatically distinguishes them. Edge colors represent relationship types.
+
+```{r}
+library(tidygraph)
+library(ggraph)
+
+graph_pv <- tbl_graph(
+  nodes = nodes,
+  edges = edges %>% rename(label = relationship),
+  directed = TRUE
+)
+
+ggraph(graph_pv, layout = 'fr') +
+  geom_edge_link(
+    aes(color = label),
+    arrow = arrow(length = unit(3, 'mm')),
+    end_cap = circle(3, 'mm'),
+    width = 1.4,
+    alpha = 0.85,
+    show.legend = TRUE
+  ) +
+  geom_node_point(
+    aes(shape = type, color = type),
+    size = 6,
+    show.legend = TRUE
+  ) +
+  geom_node_text(
+    aes(label = label),
+    repel = TRUE,
+    size = 3.8,
+    vjust = 1.5
+  ) +
+  scale_shape_manual(
+    values = c("Person" = 16, "Vessel" = 17),
+    name = "Node Type"
+  ) +
+  scale_color_manual(
+    values = c("Person" = "#FF8888", "Vessel" = "#44C6C6"),
+    name = "Node Type"
+  ) +
+  scale_edge_color_manual(
+    values = relation_color_map,
+    name = "Relationship"
+  ) +
+  guides(
+    edge_color = guide_legend(
+      override.aes = list(
+        linetype = 1,
+        size = 3 
+      )
+    )
+  ) +
+  theme_void() +
+  labs(title = "People–Vessel Interaction Network") +
+  theme(
+    legend.position = "right",
+    plot.title = element_text(hjust = 0.5, size = 15, face = "bold")
+  )
+
+```
+
+### Task 2.2 ：Identify closely associated groups and the predominant topics for each group
+
+#### Step 1: Data preparation
+
+referring to task 2.1 we already get - nodes: id, label, type - edges: from, to, relationship_type
+
+```{r}
+edges <- edges_pv %>%
+  mutate(
+    from = as.character(from),
+    to = as.character(to),
+    relationship_type = as.character(relationship_type)
+  ) %>%
+  select(from, to, relationship_type)
+
+edges <- edges %>%
+  mutate(title = relationship_type)
+
+```
+
+#### Step 2: Building un-directed graph
+
+```{r}
+graph_pv_undirected <- tbl_graph(
+  nodes = nodes,
+  edges = edges,
+  directed = FALSE
+)
+
+```
+
+#### Step 3:Louvain Community detection
+
+```{r}
+graph_pv_undirected <- graph_pv_undirected %>%
+  mutate(community = as.factor(group_louvain()))
+
+```

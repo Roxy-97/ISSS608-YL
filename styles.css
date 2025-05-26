@@ -1,3 +1,14 @@
+/* 在 styles.css 文件开头加上这段 */
+.html-widget, .plotly, .vis-network {
+  all: unset !important;
+  display: block !important;
+  width: 100% !important;
+  min-height: 400px !important;
+}
+
+
+
+
 /* Import Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=JetBrains+Mono&display=swap');
 
@@ -194,3 +205,5 @@ div.callout.self-note .callout-body {
   border-bottom-left-radius: 0.5rem !important;
   border-bottom-right-radius: 0.5rem !important;
 }
+
+
