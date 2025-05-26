@@ -697,7 +697,7 @@ mc3_nodes_cleaned <- nodes_tbl %>%
   mutate(id = as.character(id)) %>%
   filter(!is.na(id)) %>%
   distinct(id, .keep_all = TRUE) %>%
-  select(-thing_collected)
+  select(-thing_collected,everything())
 
 mc3_edges_cleaned <- edges_tbl %>%
   rename(from_id = source, to_id = target) %>%
@@ -715,12 +715,14 @@ Identify "Person" and "Vessel" nodes, and link them through "Relationship" nodes
 ```{r}
 people_nodes <- mc3_nodes_cleaned %>% filter(sub_type == "Person")
 vessel_nodes <- mc3_nodes_cleaned %>% filter(sub_type == "Vessel")
+relationship_nodes <- mc3_nodes_cleaned %>% 
+  filter(grepl("^Relationship_", id))
 
 person_relationship_edges <- mc3_edges_cleaned %>%
-  filter(from_id %in% people_nodes$id & grepl("^Relationship_", to_id))
+  filter(from_id %in% people_nodes$id & to_id %in% relationship_nodes$id)
 
 relationship_vessel_edges <- mc3_edges_cleaned %>%
-  filter(grepl("^Relationship_", from_id) & to_id %in% vessel_nodes$id)
+  filter(from_id %in% relationship_nodes$id & to_id %in% vessel_nodes$id)
 
 person_to_relationship <- person_relationship_edges %>%
   select(person_id = from_id, relationship_id = to_id)
@@ -730,7 +732,6 @@ relationship_to_vessel <- relationship_vessel_edges %>%
 person_vessel_links <- person_to_relationship %>%
   inner_join(relationship_to_vessel, by = "relationship_id") %>%
   select(person_id, vessel_id, relationship_id)
-
 
 ```
 
@@ -744,11 +745,13 @@ person_vessel_links <- person_vessel_links %>%
   left_join(people_nodes %>% select(id, person_label = label), by = c("person_id" = "id")) %>%
   left_join(vessel_nodes %>% select(id, vessel_label = label), by = c("vessel_id" = "id"))
 
+person_vessel_links <- person_vessel_links %>%
+  mutate(relationship_type = stringr::str_extract(relationship_id, "(?<=Relationship_)[^_]+"))
+
 edges_pv <- person_vessel_links %>%
   mutate(
     from = person_label,
-    to = vessel_label,
-    relationship_type = gsub("Relationship_|_[0-9]+", "", relationship_id)
+    to = vessel_label
   ) %>%
   select(from, to, relationship_type)
 
@@ -772,13 +775,12 @@ nodes <- data.frame(
     by = "label"
   ) %>%
   mutate(
-    shape = ifelse(type == "Person", 16, 17), # 
+    shape = ifelse(type == "Person", 16, 17),
     color = ifelse(type == "Person", "#FF8888", "#44C6C6")
   ) %>%
   select(id, label, type, shape, color)
 
 relation_types <- sort(unique(edges_pv$relationship_type))
-
 if (length(relation_types) <= 8) {
   relation_colors <- RColorBrewer::brewer.pal(length(relation_types), "Dark2")
 } else {
@@ -788,15 +790,10 @@ relation_color_map <- setNames(relation_colors, relation_types)
 
 edges <- edges_pv %>%
   mutate(
-    from = as.character(from),
-    to = as.character(to),
     relationship = relationship_type,
     color = relation_color_map[relationship_type]
   ) %>%
   select(from, to, relationship, color)
-
-
-
 
 ```
 
@@ -805,9 +802,6 @@ edges <- edges_pv %>%
 Use ggraph to plot a static network diagram. Node types (person/vessel) have different shapes and colors, and the legend on the right automatically distinguishes them. Edge colors represent relationship types.
 
 ```{r}
-library(tidygraph)
-library(ggraph)
-
 graph_pv <- tbl_graph(
   nodes = nodes,
   edges = edges %>% rename(label = relationship),
@@ -832,7 +826,8 @@ ggraph(graph_pv, layout = 'fr') +
     aes(label = label),
     repel = TRUE,
     size = 3.8,
-    vjust = 1.5
+    vjust = 1.5,
+    segment.color = NA 
   ) +
   scale_shape_manual(
     values = c("Person" = 16, "Vessel" = 17),
@@ -847,12 +842,9 @@ ggraph(graph_pv, layout = 'fr') +
     name = "Relationship"
   ) +
   guides(
-    edge_color = guide_legend(
-      override.aes = list(
-        linetype = 1,
-        size = 3 
-      )
-    )
+    color = guide_legend(override.aes = list(size = 6)),
+    shape = guide_legend(override.aes = list(size = 6)),
+    edge_color = guide_legend(override.aes = list(linetype = 1, size = 2))
   ) +
   theme_void() +
   labs(title = "People–Vessel Interaction Network") +
@@ -861,7 +853,10 @@ ggraph(graph_pv, layout = 'fr') +
     plot.title = element_text(hjust = 0.5, size = 15, face = "bold")
   )
 
+ 
+
 ```
+
 
 ### Task 2.2 ：Identify closely associated groups and the predominant topics for each group
 
@@ -870,34 +865,126 @@ ggraph(graph_pv, layout = 'fr') +
 referring to task 2.1 we already get - nodes: id, label, type - edges: from, to, relationship_type
 
 ```{r}
-edges <- edges_pv %>%
-  mutate(
-    from = as.character(from),
-    to = as.character(to),
-    relationship_type = as.character(relationship_type)
-  ) %>%
-  select(from, to, relationship_type)
+ig_undir <- as.undirected(as.igraph(graph_pv), mode = "collapse")
 
-edges <- edges %>%
-  mutate(title = relationship_type)
+com <- cluster_louvain(ig_undir)
+membership_vec <- membership(com) 
+graph_pv <- graph_pv %>% 
+  activate(nodes) %>%
+  mutate(community = as.factor(membership_vec[seq_len(n())]))
+
+nodes <- as_tibble(graph_pv, "nodes")
+
+
+table(nodes$community)
 
 ```
 
 #### Step 2: Building un-directed graph
 
 ```{r}
-graph_pv_undirected <- tbl_graph(
-  nodes = nodes,
-  edges = edges,
-  directed = FALSE
-)
+
+group_summary <- nodes %>%
+  group_by(community, type) %>%
+  summarise(
+    members = paste(label, collapse = ", "),
+    .groups = "drop"
+  )
+print(group_summary)
+
 
 ```
 
 #### Step 3:Louvain Community detection
 
 ```{r}
-graph_pv_undirected <- graph_pv_undirected %>%
-  mutate(community = as.factor(group_louvain()))
+library(ggraph)
+library(RColorBrewer)
+
+# 1. 社区颜色设定
+n_communities <- length(unique(na.omit(nodes$community)))
+# 如果社区数>8，自动扩展色盘
+if(n_communities > 8) {
+  palette <- colorRampPalette(brewer.pal(8, "Set2"))(n_communities)
+} else {
+  palette <- brewer.pal(max(3, n_communities), "Set2")
+}
+
+# 2. 边(relationship)颜色设定，自动取 Dark2 色盘
+relation_types <- unique(edges$label)
+n_rel <- length(relation_types)
+relation_colors <- brewer.pal(max(3, n_rel), "Dark2")
+relation_color_map <- setNames(relation_colors, relation_types)
+
+ggraph(graph_pv, layout = 'fr') +
+  geom_edge_link(
+    aes(color = label),
+    arrow = arrow(length = unit(3, 'mm')), 
+    end_cap = circle(3, 'mm'),
+    width = 1.3,
+    alpha = 0.9,
+    show.legend = TRUE
+  ) +
+  geom_node_point(
+    aes(shape = type, fill = community),
+    size = 9,
+    color = "black",
+    stroke = 1.1,
+    alpha = 1,
+    show.legend = TRUE
+  ) +
+  geom_node_text(
+    aes(label = label),
+    repel = TRUE,
+    size = 3,
+    segment.color = NA
+  ) +
+  scale_shape_manual(
+    values = c("Person" = 21, "Vessel" = 24),
+    name = "Node Type"
+  ) +
+  scale_fill_manual(
+    values = palette,
+    name = "Community"
+  ) +
+  scale_edge_color_manual(
+    values = relation_color_map,
+    name = "Relationship"
+  ) +
+  guides(
+    fill = guide_legend(
+      override.aes = list(shape = 21, size = 7, color = "black", stroke = 1.2)
+    ),
+    shape = guide_legend(
+      override.aes = list(size = 7, fill = "#CCCCCC", color = "black", stroke = 1.2)
+    ),
+    edge_color = guide_legend(
+      override.aes = list(linetype = 1, size = 3, alpha = 1)
+    )
+  ) +
+  theme_void() +
+  labs(title = "People–Vessel Network: Community Structure") +
+  theme(
+    legend.position = "right",
+    legend.box = "vertical",
+    plot.title = element_text(hjust = 0.5, size = 16, face = "bold")
+  )
+  
+
+
 
 ```
+
+
+```{r}
+group_summary$topic <- case_when(
+  grepl("EcoVigil|Green Guardians", group_summary$members) ~ "Environmentalism",
+  grepl("Sailor Shift|Mariner's Dream", group_summary$members) ~ "Entertainment",
+  grepl("Mako|Remora|Marlin|Neptune", group_summary$members) ~ "Fishing/Leisure",
+  TRUE ~ "Other"
+)
+print(group_summary)
+
+
+```
+
