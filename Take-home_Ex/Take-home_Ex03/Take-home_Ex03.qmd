@@ -989,9 +989,11 @@ The community detection analysis of the people–vessel interaction network reve
 These findings highlight the presence of distinct interest groups within the Oceanus community, each aligned around environmentalism, fishing/leisure activities, media/investigation, or covert communications. The clear separation and internal cohesion of these groups underscore the complex social dynamics at play, supporting the investigation into tensions and alliances underlying recent events in Oceanus.
 :::
 
-### **Task 3: Pseudonym Identification**
+### 
 
-### Task 3.1 Expand visualizations to reveal who is using pseudonyms
+### 
+
+### **Task 3: Pseudonym Identification**Task 3.1 Expand visualizations to reveal who is using pseudonyms
 
 To detect the pseudonyms, below code is based on two rules for `sub_type = "Person"`:
 
@@ -1116,9 +1118,22 @@ all_legend <- list(
     list(label = "Vessel", shape = "triangle", color = "orange")
 )
 
-visNetwork(nodes_viz, edges_viz, width = "1600px", height = "900px") %>%
-  visEdges(arrows = "to",smooth = FALSE) %>%
-  visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE, selectedBy = "group") %>%
+set.seed(1234)
+
+nodes_viz <- nodes_viz %>%
+  mutate(
+    x = sample(-600:600, n(), replace = TRUE),
+    y = sample(-400:400, n(), replace = TRUE)
+  )
+
+
+visNetwork(nodes_viz, edges_viz, width = "100%", height = "900px") %>%
+  visEdges(arrows = "to", smooth = FALSE) %>%
+  visOptions(
+    highlightNearest = TRUE,
+    nodesIdSelection = TRUE,
+    selectedBy = "group"
+  ) %>%
   visLegend(
     addNodes = all_legend,
     useGroups = FALSE
@@ -1126,10 +1141,10 @@ visNetwork(nodes_viz, edges_viz, width = "1600px", height = "900px") %>%
   visPhysics(
     stabilization = TRUE,
     barnesHut = list(
-      gravitationalConstant = -5000,  
-      centralGravity = 0.2,           
-      springLength = 250,             
-      springConstant = 0.01           
+      gravitationalConstant = -6000,
+      centralGravity = 0.3,
+      springLength = 350,
+      springConstant = 0.01
     )
   ) %>%
   visInteraction(
@@ -1137,8 +1152,9 @@ visNetwork(nodes_viz, edges_viz, width = "1600px", height = "900px") %>%
     dragView = TRUE,
     zoomView = TRUE
   ) %>%
-  visLayout(randomSeed = 42)
-
+  visLayout(randomSeed = 123)
+    
+ 
 
 
 ```
