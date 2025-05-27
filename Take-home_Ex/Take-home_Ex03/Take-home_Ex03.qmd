@@ -1123,12 +1123,21 @@ visNetwork(nodes_viz, edges_viz, width = "1600px", height = "900px") %>%
     addNodes = all_legend,
     useGroups = FALSE
   ) %>%
-  visPhysics(stabilization = TRUE) %>%
+  visPhysics(
+    stabilization = TRUE,
+    barnesHut = list(
+      gravitationalConstant = -5000,  
+      centralGravity = 0.2,           
+      springLength = 250,             
+      springConstant = 0.01           
+    )
+  ) %>%
   visInteraction(
     dragNodes = TRUE,
     dragView = TRUE,
     zoomView = TRUE
-  )
+  ) %>%
+  visLayout(randomSeed = 42)
 
 
 
