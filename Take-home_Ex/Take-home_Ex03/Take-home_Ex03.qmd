@@ -53,7 +53,7 @@ Clepper has built a knowledge graph from two weeks of intercepted radio communic
 ### 3.1 Loading packages
 
 | Package | Description |
-|:-----------------|:-----------------------------------------------------|
+|:------------------|:----------------------------------------------------|
 | jsonlite | JSON parsing and generation |
 | tidyverse | Core data-science suite (dplyr, ggplot2, etc.) |
 | SmartEDA | Automated exploratory data analysis |
@@ -1016,12 +1016,12 @@ pseudo_table <- nodes_person_vessel%>%
   filter(is_pseudonym == TRUE) %>%
   select(id, label, sub_type)
 
-print(pseudo_table)
+kable(pseudo_table)
 
 
 ```
 
-::: {.callout-caution icon="false"}
+::: {.callout-caution style="background-color: white;" icon="false"}
 ## Conclusion
 
 By applying a rule-based pseudonym detection algorithm to nodes classified as sub_type = "Person", we identified entities whose labels either begin with "The" or match a curated set of known pseudonym keywords (e.g., “Boss”, “Accountant”, “Middleman”, etc.).
@@ -1116,14 +1116,19 @@ all_legend <- list(
     list(label = "Vessel", shape = "triangle", color = "orange")
 )
 
-visNetwork(nodes_viz, edges_viz, width = "100%", height = "800px") %>%
+visNetwork(nodes_viz, edges_viz, width = "1600px", height = "900px") %>%
   visEdges(arrows = "to",smooth = FALSE) %>%
   visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE, selectedBy = "group") %>%
   visLegend(
     addNodes = all_legend,
     useGroups = FALSE
   ) %>%
-  visPhysics(stabilization = TRUE)
+  visPhysics(stabilization = TRUE) %>%
+  visInteraction(
+    dragNodes = TRUE,
+    dragView = TRUE,
+    zoomView = TRUE
+  )
 
 
 
