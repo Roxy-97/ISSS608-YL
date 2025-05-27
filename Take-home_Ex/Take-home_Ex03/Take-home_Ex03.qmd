@@ -32,44 +32,28 @@ Clepper has built a knowledge graph from two weeks of intercepted radio communic
 
 2.  Analyze how these patterns changed over the two-week observation period
 
-3.  Select a specific entity and determine who influences them based on these patterns
+3.  Focus on a specific entity and use this information to determine who has influence over them.
 
 **Task 2: Relationship Analysis**
 
 1.  Develop visualizations to explore connections between vessels and people
 
-2.  Identify closely associated groups
-
-3.  Determine predominant topics for each group (e.g., environmentalism, Sailor Shift, fishing/leisure vessels)
+2.  Identify closely associated groups and the predominant topics for each group
 
 **Task 3: Pseudonym Identification**
 
 1.  Expand visualizations to reveal who is using pseudonyms
 
-2.  Identify known pseudonyms ("Boss", "The Lookout") and discover additional ones
+2.  Visual analytics to identify common entity
 
-3.  Account for pseudonyms potentially used by multiple entities
-
-4.  Demonstrate how these visualizations simplify entity identification
-
-5.  Explain how understanding pseudonyms changes interpretation of activities
-
-**Task 4: Nadia Conti Investigation**
-
-1.  Use visual analytics to provide evidence regarding possible illegal activity by Nadia Conti
-
-2.  Create a visual summary of Nadia's actions
-
-3.  Assess whether Clepper's suspicions are justified
-
-Each task builds on previous analysis to uncover the potential corruption surrounding the Nemo Reef closure and connections between officials, Sailor Shift's team, influential families, and The Green Guardians.
+3.  Explain how understanding pseudonyms changes interpretation of activities
 
 ## 3.0 Setting up
 
 ### 3.1 Loading packages
 
 | Package | Description |
-|:-----------------------------------|:-----------------------------------|
+|:-----------------|:-----------------------------------------------------|
 | jsonlite | JSON parsing and generation |
 | tidyverse | Core data-science suite (dplyr, ggplot2, etc.) |
 | SmartEDA | Automated exploratory data analysis |
@@ -86,27 +70,22 @@ Each task builds on previous analysis to uncover the potential corruption surrou
 | viridis | Color scales for scientific visualization (colorblind-friendly) |
 | forcats | Tools for working with categorical variables (factors) |
 | knitr | Dynamic report generation and literate programming |
+| visNetwork | Interactive network visualization in R |
+| htmltools | Tools for HTML generation and dependency management |
+| stringr | Consistent, simple tools for string manipulation |
 
 ```{r}
 pacman::p_load(
-  jsonlite,
-  tidyverse,
-  SmartEDA,
-  tidygraph,
-  ggraph,
-  lubridate,
-  dplyr,
-  patchwork,
-  purrr,
-  scales,
-  RColorBrewer,
-  plotly,
-  igraph,
-  viridis,
-  forcats,
-  knitr,
-  visNetwork,
-  htmltools)
+  jsonlite,tidyverse,
+  SmartEDA,tidygraph,
+  ggraph,lubridate,
+  dplyr,patchwork,
+  purrr,scales,
+  RColorBrewer,plotly,
+  igraph,viridis,
+  forcats,knitr,
+  visNetwork,htmltools,
+  stringr)
 ```
 
 ### 3.2 Loading data
@@ -135,7 +114,7 @@ kable(head(edges_tbl, 10))
 
 ```
 
-after slpit to nodes and edges, the data shouw 3226 edges and 1159 nodes
+after split to nodes and edges, the data show **3226 edges** and **1159 nodes**
 
 ## 4.Initial EDA
 
@@ -148,7 +127,7 @@ ExpCatViz(data = nodes_tbl,
           col = "red")
 ```
 
-On the other hands, code chunk below uses ExpCATViz() of SmartEDA package to reveal the frequency distribution of all categorical fields in mc3_edges tibble dataframe.
+On the other hands, code chunk below uses ExpCATViz() of SmartEDA package to reveal the frequency distribution of all categorical fields in MC3_edges tibble data frame.
 
 ```{r}
 ExpCatViz(data=edges_tbl,
@@ -209,7 +188,7 @@ for (grp in names(node_inventory)) {
 
 #### Step 3: Create communication nodes
 
-based on the above list, we noticed that based on the task requirement, now we only focus on type="event" and sub_type ="communication" , next step is to create communication nodes
+based on the above list, we noticed that based on the task requirement, now we only focus on type="event" and sub_type ="communication"
 
 ```{r}
 comm_nodes <-nodes_tbl %>%
@@ -295,13 +274,11 @@ ggplot(heatmap_data, aes(x=hour, y=date, fill=n)) +
 
 ### Task 1.2 Compare the shape of daily rhythm between week 1 and week 2
 
-```{r}
- # Mark Week 1 vs Week 2
+```{r,warning=FALSE}
 msgs <- msgs %>%
   mutate(
     week = if_else(date <= min(date) + days(6), "Week 1", "Week 2")
   )
-
 # Count and normalize within each week
 week_patterns <- msgs %>%
   count(week, hour) %>%
@@ -343,6 +320,18 @@ ggplot(week_patterns, aes(x = hour, y = proportion, color = week)) +
 
 
 ```
+
+::: {.callout-caution style="background-color: white;" icon="false"}
+## Conclusion
+
+The visualization of hourly communication patterns reveals that message activity in Oceanus follows a pronounced daily cycle, with distinct peaks and lows across both observed weeks.
+
+In Week 1, communication is highly concentrated in the morning hours, particularly between 8 AM and 12 PM, where a majority of the messages are exchanged.
+
+By contrast, Week 2 shows a broader distribution of communication throughout the day, with notable increases in afternoon and evening activity.
+
+This shift suggests that while the first week’s communications were more focused and possibly related to regular planning or operational updates, the second week’s patterns reflect heightened activity or more dynamic coordination, potentially due to emergent events or increased urgency among entities.
+:::
 
 ### Task 1.3: Focus on a specific entity and use this information to determine who has influence over them.
 
@@ -984,7 +973,7 @@ print(group_summary)
 
 ```
 
-::: {.callout-caution icon="false"}
+::: {.callout-caution style="background-color: white;" icon="false"}
 ## Conclusion
 
 The community detection analysis of the people–vessel interaction network revealed several closely associated groups within the Oceanus scenario. Each community, identified through the Louvain algorithm and confirmed by network visualization, displays distinct thematic characteristics based on the key members present.
@@ -998,4 +987,162 @@ The community detection analysis of the people–vessel interaction network reve
 -   Additionally, a community featuring members with pseudonymous names such as Boss and Small Fry appears to be engaged in covert or less formal operations.
 
 These findings highlight the presence of distinct interest groups within the Oceanus community, each aligned around environmentalism, fishing/leisure activities, media/investigation, or covert communications. The clear separation and internal cohesion of these groups underscore the complex social dynamics at play, supporting the investigation into tensions and alliances underlying recent events in Oceanus.
+:::
+
+### **Task 3: Pseudonym Identification**
+
+### Task 3.1 Expand visualizations to reveal who is using pseudonyms
+
+To detect the pseudonyms, below code is based on two rules for `sub_type = "Person"`:
+
+1.  Name starting with "The" :These are very likely pseudonyms, such as “The Lookout” or “The Intern”
+
+2.  Obvious pseudonym keywords: Names that contain certain keywords commonly used as roles or code names (e.g., “Boss”, “Accountant”, “Middleman”, etc.).
+
+```{r}
+nodes_person_vessel <- nodes_tbl %>%
+  filter(sub_type %in% c("Person","Vessel"))
+
+pseudonym_keywords <- c("Boss", "Accountant", "Middleman", "Lookout", "Money", "Intern", "Small Fry")
+
+nodes_person_vessel <- nodes_person_vessel %>%
+  mutate(
+    is_the_prefix = str_detect(label, "^The "),
+    is_keyword = str_detect(label, paste(pseudonym_keywords, collapse = "|")),
+    is_pseudonym = is_the_prefix | is_keyword
+  )
+
+pseudo_table <- nodes_person_vessel%>%
+  filter(is_pseudonym == TRUE) %>%
+  select(id, label, sub_type)
+
+print(pseudo_table)
+
+
+```
+
+::: {.callout-caution icon="false"}
+## Conclusion
+
+By applying a rule-based pseudonym detection algorithm to nodes classified as sub_type = "Person", we identified entities whose labels either begin with "The" or match a curated set of known pseudonym keywords (e.g., “Boss”, “Accountant”, “Middleman”, etc.).
+
+This approach systematically flagged a total of **seven** unique person nodes: "The Intern", "The Lookout", "The Accountant", "Mrs. Money", "The Middleman", "Boss", and "Small Fry".
+
+These entities are highly likely to represent pseudonymous actors within the communication network, potentially serving as proxies or aliases to conceal the true identity or organizational role of the underlying individual.
+
+The technical filtering strategy ensures a reproducible and objective process for pseudonym identification, which will be leveraged in downstream analyses of network influence, alias mapping, and the detection of covert activity within the Oceanus knowledge graph.
+:::
+
+### Task 3.2 ：Visual analytics to identify common entity (Pseudonym and their network)
+
+```{r}
+pseudo_labels <- pseudo_table$label
+core_ids <- nodes_tbl %>% filter(sub_type %in% c("Person", "Vessel")) %>% pull(label)
+
+pseudo_to_rel <- edges_tbl %>%
+  filter(source %in% pseudo_labels & grepl("^Relationship_", target)) %>%
+  select(pseudo = source, relationship = target, type_pseudo = type)
+
+rel_to_person <- edges_tbl %>%
+  filter(grepl("^Relationship_", source) & target %in% core_ids) %>%
+  select(relationship = source, person = target, type_person = type)
+
+pseudo_rel_network <- pseudo_to_rel %>%
+  inner_join(rel_to_person, by = "relationship") %>%
+  select(pseudonym = pseudo, relationship, person, type_pseudonym = type_pseudo, type_person)
+
+
+extract_reltype <- function(x) {
+  m <- regmatches(x, regexpr("_(.*?)_", x))
+  if (length(m) == 0) return("Other")
+  gsub("_", "", m)
+}
+rel_type_vec <- sapply(pseudo_rel_network$relationship, extract_reltype)
+rel_types <- unique(rel_type_vec)
+rel_colors <- setNames(RColorBrewer::brewer.pal(max(3, length(rel_types)), "Set2"), rel_types)
+
+
+person_vessel_info <- nodes_tbl %>%
+  filter(label %in% core_ids | label %in% pseudo_labels) %>%
+  select(label, sub_type) %>%
+  distinct(label, .keep_all = TRUE)
+
+nodes_all <- unique(c(pseudo_rel_network$pseudonym, pseudo_rel_network$relationship, pseudo_rel_network$person))
+nodes_viz <- tibble(id = nodes_all) %>%
+  left_join(person_vessel_info, by = c("id" = "label"))
+
+nodes_viz <- tibble(id = nodes_all) %>%
+  left_join(person_vessel_info, by = c("id" = "label")) %>%
+  mutate(
+    group = ifelse(id %in% pseudo_labels, "Pseudonym",
+                   ifelse(!is.na(sub_type) & sub_type == "Person", "Person",
+                          ifelse(!is.na(sub_type) & sub_type == "Vessel", "Vessel",
+                                 ifelse(grepl("^Relationship_", id), extract_reltype(id), "Other")))),
+    label = ifelse(grepl("^Relationship_", id), "", id),
+    title = ifelse(group == "Pseudonym", paste0("Pseudonym: ", id, "<br>Type: ", sub_type),
+                   ifelse(group == "Person", paste0("Person: ", id),
+                          ifelse(group == "Vessel", paste0("Vessel: ", id),
+                                 ifelse(grepl("^Relationship_", id), paste0("Relationship: ", extract_reltype(id)), id)))),
+    color = ifelse(group == "Pseudonym", "red",
+                   ifelse(group == "Person", "skyblue",
+                          ifelse(group == "Vessel", "orange",
+                                 ifelse(group %in% rel_types, rel_colors[group], "grey")))),
+    shape = ifelse(group == "Pseudonym", "square",
+                   ifelse(group == "Person", "dot",
+                          ifelse(group == "Vessel", "triangle",
+                                 ifelse(group %in% rel_types, "diamond", "dot"))))
+  )
+
+edges_viz <- bind_rows(
+  pseudo_rel_network %>%
+    mutate(rel_type = extract_reltype(relationship)) %>%
+    transmute(
+      from = pseudonym, to = relationship,
+      color = rel_colors[rel_type],
+      arrows = "to", title = paste0("Pseudonym to Relationship: ", rel_type)
+    ),
+  pseudo_rel_network %>%
+    mutate(rel_type = extract_reltype(relationship)) %>%
+    transmute(
+      from = relationship, to = person,
+      color = rel_colors[rel_type],
+      arrows = "to", title = paste0("Relationship to Person/Vessel: ", rel_type)
+    )
+)
+
+all_legend <- list(
+    list(label = "Pseudonym", shape = "square", color = "red"),
+    list(label = "Person", shape = "dot", color = "skyblue"),
+    list(label = "Vessel", shape = "triangle", color = "orange")
+)
+
+visNetwork(nodes_viz, edges_viz, width = "100%", height = "800px") %>%
+  visEdges(arrows = "to",smooth = FALSE) %>%
+  visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE, selectedBy = "group") %>%
+  visLegend(
+    addNodes = all_legend,
+    useGroups = FALSE
+  ) %>%
+  visPhysics(stabilization = TRUE)
+
+
+
+```
+
+### Task 3.3 :How does your understanding of activities change given your understanding of pseudonyms?
+
+::: {.callout-caution style="background-color: white;" icon="false"}
+## Conclusion
+
+With the explicit identification of pseudonyms such as “Boss,” “The Intern,” “The Accountant,” “Mrs. Money,” “The Middleman,” “The Lookout,” and “Small Fry,” my understanding of the activities within the Oceanus network changed significantly.
+
+**Initially**, communications and relationships appeared to be fragmented among many individuals and vessels. However, after mapping pseudonyms onto the network, several important patterns emerged:
+
+-   **Pseudonyms as Key Hubs:** In the visual network, the detected pseudonyms are not peripheral actors—they consistently occupy central hub positions, connecting to multiple vessels and people through various types of relationships (such as "Reports," "Coordinates," "Operates," and "Suspicious").
+
+-   **Obscured True Roles:** What previously looked like many unrelated participants was actually a small set of influential actors operating under multiple pseudonyms. For example, “The Intern” and “Boss” are both connected to several vessels via "Coordinates" and "Operates" relationships, indicating they may be orchestrating or managing operations behind the scenes.
+
+-   **Concealment of Illicit Activity:** The structure revealed that pseudonyms are often used to mask direct links between real individuals and vessels—particularly in suspicious or high-frequency communication events. This suggests intentional obfuscation, possibly to hide illicit coordination or the flow of sensitive information.
+
+-   **Redefining Influence and Risk:** By highlighting pseudonyms, it becomes clear that influence within the network is far more centralized than the real-name view suggested. A few pseudonyms control or interact with a large proportion of vessels and people, making them high-value targets for further investigation.
 :::
