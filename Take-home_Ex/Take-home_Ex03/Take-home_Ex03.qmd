@@ -53,7 +53,7 @@ Clepper has built a knowledge graph from two weeks of intercepted radio communic
 ### 3.1 Loading packages
 
 | Package | Description |
-|:------------------|:----------------------------------------------------|
+|:-------------------|:---------------------------------------------------|
 | jsonlite | JSON parsing and generation |
 | tidyverse | Core data-science suite (dplyr, ggplot2, etc.) |
 | SmartEDA | Automated exploratory data analysis |
@@ -989,11 +989,9 @@ The community detection analysis of the people–vessel interaction network reve
 These findings highlight the presence of distinct interest groups within the Oceanus community, each aligned around environmentalism, fishing/leisure activities, media/investigation, or covert communications. The clear separation and internal cohesion of these groups underscore the complex social dynamics at play, supporting the investigation into tensions and alliances underlying recent events in Oceanus.
 :::
 
-### 
+## **Task 3: Pseudonym Identification Task** 
 
-### 
-
-### **Task 3: Pseudonym Identification**Task 3.1 Expand visualizations to reveal who is using pseudonyms
+### 3.1 Expand visualizations to reveal who is using pseudonyms
 
 To detect the pseudonyms, below code is based on two rules for `sub_type = "Person"`:
 
