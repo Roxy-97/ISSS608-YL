@@ -881,7 +881,7 @@ group_summary <- nodes %>%
     .groups = "drop"
   )
 
-print(group_summary)
+kable(group_summary)
 
 
 ```
@@ -969,7 +969,7 @@ group_summary$topic <- case_when(
   TRUE ~ "Other"
 )
 
-print(group_summary)
+kable(group_summary)
 
 ```
 
