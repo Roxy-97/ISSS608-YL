@@ -53,7 +53,7 @@ Clepper has built a knowledge graph from two weeks of intercepted radio communic
 ### 3.1 Loading packages
 
 | Package | Description |
-|:--------------------|:--------------------------------------------------|
+|:---------------------|:-------------------------------------------------|
 | jsonlite | JSON parsing and generation |
 | tidyverse | Core data-science suite (dplyr, ggplot2, etc.) |
 | SmartEDA | Automated exploratory data analysis |
@@ -1120,8 +1120,8 @@ set.seed(1234)
 
 nodes_viz <- nodes_viz %>%
   mutate(
-    x = sample(-600:600, n(), replace = TRUE),
-    y = sample(-400:400, n(), replace = TRUE)
+    x = sample(-2000:2000, n(), replace = TRUE),
+    y = sample(-1200:1200, n(), replace = TRUE)
   )
 
 
@@ -1142,8 +1142,8 @@ visNetwork(nodes_viz, edges_viz, width = "100%", height = "900px") %>%
     stabilization = TRUE,
     barnesHut = list(
       gravitationalConstant = -8000,
-      centralGravity = 0.2,
-      springLength = 450,
+      centralGravity = 0.01,
+      springLength = 1200,
       springConstant = 0.008
     )
   ) %>%
