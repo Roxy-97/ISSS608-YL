@@ -1,6 +1,15 @@
 ---
 title: "In class Exercise 2"
 author: "Yang Lu"
+date: "31 May 2025"
+date-modified: "last-modified"
+format: html
+editor: visual
+execute: 
+  eval: true  
+  echo: true  
+  warning: false 
+  freeze: true 
 ---
 
 installation Shiny
