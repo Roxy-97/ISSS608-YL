@@ -53,7 +53,7 @@ Clepper has built a knowledge graph from two weeks of intercepted radio communic
 ### 3.1 Loading packages
 
 | Package | Description |
-|:---------------------|:-------------------------------------------------|
+|:---|:---|
 | jsonlite | JSON parsing and generation |
 | tidyverse | Core data-science suite (dplyr, ggplot2, etc.) |
 | SmartEDA | Automated exploratory data analysis |
