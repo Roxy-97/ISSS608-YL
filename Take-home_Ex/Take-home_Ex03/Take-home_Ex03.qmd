@@ -1035,7 +1035,7 @@ The technical filtering strategy ensures a reproducible and objective process fo
 
 ### Task 3.2 ：Visual analytics to identify common entity (Pseudonym and their network)
 
-```{r network-plot, fig.width=14, fig.height=10, out.width="100%"}
+```{r,results='asis'}
 pseudo_labels <- pseudo_table$label
 core_ids <- nodes_tbl %>% filter(sub_type %in% c("Person", "Vessel")) %>% pull(label)
 
