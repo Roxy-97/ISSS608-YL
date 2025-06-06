@@ -22,7 +22,7 @@ In this chapter, you will learn how to plot functional and truthful choropleth m
 
 ## **11.2 Getting Started**
 
-In this hands-on exercise, the key R package use is [**tmap**](https://cran.r-project.org/web/packages/tmap/) package in R. Beside **tmap** package, four other R packages will be used. They are:
+In this hands-on exercise, the key R package use is [**tmap**](https://cran.r-project.org/web/packages/tmap/) package in R. Beside **tmap** package, four other R packages will be used. They are
 
 -   [**readr**](https://readr.tidyverse.org/) for importing a delimited text file,
 
