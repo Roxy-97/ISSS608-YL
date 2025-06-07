@@ -1,0 +1,335 @@
+---
+title: "Take home Exercise 3"
+author: "Yang Lu"
+date: "12 Jun 2025"
+date-modified: "last-modified"
+format: html
+editor: visual
+execute: 
+  eval: true  
+  echo: true  
+  warning: false 
+  freeze: true 
+---
+
+# **Take-home Exercise 3: Prototyping Modules for Visual Analytics Shiny Application**
+
+## 1. Overall task
+
+-   To evaluate and determine the necessary R packages needed for your Shiny application are supported in R CRAN,
+
+-   To prepare and test the specific R codes can be run and returned the correct output as expected,
+
+-   To determine the parameters and outputs that will be exposed on the Shiny applications, and
+
+-   To select the appropriate Shiny UI components for exposing the parameters determine above.
+
+## 2. Install packages
+
+```{r}
+pacman::p_load(
+shiny,jsonlite,tidyverse,
+SmartEDA,tidygraph,ggraph,lubridate,
+dplyr,scales,patchwork,plotly)
+
+```
+
+## 3. Loading data
+
+```{r}
+
+MC3_graph <- fromJSON("data/MC3_graph.json")
+nodes_tbl  <- as_tibble(MC3_graph$nodes)
+edges_tbl  <- as_tibble(MC3_graph$edges)
+
+```
+
+## 4. Task 1.1: Create visual analytics to identify daily patterns in communication timing
+
+```{r}
+#Extract the data only for sub_type=communication
+comm_nodes <-nodes_tbl %>%
+  filter(type=="Event",
+         sub_type == "Communication") %>%
+  select(event_id = id,timestamp)
+
+#Extract data from sender and receiver
+sent_edges <-edges_tbl %>% filter(type=="sent")%>%
+  select(sender = source,event_id=target)
+
+recv_edges <-edges_tbl %>% filter(type=="received")%>%
+  select(event_id = source,receiver=target)
+
+#using inner_join to combine sender and receiver
+msgs <- sent_edges %>%
+  inner_join(recv_edges, by="event_id") %>%
+  inner_join(comm_nodes, by="event_id") %>%
+  mutate(ts = ymd_hms(timestamp, tz="UTC")) %>%
+  mutate(date = as_date(ts), hour = hour(ts))
+
+
+heatmap_data <- msgs %>%
+  count(date, hour) %>%
+  complete(
+    date = seq(min(date), max(date), by = "1 day"),
+    hour = 0:23,
+    fill = list(n = 0)
+  )
+
+
+ui <- fluidPage(
+  titlePanel("Heatmap：Daily Communication Patterns"),
+  sidebarLayout(
+    sidebarPanel(
+  
+      dateRangeInput(
+        inputId = "date_range",
+        label   = "Select date range：",
+        start   = min(heatmap_data$date),
+        end     = max(heatmap_data$date)
+      ),
+      sliderInput(
+        inputId = "hour_range",
+        label   = "Select hour range：",
+        min     = 0,
+        max     = 23,
+        value   = c(0, 23),
+        step    = 1,
+        ticks   = FALSE
+      )
+    ),
+    mainPanel(
+      plotOutput("heatmap", height = "600px")
+    )
+  )
+)
+
+
+server <- function(input, output, session) {
+  
+ 
+  filtered_data <- reactive({
+    req(input$date_range)  
+    heatmap_data %>%
+      filter(
+        date >= input$date_range[1],
+        date <= input$date_range[2],
+        hour >= input$hour_range[1],
+        hour <= input$hour_range[2])
+  })
+  
+
+  output$heatmap <- renderPlot({
+    df <- filtered_data()
+    
+     ggplot(df, aes(x = hour, y = date, fill = n)) +
+      geom_tile(color = "white") +
+
+      scale_x_continuous(
+        breaks = seq(input$hour_range[1], input$hour_range[2], by = 1),
+        expand = c(0, 0)
+      ) +
+      scale_y_date(
+        breaks      = seq(min(df$date), max(df$date), by = "1 day"),
+        date_labels = "%b %d",
+        expand      = c(0, 0)
+      ) +
+      scale_fill_distiller(
+        name      = "Messages",
+        palette   = "Spectral",
+        direction = 1
+      ) +
+      labs(
+        title = "Heat map of daily message count by hour",
+        x     = "Hours (0–23)",
+        y     = "Date"
+      ) +
+      theme_minimal() +
+      theme(
+        axis.text.x = element_text(hjust = 0.5),
+        axis.text.y = element_text(size = 8),
+        panel.grid  = element_blank()
+      )
+  }, res = 96)
+  
+}
+
+
+shinyApp(ui, server)
+```
+
+## 4. Task 1.2: Compare the shape of daily rhythm between week 1 and week 2
+
+```{r}
+start_date <-min(msgs$date)
+msgs <- msgs %>%
+  mutate(
+    week = if_else(date <= min(date) + days(6), "Week 1", "Week 2")
+  )
+# Count and normalize within each week
+week_patterns <- msgs %>%
+  count(week, hour) %>%
+  group_by(week) %>%
+  mutate(proportion = n / sum(n)) %>%
+  ungroup()
+
+ui <- fluidPage(
+  titlePanel("Compare the shape of daily rhythm between week 1 and week 2"),
+  sidebarLayout(
+    sidebarPanel(
+      checkboxGroupInput(
+        inputId  = "weeks",
+        label    = "Select Comparison Week：",
+        choices  = c("Week 1", "Week 2"),
+        selected = c("Week 1", "Week 2")
+    ),
+     sliderInput(
+        inputId = "hour_range",
+        label   = "Select Hourly Interval：",
+        min     = 0,
+        max     = 23,
+        value   = c(0, 23),
+        step    = 1,
+        ticks   = FALSE
+      )
+    ),
+    mainPanel(
+      plotOutput("week_plot", height = "450px")
+    )
+  )
+)
+
+server <- function(input, output, session) {
+
+   filtered_patterns <- reactive({
+    req(input$weeks, input$hour_range)
+    week_patterns %>%
+      filter(
+        week %in% input$weeks,
+        hour >= input$hour_range[1],
+        hour <= input$hour_range[2]
+      )
+  })
+
+  output$week_plot <- renderPlot({
+    df <- filtered_patterns()
+    hour_breaks <- seq(min(df$hour), max(df$hour), by = 1)
+    prop_breaks <- seq(
+      0,
+      ceiling(max(df$proportion) * 100) / 100,
+      by = 0.02
+    )
+
+    ggplot(df, aes(x = hour, y = proportion, color = week)) +
+      geom_line(size = 1.2) +
+      geom_point(size = 3) +
+      scale_x_continuous(breaks = hour_breaks) +
+      scale_y_continuous(
+        breaks = prop_breaks,
+        labels = percent_format(accuracy = 1)
+      ) +
+      labs(
+        title = "Hourly Communication Patterns: Week 1 vs Week 2",
+        x     = "Hour of Day",
+        y     = "Percent of Total Messages",
+        color = NULL
+      ) +
+      theme_light(base_size = 12) +
+      theme(
+        plot.title       = element_text(face = "bold", size = 16, hjust = 0.5),
+        legend.position  = "top",
+        panel.grid.major = element_line(color = "grey80"),
+        panel.grid.minor = element_line(color = "grey90"),
+        axis.text.x      = element_text(vjust = 0.5),
+        axis.text.y      = element_text(size = 8)
+      )
+  }, res = 96)
+
+}
+
+shinyApp(ui, server)
+     
+```
+
+## 5. Task 1.3: Focus on a specific entity and use this information to determine who has influence over them.
+
+```{r}
+entity_info <- nodes_tbl %>%
+  filter(type == "Entity") %>%
+  select(id, target_subtype = sub_type)
+
+msgs2 <- msgs %>%
+  left_join(entity_info, by = c("receiver" = "id"))
+
+
+top_inf <- msgs2 %>%
+  filter(!is.na(receiver)) %>%
+  count(target_subtype, receiver, sender, sort = TRUE) %>%
+  group_by(target_subtype, receiver) %>%
+  slice_max(n, n = 10) %>%
+  ungroup()
+
+subtypes <- sort(unique(top_inf$target_subtype))
+
+ui <- fluidPage(
+  titlePanel("Influencer Analysis by Entity Subtype"),
+  sidebarLayout(
+    sidebarPanel(
+      selectInput(
+        inputId  = "subtype",
+        label    = "Select target_subtype:",
+        choices  = subtypes,
+        selected = subtypes[1]
+      )
+    ),
+    mainPanel(
+      plotlyOutput("inf_plot", height = "600px")
+    )
+  )
+)
+
+server <- function(input, output, session) {
+
+  filtered <- reactive({
+    req(input$subtype)
+    top_inf %>% filter(target_subtype == input$subtype)
+  })
+
+  output$inf_plot <- renderPlotly({
+    df <- filtered()
+    p <- ggplot(df, aes(
+        x     = reorder(sender, n, .desc = TRUE),
+        y     = n,
+        fill  = receiver,
+        text  = paste0(
+          "Subtype: ", input$subtype, "<br>",
+          "Sender: ", sender, "<br>",
+          "Receiver: ", receiver, "<br>",
+          "Count: ", n
+        )
+      )) +
+      geom_col(color = "white") +
+      scale_fill_viridis_d(option = "turbo", name = "Receiver") +
+      coord_flip() +
+      labs(
+        title = paste("Top 10 Senders for subtype:", input$subtype),
+        x     = "Influencer (Sender)",
+        y     = "Message Count"
+      ) +
+      theme_minimal(base_size = 12) +
+      theme(
+        axis.text.y      = element_text(size = 8),
+        panel.grid.major = element_line(color = "grey80"),
+        panel.grid.minor = element_line(color = "grey90"),
+        legend.position  = "bottom"
+      )
+
+    ggplotly(p, tooltip = "text")
+  })
+}
+
+shinyApp(ui, server)
+
+
+
+```
