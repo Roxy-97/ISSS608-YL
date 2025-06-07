@@ -734,11 +734,10 @@ Things to learn from tm_polygons():
 <h3 class="anchored" data-anchor-id="self-work">Self work</h3>
 <section id="task-1-using-what-you-had-learned-prepare-choropleth-maps-by-using-different-classification-methods-supported-by-tmap-and-compare-their-differences." class="level4">
 <h4 class="anchored" data-anchor-id="task-1-using-what-you-had-learned-prepare-choropleth-maps-by-using-different-classification-methods-supported-by-tmap-and-compare-their-differences.">Task 1: Using what you had learned, prepare choropleth maps by using different classification methods supported by tmap and compare their differences.</h4>
-</section>
-</section>
-<div class="pane-tabset">
-<section id="using-quantile" class="level3">
-<h3 class="anchored" data-anchor-id="using-quantile">Using quantile</h3>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Using quantile</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Using sd</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Using pretty(default)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false">Using bclust</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz_pop2020)<span class="sc">+</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="st">"DEPENDENCY"</span>,</span>
@@ -754,9 +753,8 @@ Things to learn from tm_polygons():
 </div>
 </div>
 </div>
-</section>
-<section id="using-sd" class="level3">
-<h3 class="anchored" data-anchor-id="using-sd">Using sd</h3>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz_pop2020)<span class="sc">+</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="st">"DEPENDENCY"</span>,</span>
@@ -772,9 +770,8 @@ Things to learn from tm_polygons():
 </div>
 </div>
 </div>
-</section>
-<section id="using-prettydefault" class="level3">
-<h3 class="anchored" data-anchor-id="using-prettydefault">Using pretty(default)</h3>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz_pop2020)<span class="sc">+</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="st">"DEPENDENCY"</span>,</span>
@@ -790,9 +787,8 @@ Things to learn from tm_polygons():
 </div>
 </div>
 </div>
-</section>
-<section id="using-bclust" class="level3">
-<h3 class="anchored" data-anchor-id="using-bclust">Using bclust</h3>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz_pop2020)<span class="sc">+</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="st">"DEPENDENCY"</span>,</span>
@@ -812,7 +808,8 @@ Computing Hierarchical Clustering</code></pre>
 </div>
 </div>
 </div>
-</section>
+</div>
+</div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" style="background-color:white;">
 <div class="callout-header d-flex align-content-center">
@@ -841,6 +838,7 @@ Reflection
 <p><strong>Cons:</strong> More computationally intensive and Results can vary slightly between runs</p>
 </div>
 </div>
+</section>
 <section id="task2-preparing-choropleth-maps-by-using-similar-classification-method-but-with-different-numbers-of-classes-i.e.-2-6-10-20.-compare-the-output-maps-what-observation-can-you-draw" class="level4">
 <h4 class="anchored" data-anchor-id="task2-preparing-choropleth-maps-by-using-similar-classification-method-but-with-different-numbers-of-classes-i.e.-2-6-10-20.-compare-the-output-maps-what-observation-can-you-draw">Task2: Preparing choropleth maps by using similar classification method but with different numbers of classes (i.e.&nbsp;2, 6, 10, 20). Compare the output maps, what observation can you draw?</h4>
 <div class="cell">
@@ -928,6 +926,7 @@ Note
 </div>
 </div>
 </div>
+</section>
 </section>
 <section id="colour-scheme" class="level3">
 <h3 class="anchored" data-anchor-id="colour-scheme"><strong>11.4.4 Colour Scheme</strong></h3>

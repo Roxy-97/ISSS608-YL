@@ -343,10 +343,9 @@ Notice that the distribution of jenks data classification method are more evenly
 
 #### Task 1: Using what you had learned, prepare choropleth maps by using different classification methods supported by tmap and compare their differences.
 
-::: pane-tabset
+::: panel-tabset
 
 ### Using quantile
-
 ```{r}
 tm_shape(mpsz_pop2020)+
   tm_polygons("DEPENDENCY",
@@ -358,7 +357,6 @@ tm_shape(mpsz_pop2020)+
 ```
 
 ### Using sd
-
 ```{r}
 tm_shape(mpsz_pop2020)+
   tm_polygons("DEPENDENCY",
@@ -370,7 +368,6 @@ tm_shape(mpsz_pop2020)+
 ```
 
 ### Using pretty(default)
-
 ```{r}
 tm_shape(mpsz_pop2020)+
   tm_polygons("DEPENDENCY",
@@ -382,7 +379,6 @@ tm_shape(mpsz_pop2020)+
 ```
 
 ### Using bclust
-
 ```{r,warning=FALSE}
 tm_shape(mpsz_pop2020)+
   tm_polygons("DEPENDENCY",
@@ -393,6 +389,9 @@ tm_shape(mpsz_pop2020)+
 
 ```
 :::
+
+
+
 
 ::: {.callout-caution style="background-color:white;" icon="false"}
 ## Reflection
