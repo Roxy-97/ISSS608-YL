@@ -4,6 +4,7 @@ author: "Yang Lu"
 date: "12 Jun 2025"
 date-modified: "last-modified"
 format: html
+runtime: shiny
 editor: visual
 execute: 
   eval: true  
@@ -30,7 +31,7 @@ execute:
 pacman::p_load(
 shiny,jsonlite,tidyverse,
 SmartEDA,tidygraph,ggraph,lubridate,
-dplyr,scales,patchwork,plotly)
+dplyr,scales,patchwork,plotly,igraph,ggraph,ggplot2)
 
 ```
 
@@ -331,5 +332,84 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 
 
+```
 
+```{r}
+ee_edges <- msgs %>% select(from = sender, to = receiver)
+entity_nodes <- nodes_tbl %>%
+  filter(type == "Entity") %>%
+  select(id, name)
+
+
+entity_graph <- tbl_graph(nodes = entity_nodes, edges = ee_edges, directed = TRUE)
+g_ig <- as.igraph(entity_graph, strict = FALSE)
+
+
+all_targets <- sort(V(g_ig)$name)
+
+
+
+ui <- fluidPage(
+  titlePanel("Influence Network Explorer"),
+  sidebarLayout(
+    sidebarPanel(
+      selectInput(
+        inputId  = "target",
+        label    = "Select target entity:",
+        choices  = all_targets,
+        selected = all_targets[1]
+      )
+    ),
+    mainPanel(
+      plotOutput("net_plot", height = "600px")
+    )
+  )
+)
+
+
+
+server <- function(input, output, session) {
+
+  output$net_plot <- renderPlot({
+    req(input$target)
+    target <- input$target
+
+    
+    root_idx <- which(V(g_ig)$name == target)
+
+   
+    ego_vs <- unique(c(
+      root_idx,
+      igraph::neighbors(g_ig, root_idx, mode = "in"),
+      igraph::neighbors(g_ig, root_idx, mode = "out")
+    ))
+
+    
+    subg <- igraph::induced_subgraph(g_ig, vids = ego_vs)
+    ego_graph <- as_tbl_graph(subg)
+
+   
+    ggraph(ego_graph, layout = "kk") +
+      geom_edge_link(
+        arrow    = arrow(length = unit(4, "mm")),
+        end_cap  = circle(3, 'mm'),
+        color    = "grey70"
+      ) +
+      geom_node_point(
+        aes(filter = (name == target)),
+        size  = 6, color = "firebrick"
+      ) +
+      geom_node_point(
+        aes(filter = (name != target)),
+        size  = 4, color = "steelblue"
+      ) +
+      geom_node_text(aes(label = name), repel = TRUE, size = 3) +
+      labs(title = paste("Influence Network of", target)) +
+      theme_void()
+  }, res = 96)
+
+}
+
+
+shinyApp(ui, server)
 ```

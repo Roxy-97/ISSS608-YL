@@ -1,0 +1,12 @@
+name: task1_1
+title: task1_1
+username: roxyyanglu
+account: roxyyanglu
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 14900148
+bundleId: 10418142
+url: https://roxyyanglu.shinyapps.io/task1_1/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE

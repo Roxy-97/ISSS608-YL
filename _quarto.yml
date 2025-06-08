@@ -48,7 +48,7 @@ website:
           - text: "Take-home Exercise 2-VAST Challenges 3"
             href: "Take-home_Ex/Take-home_Ex03/Take-home_Ex03.html"
           - text: "Take-home Exercise 3"
-            href: "Take-home_Ex/Take-home_Ex04/Take-home_Ex04.html"
+            href: "https://roxyyanglu.shinyapps.io/Take-home_Ex03/"
             
       - text: "In-class Exercise"
         menu:
