@@ -817,5 +817,19 @@
     "title": "Take home Exercise 3",
     "section": "",
     "text": "entity_info &lt;- nodes_tbl %&gt;%\n  filter(type == \"Entity\") %&gt;%\n  select(id, target_subtype = sub_type)\n\nmsgs2 &lt;- msgs %&gt;%\n  left_join(entity_info, by = c(\"receiver\" = \"id\"))\n\n\ntop_inf &lt;- msgs2 %&gt;%\n  filter(!is.na(receiver)) %&gt;%\n  count(target_subtype, receiver, sender, sort = TRUE) %&gt;%\n  group_by(target_subtype, receiver) %&gt;%\n  slice_max(n, n = 10) %&gt;%\n  ungroup()\n\nsubtypes &lt;- sort(unique(top_inf$target_subtype))\n\nui &lt;- fluidPage(\n  titlePanel(\"Influencer Analysis by Entity Subtype\"),\n  sidebarLayout(\n    sidebarPanel(\n      selectInput(\n        inputId  = \"subtype\",\n        label    = \"Select target_subtype:\",\n        choices  = subtypes,\n        selected = subtypes[1]\n      )\n    ),\n    mainPanel(\n      plotlyOutput(\"inf_plot\", height = \"600px\")\n    )\n  )\n)\n\nserver &lt;- function(input, output, session) {\n\n  filtered &lt;- reactive({\n    req(input$subtype)\n    top_inf %&gt;% filter(target_subtype == input$subtype)\n  })\n\n  output$inf_plot &lt;- renderPlotly({\n    df &lt;- filtered()\n    p &lt;- ggplot(df, aes(\n        x     = reorder(sender, n, .desc = TRUE),\n        y     = n,\n        fill  = receiver,\n        text  = paste0(\n          \"Subtype: \", input$subtype, \"&lt;br&gt;\",\n          \"Sender: \", sender, \"&lt;br&gt;\",\n          \"Receiver: \", receiver, \"&lt;br&gt;\",\n          \"Count: \", n\n        )\n      )) +\n      geom_col(color = \"white\") +\n      scale_fill_viridis_d(option = \"turbo\", name = \"Receiver\") +\n      coord_flip() +\n      labs(\n        title = paste(\"Top 10 Senders for subtype:\", input$subtype),\n        x     = \"Influencer (Sender)\",\n        y     = \"Message Count\"\n      ) +\n      theme_minimal(base_size = 12) +\n      theme(\n        axis.text.y      = element_text(size = 8),\n        panel.grid.major = element_line(color = \"grey80\"),\n        panel.grid.minor = element_line(color = \"grey90\"),\n        legend.position  = \"bottom\"\n      )\n\n    ggplotly(p, tooltip = \"text\")\n  })\n}\n\nshinyApp(ui, server)\n\nShiny applications not supported in static R Markdown documents"
+  },
+  {
+    "objectID": "Hands-on_EX/Hands-on_Ex12/Hands-on_Ex12.html#learning-outcome",
+    "href": "Hands-on_EX/Hands-on_Ex12/Hands-on_Ex12.html#learning-outcome",
+    "title": "Hands-on Exercise 7 Part B",
+    "section": "12.1.1 Learning outcome",
+    "text": "12.1.1 Learning outcome\nBy the end of this hands-on exercise, you will acquire the following skills by using appropriate R packages:\n\nTo import an aspatial data file into R.\nTo convert it into simple point feature data frame and at the same time, to assign an appropriate projection reference to the newly create simple point feature data frame.\nTo plot interactive proportional symbol maps."
+  },
+  {
+    "objectID": "Hands-on_EX/Hands-on_Ex12/Hands-on_Ex12.html#the-data",
+    "href": "Hands-on_EX/Hands-on_Ex12/Hands-on_Ex12.html#the-data",
+    "title": "Hands-on Exercise 7 Part B",
+    "section": "12.3.1 The data",
+    "text": "12.3.1 The data\nThe data set use for this hands-on exercise is called SGPools_svy21. The data is in csv file format.\nFigure below shows the first 15 records of SGPools_svy21.csv. It consists of seven columns. The XCOORD and YCOORD columns are the x-coordinates and y-coordinates of SingPools outlets and branches. They are in Singapore SVY21 Projected Coordinates System."
   }
 ]

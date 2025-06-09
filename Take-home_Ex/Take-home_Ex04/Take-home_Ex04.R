@@ -8,6 +8,7 @@ library(lubridate)
 library(igraph)
 library(vistime)
 library(bslib)
+library(scales)
 
 # --------------------------------------------------
 # 1. DIY bslib theme
@@ -34,7 +35,7 @@ ui <- fluidPage(
       .navbar-covert .nav-link:hover { color: #DBCAC3 !important; }
       body { padding-top: 70px; }
       section { padding: 60px 20px; }
-      /* web BG set for #DBCAC3 的 section */
+      /* web BG set for #DBCAC3 section */
 #home,
 #sketch,
 #task2,
@@ -42,7 +43,7 @@ ui <- fluidPage(
   background-color: #DBCAC3 !important;
 }
 
-/* web BG set for #ebe2de 的 section */
+/* web BG set for #ebe2de section */
 #timeline,
 #task1,
 #task3,
