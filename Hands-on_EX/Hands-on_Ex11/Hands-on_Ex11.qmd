@@ -393,7 +393,7 @@ tm_shape(mpsz_pop2020)+
 ```
 :::
 
-::: {.callout-caution style="background-color:white;" icon="false"}
+::: {.callout-caution style="background-color: white;" icon="false"}
 ## Reflection
 
 **Pretty**
@@ -454,7 +454,7 @@ do.call(tmap_arrange, c(maps, ncol = 2))
 
 ```
 
-::: {.callout-caution style="backgroud-color:white;" icon="false"}
+::: {.callout-caution style="background-color: white;" icon="false"}
 ## Reflection
 
 **2 classes**: Only splits areas into “low” vs. “high,” making the map immediately clear but showing only the broad pattern—all finer detail is lost.
@@ -478,7 +478,7 @@ Before get started, it is always a good practice to get some descriptive statist
 summary(mpsz_pop2020$DEPENDENCY)
 ```
 
-::: callout-note
+::: {.callout-note style="background-color: white;"}
 We capped the top at 1.00 because dependency ratio is usually expressed as a proportion (0–100%).
 
 Letting the max be 19 would stretch the color scale so much that all normal values (0–1) collapse into one class and the map loses detail. By clamping at 1, here keep the focus on the vast majority of data and group any extreme outliers into the highest class.

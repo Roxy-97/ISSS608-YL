@@ -44,3 +44,8 @@ pacman::p_load(sf, tmap, tidyverse)
 The data set use for this hands-on exercise is called *SGPools_svy21*. The data is in csv file format.
 
 Figure below shows the first 15 records of SGPools_svy21.csv. It consists of seven columns. The XCOORD and YCOORD columns are the x-coordinates and y-coordinates of SingPools outlets and branches. They are in [Singapore SVY21 Projected Coordinates System](https://www.sla.gov.sg/sirent/CoordinateSystems.aspx).
+
+```{r}
+sgpools <- read_csv("data/aspatial/SGPools_svy21.csv")
+
+```

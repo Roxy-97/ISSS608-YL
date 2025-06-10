@@ -830,6 +830,13 @@
     "href": "Hands-on_EX/Hands-on_Ex12/Hands-on_Ex12.html#the-data",
     "title": "Hands-on Exercise 7 Part B",
     "section": "12.3.1 The data",
-    "text": "12.3.1 The data\nThe data set use for this hands-on exercise is called SGPools_svy21. The data is in csv file format.\nFigure below shows the first 15 records of SGPools_svy21.csv. It consists of seven columns. The XCOORD and YCOORD columns are the x-coordinates and y-coordinates of SingPools outlets and branches. They are in Singapore SVY21 Projected Coordinates System."
+    "text": "12.3.1 The data\nThe data set use for this hands-on exercise is called SGPools_svy21. The data is in csv file format.\nFigure below shows the first 15 records of SGPools_svy21.csv. It consists of seven columns. The XCOORD and YCOORD columns are the x-coordinates and y-coordinates of SingPools outlets and branches. They are in Singapore SVY21 Projected Coordinates System.\n\nsgpools &lt;- read_csv(\"data/aspatial/SGPools_svy21.csv\")"
+  },
+  {
+    "objectID": "Hands-on_EX/Hands-on_Ex12/data/geospatial/MPSZ-2019.html",
+    "href": "Hands-on_EX/Hands-on_Ex12/data/geospatial/MPSZ-2019.html",
+    "title": "",
+    "section": "",
+    "text": "&lt;!DOCTYPE qgis PUBLIC ‘http://mrcc.com/qgis.dtd’ ‘SYSTEM’&gt;     dataset\n\n\n        0 0     false"
   }
 ]
