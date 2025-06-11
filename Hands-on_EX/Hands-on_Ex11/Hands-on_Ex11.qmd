@@ -173,7 +173,7 @@ Two approaches can be used to prepare thematic map using *tmap*, they are:
 
 -   Plotting **highly customisable thematic map** by using tmap elements.
 
-### **21.4.1 Plotting a choropleth map quickly by using *qtm()***
+### **11.4.1 Plotting a choropleth map quickly by using *qtm()***
 
 The easiest and quickest to draw a choropleth map using **tmap** is using *qtm()*. It is concise and provides a good default visualisation in many cases.
 
@@ -535,7 +535,7 @@ tm_shape(mpsz_pop2020)+
 
 Map layout refers to the combination of all map elements into a cohensive map. Map elements include among others the objects to be mapped, **the title, the scale bar, the compass, margins and aspects ratios.** Colour settings and data classification methods covered in the previous section relate to the palette and break-points are used to affect how the map looks.
 
-#### 21.4.5.1 Map Legend
+#### 11.4.5.1 Map Legend
 
 In **tmap**, several `tm_legend()` options are provided to change the placement, format and appearance of the legend.
 
