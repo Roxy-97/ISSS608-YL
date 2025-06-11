@@ -830,7 +830,7 @@
     "href": "Hands-on_EX/Hands-on_Ex12/Hands-on_Ex12.html#the-data",
     "title": "Hands-on Exercise 7 Part B",
     "section": "12.3.1 The data",
-    "text": "12.3.1 The data\nThe data set use for this hands-on exercise is called SGPools_svy21. The data is in csv file format.\nFigure below shows the first 15 records of SGPools_svy21.csv. It consists of seven columns. The XCOORD and YCOORD columns are the x-coordinates and y-coordinates of SingPools outlets and branches. They are in Singapore SVY21 Projected Coordinates System.\n\nsgpools &lt;- read_csv(\"data/aspatial/SGPools_svy21.csv\")"
+    "text": "12.3.1 The data\nThe data set use for this hands-on exercise is called SGPools_svy21. The data is in csv file format.\nFigure below shows the first 15 records of SGPools_svy21.csv. It consists of seven columns. The XCOORD and YCOORD columns are the x-coordinates and y-coordinates of SingPools outlets and branches. They are in Singapore SVY21 Projected Coordinates System."
   },
   {
     "objectID": "Hands-on_EX/Hands-on_Ex12/data/geospatial/MPSZ-2019.html",
@@ -838,5 +838,68 @@
     "title": "",
     "section": "",
     "text": "&lt;!DOCTYPE qgis PUBLIC ‘http://mrcc.com/qgis.dtd’ ‘SYSTEM’&gt;     dataset\n\n\n        0 0     false"
+  },
+  {
+    "objectID": "Hands-on_EX/Hands-on_Ex12/Hands-on_Ex12.html#data-import-and-preparation",
+    "href": "Hands-on_EX/Hands-on_Ex12/Hands-on_Ex12.html#data-import-and-preparation",
+    "title": "Hands-on Exercise 7 Part B",
+    "section": "12.3.2 Data Import and Preparation",
+    "text": "12.3.2 Data Import and Preparation\n\nsgpools &lt;- read_csv(\"data/aspatial/SGPools_svy21.csv\")\n\nAfter importing the data file into R, it is important for us to examine if the data file has been imported correctly.\nThe code chunk below shows list() is used to do the job.\n\nlist(sgpools) \n\n[[1]]\n# A tibble: 306 × 7\n   NAME           ADDRESS POSTCODE XCOORD YCOORD `OUTLET TYPE` `Gp1Gp2 Winnings`\n   &lt;chr&gt;          &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;                     &lt;dbl&gt;\n 1 Livewire (Mar… 2 Bayf…    18972 30842. 29599. Branch                        5\n 2 Livewire (Res… 26 Sen…    98138 26704. 26526. Branch                       11\n 3 SportsBuzz (K… Lotus …   738078 20118. 44888. Branch                        0\n 4 SportsBuzz (P… 1 Sele…   188306 29777. 31382. Branch                       44\n 5 Prime Serango… Blk 54…   552542 32239. 39519. Branch                        0\n 6 Singapore Poo… 1A Woo…   731001 21012. 46987. Branch                        3\n 7 Singapore Poo… Blk 64…   370064 33990. 34356. Branch                       17\n 8 Singapore Poo… Blk 88…   370088 33847. 33976. Branch                       16\n 9 Singapore Poo… Blk 30…   540308 33910. 41275. Branch                       21\n10 Singapore Poo… Blk 20…   560202 29246. 38943. Branch                       25\n# ℹ 296 more rows\n\n\nNotice that the sgpools data in tibble data frame and not the common R data frame."
+  },
+  {
+    "objectID": "Hands-on_EX/Hands-on_Ex12/Hands-on_Ex12.html#creating-a-sf-data-frame-from-an-aspatial-data-frame",
+    "href": "Hands-on_EX/Hands-on_Ex12/Hands-on_Ex12.html#creating-a-sf-data-frame-from-an-aspatial-data-frame",
+    "title": "Hands-on Exercise 7 Part B",
+    "section": "12.3.3 Creating a sf data frame from an aspatial data frame",
+    "text": "12.3.3 Creating a sf data frame from an aspatial data frame\nThe code chunk below converts sgpools data frame into a simple feature data frame by using st_as_sf() of sf packages\n\nsgpools_sf &lt;- st_as_sf(sgpools, \n                       coords = c(\"XCOORD\", \"YCOORD\"),\n                       crs= 3414)\n\n\n\n\n\n\n\nThings to learn from the arguments above:\n\n\n\n\nThe coords argument requires you to provide the column name of the x-coordinates first then followed by the column name of the y-coordinates.\nThe crs argument required you to provide the coordinates system in epsg format. EPSG: 3414 is Singapore SVY21 Projected Coordinate System. You can search for other country’s epsg code by refering to epsg.io.\n\n\n\nFigure below shows the data table of sgpools_sf. Notice that a new column called geometry has been added into the data frame.\n\n\n\nYou can display the basic information of the newly created sgpools_sf by using the code chunk below.\n\n\n\nlist(sgpools_sf)\n\n[[1]]\nSimple feature collection with 306 features and 5 fields\nGeometry type: POINT\nDimension:     XY\nBounding box:  xmin: 7844.194 ymin: 26525.7 xmax: 45176.57 ymax: 47987.13\nProjected CRS: SVY21 / Singapore TM\n# A tibble: 306 × 6\n   NAME                         ADDRESS POSTCODE `OUTLET TYPE` `Gp1Gp2 Winnings`\n * &lt;chr&gt;                        &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;                     &lt;dbl&gt;\n 1 Livewire (Marina Bay Sands)  2 Bayf…    18972 Branch                        5\n 2 Livewire (Resorts World Sen… 26 Sen…    98138 Branch                       11\n 3 SportsBuzz (Kranji)          Lotus …   738078 Branch                        0\n 4 SportsBuzz (PoMo)            1 Sele…   188306 Branch                       44\n 5 Prime Serangoon North        Blk 54…   552542 Branch                        0\n 6 Singapore Pools Woodlands C… 1A Woo…   731001 Branch                        3\n 7 Singapore Pools 64 Circuit … Blk 64…   370064 Branch                       17\n 8 Singapore Pools 88 Circuit … Blk 88…   370088 Branch                       16\n 9 Singapore Pools Anchorvale … Blk 30…   540308 Branch                       21\n10 Singapore Pools Ang Mo Kio … Blk 20…   560202 Branch                       25\n# ℹ 296 more rows\n# ℹ 1 more variable: geometry &lt;POINT [m]&gt;\n\n\nThe output shows that sgppols_sf is in point feature class. It’s epsg ID is 3414. The bbox provides information of the extend of the geospatial data."
+  },
+  {
+    "objectID": "Hands-on_EX/Hands-on_Ex12/Hands-on_Ex12.html#it-all-started-with-an-interactive-point-symbol-map",
+    "href": "Hands-on_EX/Hands-on_Ex12/Hands-on_Ex12.html#it-all-started-with-an-interactive-point-symbol-map",
+    "title": "Hands-on Exercise 7 Part B",
+    "section": "12.4.1 It all started with an interactive point symbol map",
+    "text": "12.4.1 It all started with an interactive point symbol map\nThe code chunks below are used to create an interactive point symbol map.\n\ntm_shape(sgpools_sf) + \n  tm_bubbles(fill = \"red\",\n           size = 1,\n           col = \"black\",\n           lwd = 1)"
+  },
+  {
+    "objectID": "Hands-on_EX/Hands-on_Ex12/Hands-on_Ex12.html#lets-make-it-proportional",
+    "href": "Hands-on_EX/Hands-on_Ex12/Hands-on_Ex12.html#lets-make-it-proportional",
+    "title": "Hands-on Exercise 7 Part B",
+    "section": "12.4.2 Lets make it proportional",
+    "text": "12.4.2 Lets make it proportional\nTo draw a proportional symbol map, we need to assign a numerical variable to the size visual attribute.\nThe code chunks below show that the variable Gp1Gp2Winnings is assigned to size visual attribute.\n\ntm_shape(sgpools_sf) + \n  tm_bubbles(fill = \"red\",\n             size = \"Gp1Gp2 Winnings\",\n             col = \"black\",\n             lwd = 1)"
+  },
+  {
+    "objectID": "Hands-on_EX/Hands-on_Ex12/Hands-on_Ex12.html#lets-give-it-a-different-colour",
+    "href": "Hands-on_EX/Hands-on_Ex12/Hands-on_Ex12.html#lets-give-it-a-different-colour",
+    "title": "Hands-on Exercise 7 Part B",
+    "section": "12.4.3 Lets give it a different colour",
+    "text": "12.4.3 Lets give it a different colour\nThe proportional symbol map can be further improved by using the colour visual attribute. In the code chunks below, OUTLET_TYPE variable is used as the colour attribute variable.\n\ntm_shape(sgpools_sf) + \n  tm_bubbles(fill = \"OUTLET TYPE\", \n             size = \"Gp1Gp2 Winnings\",\n             col = \"black\",\n             lwd = 1)"
+  },
+  {
+    "objectID": "Hands-on_EX/Hands-on_Ex12/Hands-on_Ex12.html#i-have-a-twin-brothers",
+    "href": "Hands-on_EX/Hands-on_Ex12/Hands-on_Ex12.html#i-have-a-twin-brothers",
+    "title": "Hands-on Exercise 7 Part B",
+    "section": "12.4.4 I have a twin brothers :)",
+    "text": "12.4.4 I have a twin brothers :)\nAn impressive and little-know feature of tmap’s view mode is that it also works with faceted plots. The argument sync in tm_facets() can be used in this case to produce multiple maps with synchronised zoom and pan settings.\n\ntm_shape(sgpools_sf) + \n  tm_bubbles(fill = \"OUTLET TYPE\", \n             size = \"Gp1Gp2 Winnings\",\n             col = \"black\",\n             lwd = 1) + \n  tm_facets(by= \"OUTLET TYPE\",\n            nrow = 1,\n            sync = TRUE)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\ntm_bubbles() vs tm_facets():\n\n\n\n\ntm_bubbles()\n- Plots “bubble” symbols at each point location\n- Maps bubble size to a numeric variable (e.g. population, earnings)\n- Allows you to style fill color, border color, and line width\ntm_facets()\n- Splits the map into multiple panels (“small multiples”) by a categorical field\n- Controls layout with nrow/ncol\n- sync = TRUE keeps all panels’ zoom/pan in sync for easy comparison\n\n\n\nNotice: Before you end the session, it is wiser to switch tmap’s Viewer back to plot mode by using the code chunk below.\n\ntmap_mode(\"plot\")"
+  },
+  {
+    "objectID": "Hands-on_EX/Hands-on_Ex12/Hands-on_Ex12.html#all-about-tmap-package",
+    "href": "Hands-on_EX/Hands-on_Ex12/Hands-on_Ex12.html#all-about-tmap-package",
+    "title": "Hands-on Exercise 7 Part B",
+    "section": "12.5.1 All about tmap package",
+    "text": "12.5.1 All about tmap package\n\ntmap: Thematic Maps in R\ntmap\ntmap: get started!\ntmap: changes in version 2.0\ntmap: creating thematic maps in a flexible way (useR!2015)\nExploring and presenting maps with tmap (useR!2017)"
+  },
+  {
+    "objectID": "Hands-on_EX/Hands-on_Ex12/Hands-on_Ex12.html#geospatial-data-wrangling-1",
+    "href": "Hands-on_EX/Hands-on_Ex12/Hands-on_Ex12.html#geospatial-data-wrangling-1",
+    "title": "Hands-on Exercise 7 Part B",
+    "section": "12.5.2 Geospatial data wrangling",
+    "text": "12.5.2 Geospatial data wrangling\n\nsf: Simple Features for R\nSimple Features for R: StandardizedSupport for Spatial Vector Data\nReading, Writing and Converting Simple Features"
+  },
+  {
+    "objectID": "Hands-on_EX/Hands-on_Ex12/Hands-on_Ex12.html#data-wrangling",
+    "href": "Hands-on_EX/Hands-on_Ex12/Hands-on_Ex12.html#data-wrangling",
+    "title": "Hands-on Exercise 7 Part B",
+    "section": "12.5.3 Data wrangling",
+    "text": "12.5.3 Data wrangling\n\ndplyr\nTidy data\ntidyr: Easily Tidy Data with ‘spread()’ and ‘gather()’ Functions"
   }
 ]
