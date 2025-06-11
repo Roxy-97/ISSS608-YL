@@ -100,7 +100,8 @@ To create an `interactive proportional symbol map` in R, the view mode of tmap w
 
 The code churn below will turn on the interactive mode of tmap.
 
-```{r}
+```{r tmap-setup, echo=FALSE, message=FALSE}
+
 tmap_mode("view")
 ```
 
@@ -165,15 +166,15 @@ tm_shape(sgpools_sf) +
 ::: {.callout-important style="background-color:white;" icon="false"}
 ## tm_bubbles() vs tm_facets():
 
-> **tm_bubbles()**\
-> - Plots “bubble” symbols at each point location\
-> - Maps bubble size to a numeric variable (e.g. population, earnings)\
-> - Allows you to style fill color, border color, and line width
->
-> **tm_facets()**\
-> - Splits the map into multiple panels (“small multiples”) by a categorical field\
-> - Controls layout with `nrow`/`ncol`\
-> - `sync = TRUE` keeps all panels’ zoom/pan in sync for easy comparison
+**tm_bubbles()**\
+- Plots “bubble” symbols at each point location\
+- Maps bubble size to a numeric variable (e.g. population, earnings)\
+- Allows you to style fill color, border color, and line width
+
+**tm_facets()**\
+- Splits the map into multiple panels (“small multiples”) by a categorical field\
+- Controls layout with `nrow`/`ncol`\
+- `sync = TRUE` keeps all panels’ zoom/pan in sync for easy comparison
 :::
 
 Notice: B**efore you end the session**, it is wiser to switch **tmap**’s Viewer back to **plot mode** by using the code chunk below.
