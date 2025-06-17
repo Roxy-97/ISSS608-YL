@@ -107,6 +107,7 @@ ggtern(data=agpop_mutated, aes(x=YOUNG,y=ACTIVE, z=OLD)) +
 ### **14.4.2 Plotting an interative ternary diagram**
 
 The code below create an interactive ternary plot using ***plot_ly()*** function of **Plotly R**.
+
 ```{r}
 label <- function(txt) {
   list(
