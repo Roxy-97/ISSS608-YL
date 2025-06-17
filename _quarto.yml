@@ -38,6 +38,19 @@ website:
             href: "Hands-on_Ex/Hands-on_Ex12/Hands-on_Ex12.html"
           - text: "Hands-on Exercise 7:Analytical Mapping."
             href: "Hands-on_Ex/Hands-on_Ex13/Hands-on_Ex13.html"
+          - text: "Hands-on Exercise 8:Part A"
+            href: "Hands-on_Ex/Hands-on_Ex14/Hands-on_Ex14.html"
+          - text: "Hands-on Exercise 8:Part B"
+            href: "Hands-on_Ex/Hands-on_Ex15/Hands-on_Ex15.html"
+          - text: "Hands-on Exercise 8:Part c."
+            href: "Hands-on_Ex/Hands-on_Ex16/Hands-on_Ex16.html"            
+          - text: "Hands-on Exercise 8:Part D."
+            href: "Hands-on_Ex/Hands-on_Ex17/Hands-on_Ex17.html"            
+          - text: "Hands-on Exercise 8:Part E."
+            href: "Hands-on_Ex/Hands-on_Ex18/Hands-on_Ex18.html"                        
+            
+            
+            
 
       - text: "Take-home Exercise"
         menu:
@@ -57,6 +70,14 @@ website:
             href: "In-class_Ex/In-class_Ex01/In-class_Ex01.html"
           - text: "In-class Exercise 2"
             href: "In-class_Ex/In-class_Ex02/In-class_Ex02.html"            
+
+
+      - text: "Shiny App"
+        menu:
+          - text: "Shiny io for storyboard"
+            href: " https://roxyyanglu.shinyapps.io/Take-home_Ex03/"
+   
+
 
     right:
       - href: index.qmd
