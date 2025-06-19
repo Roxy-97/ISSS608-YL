@@ -75,7 +75,7 @@ website:
       - text: "Shiny App"
         menu:
           - text: "Shiny io for storyboard"
-            href: " https://roxyyanglu.shinyapps.io/Take-home_Ex03/"
+            href: "https://roxyyanglu.shinyapps.io/Take-home_Ex03/"
    
 
 
