@@ -166,3 +166,110 @@ plot_ly(
 
 
 ```
+
+# **Visual Correlation Analysis**
+
+相关系数(Correlation coefficien)是一种常用的统计量，用于衡量两个变量之间关系的类型和强度。相关系数的取值范围在 -1.0 和 1.0 之间。相关系数为 1 表示两个变量之间存在完美的线性关系，而 -1.0 则表示两个变量之间存在完美的反向关系。相关系数为 0.0 则表示两个变量之间没有线性关系。
+
+When multivariate data are used, the correlation coefficeints of the pair comparisons are displayed in a table form known as correlation matrix or scatterplot matrix.
+
+计算相关矩阵主要有三个原因。
+
+-   揭示高维变量之间的配对关系。 为其他分析提供输入。
+
+-   人们通常使用相关矩阵作为探索性因素分析、确认性因素分析、结构方程模型和线性回归的输入，同时排除缺失值配对。
+
+-   检查其他分析时用作诊断。例如，在线性回归中，高相关性表明线性回归的估计值不可靠。
+
+First, you will learn how to **create correlation matrix** using `pairs()` of R Graphics.
+
+Next, you will learn how to **plot corrgram** using corrplot package of R. **corrgram**：专门用来绘制相关图，支持多种面板样式；
+
+Lastly, you will learn how to create an **interactive correlation matrix** using plotly R.
+
+## **Installing and Launching R Packages**
+
+launch **corrplot**, **ggpubr**, **plotly** and **tidyverse** in RStudio.
+
+```{r}
+pacman::p_load(corrplot, ggstatsplot, tidyverse)
+
+```
+
+```{r}
+wine <- read_csv("Hands-on_Ex09/data/wine_quality.csv")
+summary(wine)
+```
+
+## **Building Correlation Matrix: *pairs()* method**
+
+```{r}
+pairs(wine[, 1:11])
+
+
+```
+
+::: callout-note
+-   `pairs()` 是 R 语言基础绘图（graphics）包中的函数，用于一次性绘制多变量之间的两两散点图。
+
+-   wine\[, 1:11\]
+
+1.  `wine` 是一个数据框（data.frame）
+
+2.  `[, 1:11]` 表示对 `wine` 取行的所有观测（留空表示“全行”），以及第1 列到第 11 列这 11 个变量。
+:::
+
+```{r}
+pairs(wine[,2:12])
+```
+
+Columns 2 to 12 of wine dataframe is used to build the scatterplot matrix.
+
+The variables are: fixed acidity, volatile acidity, citric acid, residual sugar, chlorides, free sulfur dioxide, total sulfur dioxide, density, pH, sulphates and alcohol.
+
+### **Drawing the lower corner**
+
+It is a common practice to show either the **upper half** or **lower half** of the correlation matrix instead of both. This is because a correlation matrix is symmetric.
+
+::: panel-tabset
+## upper.panel
+
+```{r}
+pairs(wine[,2:12], upper.panel = NULL)
+```
+
+## lower.panel
+
+```{r}
+pairs(wine[,2:12], lower.panel = NULL)
+```
+:::
+
+### **Including with correlation coefficients**
+
+To show the correlation coefficient of each pair of variables instead of a scatter plot, [*panel.cor*](https://www.rdocumentation.org/packages/xcms/versions/1.48.0/topics/panel.cor) function will be used. This will also show higher correlations in a larger font.
+
+![](images/clipboard-2245297864.png)
+
+
+```{r}
+panel.cor <- function(x, y, digits=2, prefix="", cex.cor, ...) {
+#保存当前绘图的坐标系统参数（usr），以便后面恢复  
+usr <- par("usr")
+on.exit(par(usr))
+par(usr = c(0, 1, 0, 1)) #将坐标系统临时改成 [0,1]×[0,1]，
+r <- abs(cor(x, y, use="complete.obs")) #Calculate the Pearson's correlation coefficients for x and y (excluding missing values) and take the absolute value
+
+#将相关系数格式化成字符，保留 digits 位小数
+#这里用 c(r,0.123456789)[1] 的技巧防止单个数字格式化出错
+txt <- format(c(r, 0.123456789), digits=digits)[1]
+txt <- paste(prefix, txt, sep="")
+if(missing(cex.cor)) cex.cor <- 0.8/strwidth(txt)
+text(0.5, 0.5, txt, cex = cex.cor * (1 + r) / 2)
+}
+
+pairs(wine[,2:12], 
+      upper.panel = panel.cor)
+
+
+```

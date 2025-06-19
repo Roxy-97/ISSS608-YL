@@ -85,17 +85,54 @@ pairs(wine[,2:12])
 
 *pairs* function of R Graphics provided many customisation arguments. For example, it is a common practice to show either the upper half or lower half of the correlation matrix instead of both. This is because a correlation matrix is symmetric.
 
-To show the lower half of the correlation matrix, the upper.panel argument will be used as shown in the code chunk below.
+To show the upper half of the correlation matrix, the upper.panel argument will be used as shown in the code chunk below.
 
 ```{r}
 pairs(wine[,2:12],upper.panel = NULL)
 
 ```
 
-Similarly,can display the upper half of the correlation matrix by using the code chun below.
+Similarly,can display the lower half of the correlation matrix by using the code chun below.
 
 ```{r}
 pairs(wine[,2:12],lower.panel = NULL)
+
+```
+
+### **15.4.3 Including with correlation coefficients**
+
+To show the correlation coefficient of each pair of variables instead of a scatter plot, [*panel.cor*](https://www.rdocumentation.org/packages/xcms/versions/1.48.0/topics/panel.cor) function will be used. This will also show higher correlations in a larger font.
+
+::: {.callout-note style="background-color:white;"}
+## **Usage: panel.cor(x, y, digits = 2, prefix = "", cex.cor)**
+
+## **Arguments:**
+
+**x :** first data series
+
+**y:** second data series
+
+**digits :** number of digits to plot
+
+**prefix :**text to prefix the coefficients
+
+**cex.cor :** character expansion factor
+:::
+
+```{r,warning=FALSE}
+panel.cor <- function(x, y, digits=2, prefix="", cex.cor, ...) {
+usr <- par("usr")
+on.exit(par(usr))
+par(usr = c(0, 1, 0, 1))
+r <- abs(cor(x, y, use="complete.obs"))
+txt <- format(c(r, 0.123456789), digits=digits)[1]
+txt <- paste(prefix, txt, sep="")
+if(missing(cex.cor)) cex.cor <- 0.8/strwidth(txt)
+text(0.5, 0.5, txt, cex = cex.cor * (1 + r) / 2)
+}
+
+pairs(wine[,2:12], 
+      upper.panel = panel.cor)
 
 ```
 
