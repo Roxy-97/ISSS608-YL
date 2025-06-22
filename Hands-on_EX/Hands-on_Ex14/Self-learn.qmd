@@ -251,7 +251,6 @@ To show the correlation coefficient of each pair of variables instead of a scatt
 
 ![](images/clipboard-2245297864.png)
 
-
 ```{r}
 panel.cor <- function(x, y, digits=2, prefix="", cex.cor, ...) {
 #保存当前绘图的坐标系统参数（usr），以便后面恢复  
@@ -273,3 +272,70 @@ pairs(wine[,2:12],
 
 
 ```
+
+## **Visualising Correlation Matrix: ggcormat()**
+
+### **The basic plot**
+
+On of the advantage of using *`ggcorrmat()`* over many other methods to visualise a **correlation matrix** is it’s ability to provide a comprehensive and yet professional statistical report as shown in the figure below.
+
+**`ggstatsplot::ggcorrmat()`**:用来一键生成带统计检验结果的相关矩阵图（correlation matrix）
+
+-   计算多个变量的两两相关系数（默认是 Pearson，也支持 Spearman／Kendall）
+
+-   t-test 或者非参数检验,并把 p 值标注在图上
+
+-   用色块热图（tile）＋文本标签 的方式同时展现相关系数大小、正负方向与显著性
+
+```{r}
+ggstatsplot::ggcorrmat(
+  data = wine, 
+  cor.vars = 1:11)
+
+```
+
+add title and subtitle
+
+```{r}
+ggstatsplot::ggcorrmat(
+  data = wine, 
+  cor.vars = 1:11, #取 wine 的第 1 列到第 11 列这 11 个变量来做两两相关分析。
+  ggcorrplot.args = list(outline.color = "black", #每个色块边框用黑色描边
+                         hc.order = TRUE,  #对变量名进行 hierarchical clustering（层次聚类）排序，把相关性强的变量自动排得更靠近。
+                         tl.cex = 10# text label 字号大小设为 10
+                         ),
+  title    = "Correlogram for wine dataset",  #给整张图加上主标题
+  subtitle = "Four pairs are no significant at p < 0.05"
+)
+
+```
+
+::: callout-note
+-   `cor.vars` argument is used to compute the **correlation matrix** needed to build the corrgram.
+
+-   `ggcorrmat()` 已经在内部给 `ggcorrplot()` 传递了一些核心参数（比如相关矩阵 `corr`、计算方法 `method`、显著性水平 `sig.level`、主题 `ggtheme`、调色板 `colors`、是否显示数值 `lab`、符号标记 `pch`、图例标题 `legend.title`、小数位数 `digits` 等）。 因此，**不要在 `ggcorrplot.args` 里再包含这些参数**，否则会和内部设置冲突或被覆盖。
+:::
+
+## **Building multiple plots**
+
+```{r}
+grouped_ggcorrmat(
+  data = wine,
+  cor.vars = 1:11,
+  grouping.var = type,
+  type = "robust",
+  p.adjust.method = "holm",
+  plotgrid.args = list(ncol = 2),
+  ggcorrplot.args = list(outline.color = "black", 
+                         hc.order = TRUE,
+                         tl.cex = 10),
+  annotation.args = list(
+    tag_levels = "a",
+    title = "Correlogram for wine dataset",
+    subtitle = "The measures are: alcohol, sulphates, fixed acidity, citric acid, chlorides, residual sugar, density, free sulfur dioxide and volatile acidity",
+    caption = "Dataset: UCI Machine Learning Repository"
+  )
+)
+
+```
+
