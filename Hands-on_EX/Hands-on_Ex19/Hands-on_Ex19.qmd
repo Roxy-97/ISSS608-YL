@@ -1,7 +1,7 @@
 ---
 title: "Hands-on Exercise 9: Information Dashboard Design: R methods."
 author: "Yang Lu"
-date: "19 Jun 2025"
+date: "22 Jun 2025"
 date-modified: "last-modified"
 format: html
 code-fold: true
@@ -286,7 +286,9 @@ report %>%
 
 ```
 
-\###**19.6.3 Combining the data.frame** Next, use the code chunk below to add the statistics on the table.
+### **19.6.3 Combining the data.frame** 
+
+Next, use the code chunk below to add the statistics on the table.
 
 ```{r}
 spark <- report %>%
@@ -308,7 +310,7 @@ sales_data = left_join(sales, spark)
 
 ```
 
-\###**19.6.4 Plotting the updated data.table**
+### **19.6.4 Plotting the updated data.table**
 
 ```{r}
 sales_data %>%
@@ -318,7 +320,9 @@ sales_data %>%
 
 ```
 
-\###**31.6.5 Combining bullet chart and sparklines** Similarly, we can combining the bullet chart and sparklines using the steps below.
+### 19**.6.5 Combining bullet chart and sparklines** 
+
+Similarly, we can combining the bullet chart and sparklines using the steps below.
 
 ```{r}
 bullet <- coffeechain %>%
