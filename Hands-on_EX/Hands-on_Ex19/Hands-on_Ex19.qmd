@@ -286,7 +286,7 @@ report %>%
 
 ```
 
-### **19.6.3 Combining the data.frame** 
+### **19.6.3 Combining the data.frame**
 
 Next, use the code chunk below to add the statistics on the table.
 
@@ -320,7 +320,7 @@ sales_data %>%
 
 ```
 
-### 19**.6.5 Combining bullet chart and sparklines** 
+### 19**.6.5 Combining bullet chart and sparklines**
 
 Similarly, we can combining the bullet chart and sparklines using the steps below.
 
