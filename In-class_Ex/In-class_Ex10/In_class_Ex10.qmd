@@ -158,7 +158,37 @@ ggplotly(p)
 
 ```
 
+## Row
 
+```{r}
+plot_ly(data = df,
+        x = ~date,
+        type = "candlestick",
+        open = ~open,
+        high = ~high,
+        low = ~low,
+        close = ~close,
+        name = "Price") %>%
+  add_lines(x = ~date,
+            y = ~TTR::SMA(close, n = 5),
+            name = "SMA 5",
+            line = list(
+              width = 1.5,
+              dash  = "dot"
+            )) %>%
+  add_lines(x = ~date,
+            y = ~TTR::SMA(close, n = 15),
+            name = "SMA 15",
+            line = list(
+              color = "red",
+              width = 1.5
+            )) %>%
+  layout(title  = "Technical Analysis of DBS Stock Prices",
+         yaxis  = list(title = "closing Price"),
+         xaxis  = list(title = "Date"))
+
+
+```
 
 
 # OCBC
